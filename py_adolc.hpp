@@ -42,8 +42,9 @@ void trace_off_default_argument(){ trace_off(0);}
 // bool    (X::*fx2)(int, double)      = &X::f;
 // bool    (X::*fx3)(int, double, char)= &X::f;
 // int     (X::*fx4)(int, int, int)    = &X::f;
+bpn::array wrapped_gradient(int tape_tag, bpn::array &compute_at_x0);
 
-
+bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &compute_at_x0);
 
 
 class mytestclass{
@@ -53,7 +54,9 @@ mytestclass(){a = 1;}
 };
 
 double depends_on(adub &a){
-	return a.value();
+	double coval;
+	a.operator>>=(coval);
+	return coval;
 }
 
 
@@ -101,8 +104,9 @@ BOOST_PYTHON_MODULE(Adolc)
 
 
 	bp::def("depends_on", &depends_on);
+	bp::def("gradient", &wrapped_gradient);
+	bp::def("function", &wrapped_function);
 
-	
 	bp::class_<adouble>("adouble", bp::init<double>())
 			.def(bp::init<const adouble>())
 			.def(bp::init<const adub>())
