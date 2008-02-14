@@ -36,7 +36,13 @@ def speelpenning(avec):
 
 
 import numpy as npy
-myavec = npy.array([Adolc.adouble(i) for i in range(1,10)])
-print myavec
+ax = npy.array([Adolc.adouble(i) for i in range(1,10)])
+x = npy.array([1.0* i for i in range(1,10)])
+Adolc.trace_on(1)
+for i in range(npy.shape(ax)[0]):
+	ax[i]<<=x[i]
+ay = speelpenning(ax)
+y = Adolc.depends_on(ay)
+Adolc.trace_off()
 
-print speelpenning(myavec)
+
