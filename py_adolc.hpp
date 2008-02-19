@@ -47,11 +47,15 @@ BOOST_PYTHON_MODULE(Adolc)
 	
 	class_<badouble>("badouble", init<const badouble &>())
 			.def(boost::python::self_ns::str(self))
+
+			.add_property("val", &badouble::value)
 			
 			.def("is_independent", &badouble::operator<<=, return_internal_reference<>())
 			.def("__ilshift__", &badouble::operator<<=, return_internal_reference<>())
 			.def("__irshift__", &badouble::operator>>=, return_internal_reference<>())
 
+			.def(-self)
+			.def(+self)
 			.def(self += double() )
 			.def(self -= double() )
 			.def(self *= double() )
@@ -65,17 +69,23 @@ BOOST_PYTHON_MODULE(Adolc)
 			.def(self +  double() )
 			.def(self -  double() )
 			.def(self *  double() )
-			.def(self /  double() )			
+			.def(self /  double() )
+
+			.def(double() + self )
+			.def(double() - self )
+			.def(double() * self )
+			.def(double() / self )
+
 
 			.def(self +  self )
 			.def(self -  self )
 			.def(self *  self )
 			.def(self /  self )
 			
-			.def(self +  int() )
-			.def(self -  int() )
-			.def(self *  int() )
-			.def(self /  int() )
+// 			.def(self +  int() )
+// 			.def(self -  int() )
+// 			.def(self *  int() )
+// 			.def(self /  int() )
 	;
 
 	class_<adub, bases<badouble> >("adub",init<locint>())
@@ -84,7 +94,6 @@ BOOST_PYTHON_MODULE(Adolc)
 	class_<adouble, bases<badouble> >("adouble", init<double>())
 			.def(init<const adouble>())
 			.def(init<const adub>())
-
 	;
 	class_<asub, bases<badouble> >("asub",init<locint,locint>())
 	;

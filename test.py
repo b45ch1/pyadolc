@@ -1,55 +1,87 @@
 #!/usr/bin/env python
-
-import Adolc
-
-
-a = Adolc.adouble(13.)
-b = Adolc.adouble(5.)
-c = Adolc.adouble(7.)
+from Adolc import *
 
 
-print 'a=',a
-print 'b=',b
-print 'c=',c
+#constructors
+a = adouble(13.);	print 'a=adouble(13.)\t= ',a,'\t\ta.val =',a.val
+b = adouble(5);		print 'b=adouble(5)\t= ',b,'\t\tb.val =',b.val
+
+#unary
+print '-a  \t =',-a
+print '+a  \t =',+a
+
+#operator + for int and double
+print 'a+2  \t =',a+2
+print 'a+2. \t =',a+2.
+print '2+a  \t =',2+a
+print '2.+a \t =',2.+a
+
+#operator - for int and double
+print 'a-2  \t =',a-2
+print 'a-2. \t =',a-2.
+print '2-a  \t =',2-a
+print '2.-a \t =',2.-a
+
+#operator * for int and double
+print 'a*2  \t =',a*2
+print 'a*2. \t =',a*2.
+print '2*a  \t =',2*a
+print '2.*a \t =',2.*a
+
+#operator / for int and double
+print 'a/2  \t =',a/2
+print 'a/2. \t =',a/2.
+print '2/a  \t =',2/a
+print '2./a \t =',2./a
+
+#operator +,-,*,/ for badouble
+print 'a+b  \t =',a+b
+print 'a-b  \t =',a-b
+print 'a*b  \t =',a*b
+print 'a/b  \t =',a/b
+
+#operator +=,-=,*=,/= for badouble
+a+=b; print 'a+=b  \t =',a
+a-=b; print 'a-=b  \t =',a
+a*=b; print 'a*=b  \t =',a
+a/=b; print 'a/=b  \t =',a
+
+
+
+
+exit()
 
 a *= b
 print 'a=',a
-
-#c = a
-#print 'c=', c
-
-
 c = a * b
-
 print '%s=%s*%s'%(c,a,b)
 
-print type(c)
-
-
 def speelpenning(avec):
-	tmp = Adolc.adouble(4.)
+	tmp = avec[0]
 	for a in avec:
 		tmp *= a
 	return tmp
 
-
 import numpy as npy
-ax = npy.array([Adolc.adouble(i) for i in range(1,10)])
-x = npy.array([1. + npy.exp(-i) for i in range(1,10)])
-y = 0.
-Adolc.trace_on(1)
+ax = npy.array([adouble(i) for i in range(1,4)])
+x = npy.array([1.*i for i in range(1,4)])
+trace_on(1)
 for i in range(npy.shape(ax)[0]):
-	ax[i]<<=x[i]
+	 ax[i].is_independent(x[i])#equivalent to ax[i]<<=x[i]
+#A = 4*npy.ones((3,3))
+#ax = A*ax
+
 ay = speelpenning(ax)
-#ay >>= y
-y = Adolc.depends_on(ay)
-Adolc.trace_off()
+y = depends_on(ay)
+trace_off()
 
 #print y
 #print x
 
-asdf = Adolc.function(1,1,x)
-print 'asdf=',asdf
-#g = Adolc.gradient(1,x)
+print 'shape(x)=',npy.shape(x)
+print 'Adolc\tfunction evaluation:\t',function(1,1,x)
+print 'normal\tfunction evaluation:\t',speelpenning(x)
 
-#print 'gradient is', g
+g = gradient(1,x)
+
+print 'gradient is', g
