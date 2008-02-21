@@ -12,11 +12,6 @@ namespace bp = boost::python;
 namespace bpn = boost::python::numeric;
 namespace nu = num_util;
 
-/*thin wrapper for overloaded functions */
-void trace_on_default_argument(short tag){ trace_on(tag,0);}
-void trace_off_default_argument(){ trace_off(0);}
-bpn::array wrapped_gradient(int tape_tag, bpn::array &compute_at_x0);
-bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &compute_at_x0);
 
 extern adub exp		( const badouble& );
 extern adub log		( const badouble& );
@@ -30,7 +25,6 @@ extern adub atan	( const badouble& );
 extern adub pow		( const badouble&, double );
 extern adouble pow	( const badouble&, const badouble& );
 extern adouble pow	( double, const badouble& ); /*this one doesnt work correctly yet */
-
 extern adub log10	( const badouble& );
 extern adub sinh  ( const badouble& );
 extern adub cosh  ( const badouble& );
@@ -41,18 +35,30 @@ extern adub tanh  ( const badouble& );
 extern adub fabs  ( const badouble& );
 extern adub ceil  ( const badouble& );
 extern adub floor ( const badouble& );
-// extern adub fmax ( const badouble&, const badouble& );
-// extern adub fmax ( double, const badouble& );
-// extern adub fmax ( const badouble&, double );
-// extern adub fmin ( const badouble&, const badouble& );
-// extern adub fmin ( double, const badouble& );
-// extern adub fmin ( const badouble&, double );
-// extern adub ldexp ( const badouble&, int );
+extern adub fmax ( const badouble&, const badouble& );
+extern adub fmax ( double, const badouble& );
+extern adub fmax ( const badouble&, double );
+extern adub fmin ( const badouble&, const badouble& );
+extern adub fmin ( double, const badouble& );
+extern adub fmin ( const badouble&, double );
+extern adub ldexp ( const badouble&, int );
 // extern adub frexp ( const badouble&, int* );
 // extern adub erf   ( const badouble& );
 
 
 
+
+/* THIN WRAPPER FOR OVERLOADED FUNCTIONS */
+/* ------------------------------------- */
+
+/* of global functions */
+void trace_on_default_argument(short tag){ trace_on(tag,0);}
+void trace_off_default_argument(){ trace_off(0);}
+bpn::array wrapped_gradient(uint tape_tag, bpn::array &compute_at_x0);
+bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &compute_at_x0);
+bp::dict wrapped_fos_forward(short tape_tag, int codimension, int keep, bpn::array &x0, bpn::array &direction);
+
+/* of class badouble */
 adub (*exp_adub) 		( const badouble& ) = &exp;
 adub (*log_adub) 		( const badouble& ) = &log;
 adub (*sqrt_adub)		( const badouble& ) = &sqrt;
@@ -65,7 +71,6 @@ adub (*atan_adub)		( const badouble& ) = &atan;
 adub (*pow_adub)		( const badouble&, double ) = &pow;
 adouble (*pow_adouble_badouble_badouble)( const badouble&, const badouble& ) = &pow;
 adouble (*pow_adouble_double_badouble)( double, const badouble& ) = &pow;
-
 adub (*log10_adub)		( const badouble& ) = &log10;
 adub (*sinh_adub)		( const badouble& ) = &sinh;
 adub (*cosh_adub) 		( const badouble& ) = &cosh;
@@ -73,19 +78,16 @@ adub (*tanh_adub) 		( const badouble& ) = &tanh;
 // adub (*asinh_adub) 		( const badouble& ) = &asinh;
 // adub (*acosh_adub) 		( const badouble& ) = &acosh;
 // adub (*atanh_adub) 		( const badouble& ) = &atanh;
-
 adub (*fabs_adub) 		( const badouble& ) = &fabs;
 adub (*ceil_adub)		( const badouble& ) = &ceil;
 adub (*floor_adub) 		( const badouble& ) = &floor;
-// 
-// adub (*fmax_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmax;
-// adub (*fmax_adub_double_badouble)		( double, const badouble& ) = &fmax;
-// adub (*fmax_adub_badouble_double)		( const badouble&, double ) = &fmax;
-// adub (*fmin_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmin;
-// adub (*fmin_adub_double_badouble)		( double, const badouble& ) = &fmin;
-// adub (*fmin_adub_badouble_double)		( const badouble&, double ) = &fmin;
-// 
-// adub (*ldexp_adub) 		( const badouble&, int ) = &ldexp;
+adub (*fmax_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmax;
+adub (*fmax_adub_double_badouble)		( double, const badouble& ) = &fmax;
+adub (*fmax_adub_badouble_double)		( const badouble&, double ) = &fmax;
+adub (*fmin_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmin;
+adub (*fmin_adub_double_badouble)		( double, const badouble& ) = &fmin;
+adub (*fmin_adub_badouble_double)		( const badouble&, double ) = &fmin;
+adub (*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 // adub (*frexp_adub) 		( const badouble&, int* ) = &frexp;
 // adub (*erf_adub) 		( const badouble& ) = &erf;
 
@@ -96,6 +98,15 @@ double depends_on(badouble &a){
 	a.operator>>=(coval);
 	return coval;
 }
+
+badouble& (badouble::*operator_eq_double) ( double ) = &badouble::operator=;
+badouble& (badouble::*operator_eq_badouble) ( const badouble& ) = &badouble::operator=;
+badouble& (badouble::*operator_eq_adub) ( const adub& ) = &badouble::operator=;
+
+// badouble badouble::operator_eq_double_constructor(const adub&){
+// 	
+// }
+
 
 BOOST_PYTHON_MODULE(Adolc)
 {
@@ -112,8 +123,14 @@ BOOST_PYTHON_MODULE(Adolc)
 	def("trace_off",trace_off);
 	def("trace_off",trace_off_default_argument);
 
+	def("start_trace",start_trace);
+	def("stop_trace",stop_trace);
+
 	def("gradient", &wrapped_gradient);
 	def("function", &wrapped_function);
+	def("fos_forward", &wrapped_fos_forward);
+
+	
 	def("depends_on", &depends_on);
 
 	
@@ -121,9 +138,13 @@ BOOST_PYTHON_MODULE(Adolc)
 			.def(boost::python::self_ns::str(self))
 
 			.add_property("val", &badouble::value)
+			.add_property("location", &badouble::loc)
 			
 			.def("is_independent", &badouble::operator<<=, return_internal_reference<>())
-			.def("__ilshift__", &badouble::operator<<=, return_internal_reference<>())
+			.def("__ilshift__", operator_eq_double, return_internal_reference<>())
+			.def("__ilshift__", operator_eq_badouble, return_internal_reference<>())
+			.def("__ilshift__", operator_eq_adub, return_internal_reference<>())
+
 			.def("__irshift__", &badouble::operator>>=, return_internal_reference<>())
 
 			.def(-self)
@@ -166,13 +187,26 @@ BOOST_PYTHON_MODULE(Adolc)
 			.def("asin",asin_adub )
 			.def("acos",acos_adub )
 			.def("atan",atan_adub )
+			.def("arcsin",asin_adub )
+			.def("arccos",acos_adub )
+			.def("arctan",atan_adub )
 			.def("log10",log10_adub)
-/*			.def("sinh",sinh_adub)
+			.def("sinh",sinh_adub)
 			.def("cosh",cosh_adub)
 			.def("tanh",tanh_adub)
-			.def("asinh",asinh_adub)
-			.def("acosh",acosh_adub)
-			.def("atanh",atanh_adub)	*/		
+// 			.def("asinh",asinh_adub)
+// 			.def("acosh",acosh_adub)
+// 			.def("atanh",atanh_adub)
+
+			.def("fabs",fabs_adub)
+			.def("ceil", ceil_adub)
+			.def("floor", floor_adub)
+			.def("fmax", fmax_adub_badouble_badouble)
+			.def("fmax", fmax_adub_double_badouble)
+			.def("fmax", fmax_adub_badouble_double)
+			.def("fmin", fmin_adub_badouble_badouble)
+			.def("fmin", fmin_adub_double_badouble)
+			.def("fmin", fmin_adub_badouble_double)
 	;
 
 	class_<adub, bases<badouble> >("adub",init<locint>())
