@@ -13,6 +13,15 @@ namespace bpn = boost::python::numeric;
 namespace nu = num_util;
 
 
+extern unsigned char **op_tape;
+extern locint        **int_tape;
+extern double        **val_tape;
+extern int op_ptr;
+extern int loc_ptr;
+extern int real_ptr;
+
+
+
 extern adub exp		( const badouble& );
 extern adub log		( const badouble& );
 extern adub sqrt	( const badouble& );
@@ -57,6 +66,8 @@ void trace_off_default_argument(){ trace_off(0);}
 bpn::array wrapped_gradient(uint tape_tag, bpn::array &compute_at_x0);
 bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &compute_at_x0);
 bp::dict wrapped_fos_forward(short tape_tag, int codimension, int keep, bpn::array &x0, bpn::array &direction);
+void py_tape_doc(short tape_tag, bpn::array &x, bpn::array &y );
+
 
 /* of class badouble */
 adub (*exp_adub) 		( const badouble& ) = &exp;
@@ -93,6 +104,11 @@ adub (*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 
 
 
+bpn::array get_op_tape(uint tape_tag);
+
+
+
+
 double depends_on(badouble &a){
 	double coval;
 	a.operator>>=(coval);
@@ -102,10 +118,6 @@ double depends_on(badouble &a){
 badouble& (badouble::*operator_eq_double) ( double ) = &badouble::operator=;
 badouble& (badouble::*operator_eq_badouble) ( const badouble& ) = &badouble::operator=;
 badouble& (badouble::*operator_eq_adub) ( const adub& ) = &badouble::operator=;
-
-// badouble badouble::operator_eq_double_constructor(const adub&){
-// 	
-// }
 
 
 BOOST_PYTHON_MODULE(Adolc)
@@ -123,12 +135,13 @@ BOOST_PYTHON_MODULE(Adolc)
 	def("trace_off",trace_off);
 	def("trace_off",trace_off_default_argument);
 
-	def("start_trace",start_trace);
-	def("stop_trace",stop_trace);
+	def("py_tape_doc",py_tape_doc);
 
 	def("gradient", &wrapped_gradient);
 	def("function", &wrapped_function);
 	def("fos_forward", &wrapped_fos_forward);
+
+	def("get_op_tape", &get_op_tape);
 
 	
 	def("depends_on", &depends_on);

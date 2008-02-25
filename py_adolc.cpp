@@ -2,6 +2,7 @@
 #include <string>
 #include "py_adolc.hpp"
 
+
 using namespace std;
 template<class T>
 void print_vec(vector<T> vec, string msg=""){
@@ -86,3 +87,30 @@ bp::dict wrapped_fos_forward(short tape_tag, int codimension, int keep, bpn::arr
 	retvals["directional_derivative"] = ret_directional_derivative;
 	return retvals;
 }
+
+
+bpn::array get_op_tape(uint tape_tag){
+	vector<double> y(10);
+	cout<<"op_ptr="<<op_ptr<<endl;
+	cout<<int_tape[0][0]<<endl;
+	bpn::array ret_y 	=  nu::makeNum( &y[0], 10);
+	return ret_y;
+}
+
+void py_tape_doc(short tape_tag, bpn::array &x, bpn::array &y ){
+	nu::check_rank(x,1);
+	nu::check_rank(y,1);
+
+
+
+	double* dataPtr_x = (double*) nu::data(x);
+	double* dataPtr_y = (double*) nu::data(y);
+	int n = nu::shape(x)[0];
+	int m = nu::shape(y)[0];
+
+	tape_doc(tape_tag, m , n, dataPtr_x, dataPtr_y);
+
+
+}
+
+
