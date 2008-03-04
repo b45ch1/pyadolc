@@ -1,64 +1,68 @@
+#!/usr/bin/env python
 import numpy as npy
-from Adolc import *
+from adolc import *
+import time
 
-
-# SETUP FOR ALL TESTS
-# ------------------
-
-ARRAY_LENGTH = 100000
-import numpy as npy
-import time 		# to make a runtime analysis
-x = npy.array([1./(i+1) for i in range(ARRAY_LENGTH)])
-
-
-
-direction = npy.zeros(ARRAY_LENGTH)
-direction[0] = 1.
-
-def run_test(f,x_0,direction, message='', print_derivatives=False):
+def run_test(f,N,M, message='', print_derivatives=False):
 	print message
-	ax = npy.array([adouble(0.) for i in range(ARRAY_LENGTH)])
+	x = npy.array([1./(i+1) for i in range(N)])
+	y = npy.zeros(M)
+	ax = npy.array([adouble(0.) for i in range(N)])
 
 	start_time = time.time()
 	trace_on(1)
-	for i in range(ARRAY_LENGTH):
-		ax[i].is_independent(x[i])# equivalent to ax[i]<<=x[i]
+	for n in range(N):
+		ax[n].is_independent(x[n])
 	ay = f(ax)
-	y = depends_on(ay)
+	for m in range(M):
+		y[m] = depends_on(ay[m])
 	trace_off()
-	run_time_taping = time.time() - start_time
+	tape_to_latex(1,x,y)
+	runtime_taping = time.time() - start_time
+	print 'Adolc\tfunction taping:\t........\telapsed time: %f'%runtime_taping
 
 	start_time = time.time()
-	y_adolc = function(1,1,x)
-	run_time_adolc = time.time() - start_time
-
+	y_adolc = function(1,M,x)
+	runtime_adolc = time.time() - start_time
+	print 'Adolc\tfunction evaluation:\t%f\telapsed time: %f'%(y_adolc[0],runtime_adolc)
+	
 	start_time = time.time()
 	y_normal = f(x)
-	run_time_normal = time.time() - start_time
+	runtime_normal = time.time() - start_time
+	print 'normal\tfunction evaluation:\t%f\telapsed time: %f'%(y_normal[0],runtime_normal)
+
+	if M==1:
+		start_time = time.time()
+		g = gradient(1,x)
+		runtime_gradient = time.time() - start_time
+		print 'gradient evaluation:\t\t........\telapsed time: %f'%runtime_gradient
 
 	start_time = time.time()
-	g = gradient(1,x)
-	run_time_gradient = time.time() - start_time
+	J = jacobian(1,x,M)
+	runtime_jacobian = time.time() - start_time
+	print 'jacobian evaluation:\t\t........\telapsed time: %f'%runtime_jacobian
 
-	start_time = time.time()
-	y_and_deriv = fos_forward(1,1,1,x,direction)
-	run_time_fos_forward = time.time() - start_time
+	#start_time = time.time()
+	#y_and_deriv = fos_forward(1,1,1,x,direction)
+	#runtime_fos_forward = time.time() - start_time
 	
-	print 'Adolc\tfunction taping:\t........\telapsed time: %f'%run_time_taping
-	print 'Adolc\tfunction evaluation:\t%f\telapsed time: %f'%(y_adolc,run_time_adolc)
-	print 'normal\tfunction evaluation:\t%f\telapsed time: %f'%(y_normal,run_time_normal)
-	print 'gradient evaluation:\t\t........\telapsed time: %f'%run_time_gradient,'\t',
-	if print_derivatives == True:
-		 print g
-	else:
-		 print ''
-	print 'direct. diff. evaluation:\t%f\telapsed time: %f'%(y_and_deriv['y'],run_time_fos_forward),
-	if print_derivatives == True:
-		 print  y_and_deriv['directional_derivative']
-	else:
-		 print ''
-	print ''
-	return y_normal
+	#if print_derivatives == True:
+		 #print g
+	#else:
+		 #print ''
+	#print 'direct. diff. evaluation:\t%f\telapsed time: %f'%(y_and_deriv['y'],runtime_fos_forward),
+	#if print_derivatives == True:
+		 #print  y_and_deriv['directional_derivative']
+	#else:
+		 #print ''
+	#print ''
+	#return y_normal
+
+
+N = 200
+M = 200
+direction = npy.zeros(N)
+direction[0] = 1.
 
 
 #def f(avec):
@@ -79,22 +83,18 @@ def run_test(f,x_0,direction, message='', print_derivatives=False):
 	#return npy.sum(avec)
 #run_test(f,x,direction)
 
+print "N=%d   M=%d"%(N,M)
+
 def f(avec):
-	return npy.prod(avec)
-run_test(f,x,direction)
+	return npy.array([npy.prod(avec)])
+run_test(f,N,1,'\n\nspeelpenning')
 
-#def f(avec):
-	#import numpy as npy
-	#N = npy.shape(avec)[0]
-	#A = 3.*npy.eye(N)
-	#y = npy.dot(A,avec)
-	#return npy.dot(avec,y)
-#run_test(f,x,direction,'inner product')
 
-#def f(avec):
-	#import numpy as npy
-	#N = npy.shape(avec)[0]
-	#A = npy.eye(N) - 2* npy.outer(avec,avec)
-	#y = npy.dot(avec,npy.dot(A,avec))
-	#return y
-#run_test(f,x,direction)
+A = npy.zeros((M,N))
+A[:] = [[ 1./N +(n==m) for n in range(N)] for m in range(M)]
+
+def f(x):
+	global A
+	return npy.dot(A,x)
+run_test(f,N,M,'\n\nmatrix vector multiplication')
+

@@ -24,27 +24,32 @@ void print_array(double *vec, int length, string msg=""){
 }
 
 
-bpn::array wrapped_gradient(uint tape_tag, bpn::array &x0){
-	nu::check_rank(x0,1);
-	vector<intp> shp(nu::shape(x0));
-	int n = shp[0]; // lenght of x0
-
-	
-	/* SETUP VARIABLES */
-	double* dataPtr = (double*) nu::data(x0);
-// 	vector<double> g(n);
-// 	gradient(tape_tag,n,dataPtr,&g[0]);
-	double* g;
-	g = myalloc(n);
-	/*call gradient function*/
-	gradient(tape_tag,n,dataPtr,g);
-
-// 	cout<<"tape tag "<<tape_tag<<endl;
-// 	print_array(dataPtr,n,"position x0:");
-// 	print_array(g,n,"gradient");
-
-	return nu::makeNum( &g[0], n);
+bpn::array wrapped_gradient(uint tape_tag, bpn::array &bpn_x){
+	nu::check_rank(bpn_x,1);
+	vector<intp> shp(nu::shape(bpn_x));
+	int N = shp[0]; // lenght of x
+	double* x = (double*) nu::data(bpn_x);
+	double g[N];
+	gradient(tape_tag, N, x, g);
+	return nu::makeNum(g, N);
 }
+
+bpn::array wrapped_jacobian(int tape_tag, bpn::array &bpn_x, int M){
+	nu::check_rank(bpn_x,1);
+	vector<intp> shp(nu::shape(bpn_x));
+	int N = shp[0];
+	double* x = (double*) nu::data(bpn_x);
+	double** J = myalloc2(M,N);
+	jacobian(tape_tag, M, N, x, J);
+	vector<intp> J_shape(2);
+	J_shape[0]=M;
+	J_shape[1]=N;
+	return nu::makeNum( J[0], J_shape);
+}
+
+
+
+
 
 bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &x0){
 	if(!nu::iscontiguous(x0)){

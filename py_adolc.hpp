@@ -49,8 +49,10 @@ extern adub ldexp ( const badouble&, int );
 /* THIN WRAPPER FOR OVERLOADED FUNCTIONS */
 void trace_on_default_argument(short tag){ trace_on(tag,0);}
 void trace_off_default_argument(){ trace_off(0);}
-bpn::array wrapped_gradient(uint tape_tag, bpn::array &compute_at_x0);
-bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &compute_at_x0);
+bpn::array wrapped_gradient(uint tape_tag, bpn::array &x);
+bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &x);
+bpn::array wrapped_jacobian(int tape_tag, bpn::array &bpn_x, int M);
+
 bp::dict wrapped_fos_forward(short tape_tag, int codimension, int keep, bpn::array &x0, bpn::array &direction);
 void py_tape_doc(short tape_tag, bpn::array &x, bpn::array &y );
 
@@ -132,11 +134,12 @@ BOOST_PYTHON_MODULE(adolc)
 	def("trace_on",trace_on_default_argument);
 	def("trace_off",trace_off_default_argument);
 
-	def("py_tape_doc",py_tape_doc);
+	def("tape_to_latex",py_tape_doc);
 
 	def("gradient", &wrapped_gradient);
 	def("function", &wrapped_function);
 	def("fos_forward", &wrapped_fos_forward);
+	def("jacobian", &wrapped_jacobian);
 
 
 	def("depends_on", &depends_on);
