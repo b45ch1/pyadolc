@@ -3,24 +3,13 @@
 #define PY_ARRAY_UNIQUE_SYMBOL PyArrayHandle
 
 #include "num_util.h"
-#include "adolc.h"
-#include "adouble.h"
+#include "adolc/adolc.h"
 
 using namespace std;
 namespace b = boost;
 namespace bp = boost::python;
 namespace bpn = boost::python::numeric;
 namespace nu = num_util;
-
-
-extern unsigned char **op_tape;
-extern locint        **int_tape;
-extern double        **val_tape;
-extern int op_ptr;
-extern int loc_ptr;
-extern int real_ptr;
-
-
 
 extern adub exp		( const badouble& );
 extern adub log		( const badouble& );
@@ -58,9 +47,6 @@ extern adub ldexp ( const badouble&, int );
 
 
 /* THIN WRAPPER FOR OVERLOADED FUNCTIONS */
-/* ------------------------------------- */
-
-/* of global functions */
 void trace_on_default_argument(short tag){ trace_on(tag,0);}
 void trace_off_default_argument(){ trace_off(0);}
 bpn::array wrapped_gradient(uint tape_tag, bpn::array &compute_at_x0);
@@ -70,43 +56,56 @@ void py_tape_doc(short tape_tag, bpn::array &x, bpn::array &y );
 
 
 /* of class badouble */
-adub (*exp_adub) 		( const badouble& ) = &exp;
-adub (*log_adub) 		( const badouble& ) = &log;
-adub (*sqrt_adub)		( const badouble& ) = &sqrt;
-adub (*sin_adub) 		( const badouble& ) = &sin;
-adub (*cos_adub) 		( const badouble& ) = &cos;
-adub (*tan_adub) 		( const badouble& ) = &tan;
-adub (*asin_adub)		( const badouble& ) = &asin;
-adub (*acos_adub)		( const badouble& ) = &acos;
-adub (*atan_adub)		( const badouble& ) = &atan;
-adub (*pow_adub)		( const badouble&, double ) = &pow;
-adouble (*pow_adouble_badouble_badouble)( const badouble&, const badouble& ) = &pow;
-adouble (*pow_adouble_double_badouble)( double, const badouble& ) = &pow;
-adub (*log10_adub)		( const badouble& ) = &log10;
-adub (*sinh_adub)		( const badouble& ) = &sinh;
-adub (*cosh_adub) 		( const badouble& ) = &cosh;
-adub (*tanh_adub) 		( const badouble& ) = &tanh;
+adub	(*exp_adub) 		( const badouble& ) = &exp;
+adub	(*log_adub) 		( const badouble& ) = &log;
+adub	(*sqrt_adub)		( const badouble& ) = &sqrt;
+adub	(*sin_adub) 		( const badouble& ) = &sin;
+adub	(*cos_adub) 		( const badouble& ) = &cos;
+adub	(*tan_adub) 		( const badouble& ) = &tan;
+adub	(*asin_adub)		( const badouble& ) = &asin;
+adub	(*acos_adub)		( const badouble& ) = &acos;
+adub	(*atan_adub)		( const badouble& ) = &atan;
+adub	(*log10_adub)		( const badouble& ) = &log10;
+adub	(*sinh_adub)		( const badouble& ) = &sinh;
+adub	(*cosh_adub) 		( const badouble& ) = &cosh;
+adub	(*tanh_adub) 		( const badouble& ) = &tanh;
 // adub (*asinh_adub) 		( const badouble& ) = &asinh;
 // adub (*acosh_adub) 		( const badouble& ) = &acosh;
 // adub (*atanh_adub) 		( const badouble& ) = &atanh;
-adub (*fabs_adub) 		( const badouble& ) = &fabs;
-adub (*ceil_adub)		( const badouble& ) = &ceil;
-adub (*floor_adub) 		( const badouble& ) = &floor;
-adub (*fmax_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmax;
-adub (*fmax_adub_double_badouble)		( double, const badouble& ) = &fmax;
-adub (*fmax_adub_badouble_double)		( const badouble&, double ) = &fmax;
-adub (*fmin_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmin;
-adub (*fmin_adub_double_badouble)		( double, const badouble& ) = &fmin;
-adub (*fmin_adub_badouble_double)		( const badouble&, double ) = &fmin;
-adub (*ldexp_adub) 		( const badouble&, int ) = &ldexp;
+adub	(*fabs_adub) 		( const badouble& ) = &fabs;
+adub	(*ceil_adub)		( const badouble& ) = &ceil;
+adub	(*floor_adub) 		( const badouble& ) = &floor;
+
+adub	(*pow_adub)			( const badouble&, double ) = &pow;
+adouble	(*pow_adouble_badouble_badouble)( const badouble&, const badouble& ) = &pow;
+adouble (*pow_adouble_double_badouble)( double, const badouble& ) = &pow;
+adub	(*fmax_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmax;
+adub	(*fmax_adub_double_badouble)		( double, const badouble& ) = &fmax;
+adub	(*fmax_adub_badouble_double)		( const badouble&, double ) = &fmax;
+adub	(*fmin_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmin;
+adub	(*fmin_adub_double_badouble)		( double, const badouble& ) = &fmin;
+adub	(*fmin_adub_badouble_double)		( const badouble&, double ) = &fmin;
+adub	(*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 // adub (*frexp_adub) 		( const badouble&, int* ) = &frexp;
 // adub (*erf_adub) 		( const badouble& ) = &erf;
 
 
 
-bpn::array get_op_tape(uint tape_tag);
+/* WRAPPED OPERATORS */
+adub *adub_add_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator+(lhs,rhs));}
+adub *adub_sub_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator-(lhs,rhs));}
+adub *adub_mul_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator*(lhs,rhs));}
+adub *adub_div_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator/(lhs,rhs));}
 
+adub *adub_add_badouble_double(const badouble &lhs,double rhs){	return new adub(operator+(lhs,rhs));}
+adub *adub_sub_badouble_double(const badouble &lhs,double rhs){	return new adub(operator-(lhs,rhs));}
+adub *adub_mul_badouble_double(const badouble &lhs,double rhs){	return new adub(operator*(lhs,rhs));}
+adub *adub_div_badouble_double(const badouble &lhs,double rhs){	return new adub(operator/(lhs,rhs));}
 
+adub *adub_add_double_badouble(const badouble &rhs,double lhs){	return new adub(operator+(lhs,rhs));}
+adub *adub_sub_double_badouble(const badouble &rhs,double lhs){	return new adub(operator-(lhs,rhs));}
+adub *adub_mul_double_badouble(const badouble &rhs,double lhs){	return new adub(operator*(lhs,rhs));}
+adub *adub_div_double_badouble(const badouble &rhs,double lhs){	return new adub(operator/(lhs,rhs));}
 
 
 double depends_on(badouble &a){
@@ -120,7 +119,7 @@ badouble& (badouble::*operator_eq_badouble) ( const badouble& ) = &badouble::ope
 badouble& (badouble::*operator_eq_adub) ( const adub& ) = &badouble::operator=;
 
 
-BOOST_PYTHON_MODULE(Adolc)
+BOOST_PYTHON_MODULE(adolc)
 {
 	using namespace boost::python;
 	import_array(); 										/* some kind of hack to get numpy working */
@@ -130,9 +129,7 @@ BOOST_PYTHON_MODULE(Adolc)
 			my docstring \
 	";
 
-	def("trace_on",trace_on);
 	def("trace_on",trace_on_default_argument);
-	def("trace_off",trace_off);
 	def("trace_off",trace_off_default_argument);
 
 	def("py_tape_doc",py_tape_doc);
@@ -141,9 +138,7 @@ BOOST_PYTHON_MODULE(Adolc)
 	def("function", &wrapped_function);
 	def("fos_forward", &wrapped_fos_forward);
 
-	def("get_op_tape", &get_op_tape);
 
-	
 	def("depends_on", &depends_on);
 
 	
@@ -172,21 +167,21 @@ BOOST_PYTHON_MODULE(Adolc)
 			.def(self *= self )
 			.def(self /= self )
 
-			.def(self +  double() )
-			.def(self -  double() )
-			.def(self *  double() )
-			.def(self /  double() )
+			.def("__add__", adub_add_badouble_badouble, return_value_policy<manage_new_object>())
+			.def("__sub__", adub_sub_badouble_badouble, return_value_policy<manage_new_object>())
+			.def("__mul__", adub_mul_badouble_badouble, return_value_policy<manage_new_object>())
+			.def("__div__", adub_div_badouble_badouble, return_value_policy<manage_new_object>())
 
-			.def(double() + self )
-			.def(double() - self )
-			.def(double() * self )
-			.def(double() / self )
+			.def("__radd__", adub_add_double_badouble, return_value_policy<manage_new_object>())
+			.def("__rsub__", adub_sub_double_badouble, return_value_policy<manage_new_object>())
+			.def("__rmul__", adub_mul_double_badouble, return_value_policy<manage_new_object>())
+			.def("__rdiv__", adub_div_double_badouble, return_value_policy<manage_new_object>())
 
-			.def(self +  self )
-			.def(self -  self )
-			.def(self *  self )
-			.def(self /  self )
-
+			.def("__add__", adub_add_badouble_double, return_value_policy<manage_new_object>())
+			.def("__sub__", adub_sub_badouble_double, return_value_policy<manage_new_object>())
+			.def("__mul__", adub_mul_badouble_double, return_value_policy<manage_new_object>())
+			.def("__div__", adub_div_badouble_double, return_value_policy<manage_new_object>())
+                        
 			.def("__pow__",pow_adub)
 			.def("__pow__",pow_adouble_badouble_badouble)
 			.def("__rpow__",pow_adouble_double_badouble)
@@ -223,11 +218,12 @@ BOOST_PYTHON_MODULE(Adolc)
 	;
 
 	class_<adub, bases<badouble> >("adub",init<locint>())
+			.def(init<const adub &>())
 	;
 	
 	class_<adouble, bases<badouble> >("adouble", init<double>())
-			.def(init<const adouble>())
-			.def(init<const adub>())
+			.def(init<const adouble&>())
+			.def(init<const adub&>())
 	;
 	
 	class_<asub, bases<badouble> >("asub",init<locint,locint>())

@@ -1,59 +1,115 @@
 #!/usr/bin/env python
+import numpy as npy
 from Adolc import *
 
-## constructors
-#a = adouble(13.);	print 'a=adouble(13.)\t= ',a,'\t\ta.val =',a.val
-#b = adouble(5);		print 'b=adouble(5)\t= ',b,'\t\tb.val =',b.val
+number_of_errors = 0
+def near_equal(lhs,rhs):
+	return ( abs((lhs-rhs)/rhs) < 10**(-10))
+
+def near_equal_with_num_error_increase(lhs,rhs):
+	global number_of_errors
+	test_passed = near_equal( lhs.val, rhs)
+	if test_passed is False:
+		number_of_errors=number_of_errors+1
+	return test_passed
 
 
-## unary
-#print '-a  \t =',-a
-#print '+a  \t =',+a
+def test_expression(str_expr, expr, ax, x):
+	global number_of_errors
+	print str_expr,'\t',expr(ax),'\t==',expr(x),'\t\t',
+	test_passed = near_equal(expr(ax).val, expr(x))
+	if test_passed is False:
+		number_of_errors=number_of_errors+1
+		print 'test failed!'
+	else:
+		print 'test OK!'
 
-## operator + for int and double
-#print 'a+2  \t =',a+2
-#print 'a+2. \t =',a+2.
-#print '2+a  \t =',2+a
-#print '2.+a \t =',2.+a
+def test_expr(a_str_expr, str_expr):
+	global number_of_errors
+	exec('import xyz')
 
-## operator - for int and double
-#print 'a-2  \t =',a-2
-#print 'a-2. \t =',a-2.
-#print '2-a  \t =',2-a
-#print '2.-a \t =',2.-a
+	
+print 'testing constructors'
+a = adouble(13.);	print a.__repr__(),'\t',;		print 'a=adouble(13.)\t= ',a,'\t\ta.val =',a.val
+b = adouble(5);		print b.__repr__(),'\t',;		print 'b=adouble(5)\t= ',b,'\t\tb.val =',b.val
+c = adouble(a);		print c.__repr__(),'\t',;		print 'c=adouble(a)\t= ',c,'\t\tc.val =',c.val
 
-## operator * for int and double
-#print 'a*2  \t =',a*2
-#print 'a*2. \t =',a*2.
-#print '2*a  \t =',2*a
-#print '2.*a \t =',2.*a
+# unary
+test_expression('-a:\t', lambda x: -x, a, a.val)
+test_expression('-a:\t', lambda x: +x, a, a.val)
 
-## operator / for int and double
-#print 'a/2  \t =',a/2
-#print 'a/2. \t =',a/2.
-#print '2/a  \t =',2/a
-#print '2./a \t =',2./a
+# operator + for int and double
+test_expression('a + 2: ',	lambda x: x[0]+x[1], (a,2),		(a.val,2))
+test_expression('a + 2.:',	lambda x: x[0]+x[1], (a,2.),	(a.val,2.))
+test_expression('2 + a: ',	lambda x: x[0]+x[1], (2,a),		(2,a.val))
+test_expression('2.+ a.:',	lambda x: x[0]+x[1], (2.,a),	(2., a.val))
 
-##operator +,-,*,/ for badouble
-#print 'a+b  \t =',a+b
-#print 'a-b  \t =',a-b
-#print 'a*b  \t =',a*b
-#print 'a/b  \t =',a/b
+# operator - for int and double
+test_expression('a - 2: ',	lambda x: x[0]-x[1], (a,2),		(a.val,2))
+test_expression('a - 2.:',	lambda x: x[0]-x[1], (a,2.),	(a.val,2.))
+test_expression('2 - a: ',	lambda x: x[0]-x[1], (2,a),		(2,a.val))
+test_expression('2.- a.:',	lambda x: x[0]-x[1], (2.,a),	(2., a.val))
 
-## operator +=,-=,*=,/= for badouble
-#a+=b; print 'a+=b  \t =',a
-#a-=b; print 'a-=b  \t =',a
-#a*=b; print 'a*=b  \t =',a
-#a/=b; print 'a/=b  \t =',a
 
-## operator **
-#print 'a**2.', a**2.
-#print 'a**2', a**2
-#print "to be implemented print '2.**a', 2.**a"
+# operator * for int and double
+test_expression('a * 2: ',	lambda x: x[0]*x[1], (a,2),		(a.val,2))
+test_expression('a * 2.:',	lambda x: x[0]*x[1], (a,2.),	(a.val,2.))
+test_expression('2 * a: ',	lambda x: x[0]*x[1], (2,a),		(2,a.val))
+test_expression('2.* a.:',	lambda x: x[0]*x[1], (2.,a),	(2., a.val))
 
-##functions
-#import numpy as npy
-#a = adouble(0.4);	print 'a=adouble(13.)\t= ',a,'\t\ta.val =',a.val
+# operator / for int and double
+test_expression('a / 2: ',	lambda x: x[0]/x[1], (a,2),		(a.val,2))
+test_expression('a / 2.:',	lambda x: x[0]/x[1], (a,2.),	(a.val,2.))
+test_expression('2 / a: ',	lambda x: x[0]/x[1], (2,a),		(2,a.val))
+test_expression('2./ a.:',	lambda x: x[0]/x[1], (2.,a),	(2., a.val))
+
+#operator +,-,*,/ for badouble
+test_expression('a + b: ',	lambda x: x[0]+x[1], (a,b),		(a.val,b.val))
+test_expression('a - b: ',	lambda x: x[0]-x[1], (a,b),		(a.val,b.val))
+test_expression('a * b: ',	lambda x: x[0]*x[1], (a,b),		(a.val,b.val))
+test_expression('a / b: ',	lambda x: x[0]/x[1], (a,b),		(a.val,b.val))
+
+# operator +=,-=,*=,/= for badouble
+c = adouble(a)
+d = c.val
+c+=b; d+=b.val; print 'c+=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+c-=b; d-=b.val; print 'c-=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+c*=b; d*=b.val; print 'c*=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+c/=b; d/=b.val; print 'c/=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+
+# operator +=,-=,*=,/= for badouble
+c = adouble(a)
+d = c.val
+c+=b.val; d+=b.val; print 'c+=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+c-=b.val; d-=b.val; print 'c-=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+c*=b.val; d*=b.val; print 'c*=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+c/=b.val; d/=b.val; print 'c/=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+
+# operator **
+test_expression('a**2: ',	lambda x: x**2, a,		a.val)
+print "to be implemented print '2.**a', 2.**a"
+
+
+#functions
+import numpy as npy
+a = adouble(0.4);	print 'a=adouble(13.)\t= ',a,'\t\ta.val =',a.val
+test_expression('exp  (a)     : ',		lambda x: npy.exp  (x),  a,		a.val)
+test_expression('log  (a)     : ',		lambda x: npy.log  (x),  a,		a.val)
+test_expression('sqrt (a)     : ',		lambda x: npy.sqrt (x),  a,		a.val)
+test_expression('sin  (a)     : ',		lambda x: npy.sin  (x),  a,		a.val)
+test_expression('cos  (a)     : ',		lambda x: npy.cos  (x),  a,		a.val)
+test_expression('tan  (a)     : ',		lambda x: npy.tan  (x),  a,		a.val)
+test_expression('asin (a)     : ',		lambda x: npy.arcsin (x),  a,		a.val)
+test_expression('acos (a)     : ',		lambda x: npy.arccos (x),  a,		a.val)
+test_expression('atan (a)     : ',		lambda x: npy.arctan (x),  a,		a.val)
+test_expression('log10(a)     : ',		lambda x: npy.log10(x),  a,		a.val)
+test_expression('sinh (a)     : ',		lambda x: npy.sinh (x),  a,		a.val)
+test_expression('cosh (a)     : ',		lambda x: npy.cosh (x),  a,		a.val)
+test_expression('tanh (a)     : ',		lambda x: npy.tanh (x),  a,		a.val)
+test_expression('fabs (a)     : ',		lambda x: npy.fabs (x),  a,		a.val)
+test_expression('ceil (a)     : ',		lambda x: npy.ceil (x),  a,		a.val)
+test_expression('floor(a)    : ',		lambda x: npy.floor(x),	 a,		a.val)
+
 #print 'exp  (a)', npy.exp  (a), a.exp  ()
 #print 'log  (a)', npy.log  (a), a.log  ()
 #print 'sqrt (a)', npy.sqrt (a), a.sqrt ()
@@ -70,108 +126,11 @@ from Adolc import *
 #print 'fabs (a)', npy.fabs (a), a.fabs ()
 #print 'ceil (a)', npy.ceil (a), a.ceil ()
 #print 'floor (a)',npy.floor (a),a.floor ()
-#print 'fmax (a,b)',			    a.fmax (b)
-#print 'fmax (a,0.3)',			a.fmax (0.3)
-#print 'fmax (0.3,a)','/* not implemented */'
-#print 'fmin (a,b)',			    a.fmin (b)
-#print 'fmin (a,0.3)',			a.fmin (0.3)
-#print 'fmin (0.3,a)','/* not implemented */'
+print 'fmax (a,b)',			    a.fmax (b)
+print 'fmax (a,0.3)',			a.fmax (0.3)
+print 'fmax (0.3,a)','/* not implemented */'
+print 'fmin (a,b)',			    a.fmin (b)
+print 'fmin (a,0.3)',			a.fmin (0.3)
+print 'fmin (0.3,a)','/* not implemented */'
 
 
-# SETUP FOR ALL TESTS
-# ------------------
-
-ARRAY_LENGTH = 2
-import numpy as npy
-import time 		# to make a runtime analysis
-x = npy.array([1./(i+1) for i in range(ARRAY_LENGTH)])
-
-
-
-direction = npy.zeros(ARRAY_LENGTH)
-direction[0] = 1.
-
-def run_test(f,x_0,direction, message='', print_derivatives=False):
-	print message
-	ax = npy.array([adouble(0.) for i in range(ARRAY_LENGTH)])
-
-	#for i in range(ARRAY_LENGTH):
-		#print ax[i],'\t',ax[i].__repr__(), ax[i].location
-
-	
-	trace_on(1)
-	for i in range(ARRAY_LENGTH):
-		ax[i].is_independent(x[i])# equivalent to ax[i]<<=x[i]
-	ay = f(ax)
-	y = depends_on(ay)
-	trace_off()
-
-	start_time = time.time()
-	y_adolc = function(1,1,x)
-	run_time_adolc = time.time() - start_time
-
-	start_time = time.time()
-	y_normal = f(x)
-	run_time_normal = time.time() - start_time
-
-	start_time = time.time()
-	g = gradient(1,x)
-	run_time_gradient = time.time() - start_time
-
-	start_time = time.time()
-	y_and_deriv = fos_forward(1,1,1,x,direction)
-	run_time_fos_forward = time.time() - start_time
-
-	print 'Adolc\tfunction evaluation:\t%f\telapsed time: %f'%(y_adolc,run_time_adolc)
-	print 'normal\tfunction evaluation:\t%f\telapsed time: %f'%(y_normal,run_time_normal)
-	print 'gradient evaluation:\t\t........\telapsed time: %f'%run_time_gradient,'\t',
-	if print_derivatives == True:
-		 print g
-	else:
-		 print ''
-	print 'direct. diff. evaluation:\t%f\telapsed time: %f'%(y_and_deriv['y'],run_time_fos_forward),
-	if print_derivatives == True:
-		 print  y_and_deriv['directional_derivative']
-	else:
-		 print ''
-	print ''
-	return y_normal
-
-
-def f(avec):
-	a = avec[0]*avec[-1]
-	c =avec[0]*avec[0]
-	if isinstance(a,badouble):
-		print avec[0].location
-		print avec[1].location
-		print a.location
-		print c.location
-	return a
-y = run_test(f,x,direction)
-
-
-py_tape_doc(1,x,npy.array([y]))
-
-#def f(avec):
-	#return npy.sum(avec)
-#run_test(f,x,direction)
-
-#def f(avec):
-	#return npy.prod(avec)
-#run_test(f,x,direction)
-
-#def f(avec):
-	#import numpy as npy
-	#N = npy.shape(avec)[0]
-	#A = 3.*npy.eye(N)
-	#y = npy.dot(A,avec)
-	#return npy.dot(avec,y)
-#run_test(f,x,direction,'inner product')
-
-#def f(avec):
-	#import numpy as npy
-	#N = npy.shape(avec)[0]
-	#A = npy.eye(N) - 2* npy.outer(avec,avec)
-	#y = npy.dot(avec,npy.dot(A,avec))
-	#return y
-#run_test(f,x,direction)
