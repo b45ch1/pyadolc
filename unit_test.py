@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import numpy as npy
-from Adolc import *
+from adolc import *
 
 number_of_errors = 0
 def near_equal(lhs,rhs):
@@ -132,5 +132,65 @@ print 'fmax (0.3,a)','/* not implemented */'
 print 'fmin (a,b)',			    a.fmin (b)
 print 'fmin (a,0.3)',			a.fmin (0.3)
 print 'fmin (0.3,a)','/* not implemented */'
+
+N = 2
+M = 3
+P = N
+D = 3
+A = npy.zeros((M,N))
+A[:] = [[ 1./N +(n==m) for n in range(N)] for m in range(M)]
+x = npy.array([1./(i+1) for i in range(N)])
+y = npy.zeros(M)
+u = npy.zeros(M); u[0] = 1.
+v = npy.zeros(N); v[0] = 1.
+V = npy.array([[m==p for m in range(M)]for p in range(P)], dtype=float)
+W = npy.array([[m==d for m in range(M)]for d in range(D)], dtype=float)
+
+b = npy.zeros(N,dtype=float)
+ax = npy.array([adouble(0.) for i in range(N)])
+
+def scalar_f(x):
+	global A
+	return npy.dot(x,x)
+
+def vector_f(x):
+	global A
+	return npy.dot(A,x)
+
+trace_on(0)
+for n in range(N):
+	ax[n].is_independent(x[n])
+ay = scalar_f(ax)
+depends_on(ay)
+trace_off()
+
+trace_on(1)
+for n in range(N):
+	ax[n].is_independent(x[n])
+ay = vector_f(ax)
+for m in range(M):
+	y[m] = depends_on(ay[m])
+trace_off()
+
+# basic drivers
+print function(0,x)
+print gradient(0,x)
+print hessian(0,x)
+print hess_vec(0,x,v)
+
+print jacobian(1,x)
+print vec_jac(1,x,u, 0)
+print jac_vec(1,x,v)
+print lagra_hess_vec(1,x,v,u)
+#jac_solv(1,x,b, 0, 2); print b
+
+# low level functions
+print zos_forward(1,x,0)
+print fos_forward(1,x,v,0)
+print fov_forward(1,x,V)
+print hos_forward(1,D,x,W,0)
+
+
+
 
 

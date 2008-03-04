@@ -56,13 +56,13 @@ bpn::array wrapped_vec_jac			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn
 bpn::array wrapped_jac_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v);
 bpn::array wrapped_hess_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v);
 bpn::array wrapped_lagra_hess_vec	(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_u);
-bpn::array wrapped_jac_solv			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_b, bool sparse, bool mode);
+void	   wrapped_jac_solv			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode);
 
 /* low level functions */
-bp::tuple wrapped_zos_forward			(short tape_tag, bpn::array &bpn_x, int keep);
+bpn::array wrapped_zos_forward			(short tape_tag, bpn::array &bpn_x, int keep);
 bp::tuple wrapped_fos_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v, int keep);
 bp::tuple wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V);
-bp::tuple wrapped_hos_forward			(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_V);
+bp::tuple wrapped_hos_forward			(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
 bp::tuple wrapped_hov_forward			(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_V);
 bp::tuple wrapped_fos_reverse			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u);
 bp::tuple wrapped_fov_reverse			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_U);
@@ -108,8 +108,6 @@ adub	(*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 // adub (*frexp_adub) 		( const badouble&, int* ) = &frexp;
 // adub (*erf_adub) 		( const badouble& ) = &erf;
 
-
-
 /* WRAPPED OPERATORS */
 adub *adub_add_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator+(lhs,rhs));}
 adub *adub_sub_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator-(lhs,rhs));}
@@ -125,7 +123,6 @@ adub *adub_add_double_badouble(const badouble &rhs,double lhs){	return new adub(
 adub *adub_sub_double_badouble(const badouble &rhs,double lhs){	return new adub(operator-(lhs,rhs));}
 adub *adub_mul_double_badouble(const badouble &rhs,double lhs){	return new adub(operator*(lhs,rhs));}
 adub *adub_div_double_badouble(const badouble &rhs,double lhs){	return new adub(operator/(lhs,rhs));}
-
 
 double depends_on(badouble &a){
 	double coval;
@@ -151,15 +148,24 @@ BOOST_PYTHON_MODULE(adolc)
 	def("trace_on",trace_on_default_argument);
 	def("trace_off",trace_off_default_argument);
 
-	def("tape_to_latex",py_tape_doc);
+	def("function", 		&wrapped_function);
+	def("gradient", 		&wrapped_gradient);
+	def("hessian",			&wrapped_hessian);
+	def("jacobian", 		&wrapped_jacobian);
+	def("vec_jac",			&wrapped_vec_jac);
+	def("jac_vec",			&wrapped_jac_vec);
+	def("hess_vec",			&wrapped_hess_vec);
+	def("lagra_hess_vec", 	&wrapped_lagra_hess_vec);
+	def("jac_solv",			&wrapped_jac_solv);
 
-	def("gradient", &wrapped_gradient);
-	def("function", &wrapped_function);
-	def("fos_forward", &wrapped_fos_forward);
-	def("jacobian", &wrapped_jacobian);
-	def("depends_on", &depends_on);
+	def("zos_forward",		&wrapped_zos_forward);
+	def("fos_forward",		&wrapped_fos_forward);
+	def("fov_forward",		&wrapped_fov_forward);
+	def("hos_forward",		&wrapped_hos_forward);
+	def("depends_on", 		&depends_on);
+	def("tape_to_latex",	py_tape_doc);
 
-	
+
 	class_<badouble>("badouble", init<const badouble &>())
 			.def(boost::python::self_ns::str(self))
 
