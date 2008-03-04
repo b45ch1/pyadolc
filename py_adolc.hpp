@@ -43,18 +43,35 @@ extern adub ldexp ( const badouble&, int );
 // extern adub frexp ( const badouble&, int* );
 // extern adub erf   ( const badouble& );
 
-
-
-
 /* THIN WRAPPER FOR OVERLOADED FUNCTIONS */
-void trace_on_default_argument(short tag){ trace_on(tag,0);}
+void trace_on_default_argument(short tape_tag){ trace_on(tape_tag,0);}
 void trace_off_default_argument(){ trace_off(0);}
-bpn::array wrapped_gradient(uint tape_tag, bpn::array &x);
-bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &x);
-bpn::array wrapped_jacobian(int tape_tag, bpn::array &bpn_x, int M);
 
-bp::dict wrapped_fos_forward(short tape_tag, int codimension, int keep, bpn::array &x0, bpn::array &direction);
-void py_tape_doc(short tape_tag, bpn::array &x, bpn::array &y );
+/* easy to use drivers */
+bpn::array wrapped_function			(short tape_tag, bpn::array &bpn_x);
+bpn::array wrapped_gradient			(short tape_tag, bpn::array &bpn_x);
+bpn::array wrapped_hessian			(short tape_tag, bpn::array &bpn_x);
+bpn::array wrapped_jacobian			(short tape_tag, bpn::array &bpn_x);
+bpn::array wrapped_vec_jac			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u, bool repeat);
+bpn::array wrapped_jac_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v);
+bpn::array wrapped_hess_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v);
+bpn::array wrapped_lagra_hess_vec	(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_u);
+bpn::array wrapped_jac_solv			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_b, bool sparse, bool mode);
+
+/* low level functions */
+bp::tuple wrapped_zos_forward			(short tape_tag, bpn::array &bpn_x, int keep);
+bp::tuple wrapped_fos_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v, int keep);
+bp::tuple wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V);
+bp::tuple wrapped_hos_forward			(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_V);
+bp::tuple wrapped_hov_forward			(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_V);
+bp::tuple wrapped_fos_reverse			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u);
+bp::tuple wrapped_fov_reverse			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_U);
+bp::tuple wrapped_hos_reverse			(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_u);
+bp::tuple wrapped_hov_reverse			(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_U);
+
+
+void py_tape_doc(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_y );
+bpn::array wrapped_tapestats(short tape_tag);
 
 
 /* of class badouble */
@@ -140,8 +157,6 @@ BOOST_PYTHON_MODULE(adolc)
 	def("function", &wrapped_function);
 	def("fos_forward", &wrapped_fos_forward);
 	def("jacobian", &wrapped_jacobian);
-
-
 	def("depends_on", &depends_on);
 
 	

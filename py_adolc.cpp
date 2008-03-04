@@ -23,7 +23,6 @@ void print_array(double *vec, int length, string msg=""){
 	printf("]\n");
 }
 
-
 bpn::array wrapped_gradient(uint tape_tag, bpn::array &bpn_x){
 	nu::check_rank(bpn_x,1);
 	vector<intp> shp(nu::shape(bpn_x));
@@ -34,10 +33,14 @@ bpn::array wrapped_gradient(uint tape_tag, bpn::array &bpn_x){
 	return nu::makeNum(g, N);
 }
 
-bpn::array wrapped_jacobian(int tape_tag, bpn::array &bpn_x, int M){
+bpn::array wrapped_jacobian(int tape_tag, bpn::array &bpn_x){
 	nu::check_rank(bpn_x,1);
+	int tape_stats[STAT_SIZE];
+	tapestats(tape_tag, tape_stats);
+	int N = tape_stats[NUM_INDEPENDENTS];
+	int M = tape_stats[NUM_DEPENDENTS];
 	vector<intp> shp(nu::shape(bpn_x));
-	int N = shp[0];
+	if( N != shp[0]) cout<<"shape missmatch between tape and input vector (function wrapped_jacobian)"<<endl;
 	double* x = (double*) nu::data(bpn_x);
 	double** J = myalloc2(M,N);
 	jacobian(tape_tag, M, N, x, J);
@@ -47,49 +50,43 @@ bpn::array wrapped_jacobian(int tape_tag, bpn::array &bpn_x, int M){
 	return nu::makeNum( J[0], J_shape);
 }
 
-
-
-
-
-bpn::array wrapped_function(int tape_tag, int codimension, bpn::array &x0){
-	if(!nu::iscontiguous(x0)){
+bpn::array wrapped_function(int tape_tag, bpn::array &bpn_x){
+	if(!nu::iscontiguous(bpn_x)){
 		printf("not a contiguous array!\n");
 	}
-	nu::check_rank(x0,1);
-	vector<intp> shp(nu::shape(x0));
-	int n = shp[0]; // lenght of x0
-
-// 	cout<<"vec of lenght "<<n<<endl;
-
-	/* SETUP VARIABLES */
-	double* dataPtr = (double*) nu::data(x0);
-	vector<double> y(codimension);
+	nu::check_rank(bpn_x,1);
+	int tape_stats[STAT_SIZE];
+	tapestats(tape_tag, tape_stats);
+	int N = tape_stats[NUM_INDEPENDENTS];
+	int M = tape_stats[NUM_DEPENDENTS];
+	double* x = (double*) nu::data(bpn_x);
+	vector<double> y(M);
 	
-	function(tape_tag, codimension, n, dataPtr, &y[0]);
-	return nu::makeNum( &y[0], codimension);
+	function(tape_tag, M, N, x, &y[0]);
+	return nu::makeNum( &y[0], M);
 }
 
-bp::dict wrapped_fos_forward(short tape_tag, int codimension, int keep, bpn::array &x0, bpn::array &direction){
-	nu::check_rank(x0,1);
-	nu::check_rank(direction,1);
+bp::tuple wrapped_fos_forward(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v, int keep){
+	nu::check_rank(bpn_x,1);
+	nu::check_rank(bpn_v,1);
+	int tape_stats[STAT_SIZE];
+	tapestats(tape_tag, tape_stats);
+	int N = tape_stats[NUM_INDEPENDENTS];
+	int M = tape_stats[NUM_DEPENDENTS];
 
-	vector<intp> shp(nu::shape(x0));
-	int n = shp[0]; // lenght of x0
+	double* x = (double*) nu::data(bpn_x);
+	double* v = (double*) nu::data(bpn_v);
+	vector<double> y(M);
+	vector<double> directional_derivative(M);
 
-	/* SETUP VARIABLES */
-	double* dataPtr_x0 = (double*) nu::data(x0);
-	double* dataPtr_direction = (double*) nu::data(direction);
-	vector<double> y(codimension);
-	vector<double> directional_derivative(codimension);
+	fos_forward(tape_tag, M, N, keep, x, v, &y[0], &directional_derivative[0]);
 
-	fos_forward(tape_tag, codimension, n, keep, dataPtr_x0, dataPtr_direction, &y[0], &directional_derivative[0]);
-
-	bpn::array ret_y 	=  nu::makeNum( &y[0], codimension);
-	bpn::array ret_directional_derivative 	=  nu::makeNum( &directional_derivative[0], codimension);
+	bpn::array ret_y 	=  nu::makeNum( &y[0], M);
+	bpn::array ret_directional_derivative 	=  nu::makeNum( &directional_derivative[0], M);
 	
-	bp::dict retvals;
-	retvals["y"] = ret_y;
-	retvals["directional_derivative"] = ret_directional_derivative;
+	bp::tuple retvals;
+	retvals[0] = ret_y;
+	retvals[1] = ret_directional_derivative;
 	return retvals;
 }
 
@@ -97,8 +94,6 @@ bp::dict wrapped_fos_forward(short tape_tag, int codimension, int keep, bpn::arr
 void py_tape_doc(short tape_tag, bpn::array &x, bpn::array &y ){
 	nu::check_rank(x,1);
 	nu::check_rank(y,1);
-
-
 
 	double* dataPtr_x = (double*) nu::data(x);
 	double* dataPtr_y = (double*) nu::data(y);
@@ -108,6 +103,13 @@ void py_tape_doc(short tape_tag, bpn::array &x, bpn::array &y ){
 	tape_doc(tape_tag, m , n, dataPtr_x, dataPtr_y);
 
 
+}
+
+/* from taping.h and taping.c */
+bpn::array wrapped_tapestats(short tape_tag) {
+	int tape_stats[STAT_SIZE];
+	tapestats(tape_tag, tape_stats);
+	return nu::makeNum( tape_stats, STAT_SIZE);
 }
 
 
