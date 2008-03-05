@@ -241,13 +241,12 @@ bp::tuple wrapped_hos_forward			(short tape_tag, int order, bpn::array &bpn_x, b
 }
 
 
-bp::tuple wrapped_hov_forward	(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_V){
+bp::tuple wrapped_hov_forward	(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V){
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
 	int M = tape_stats[NUM_DEPENDENTS];
 	int P = nu::shape(bpn_V)[1];
-	int D = nu::shape(bpn_V)[2];
 
 	double* x = (double*) nu::data(bpn_x);
 	double* V_data = (double*) nu::data(bpn_V);
@@ -261,16 +260,16 @@ bp::tuple wrapped_hov_forward	(short tape_tag, int order, bpn::array &bpn_x, bpn
 	}
 	
 	double y[M];
-	double*** Y = myalloc3(M,D, P);
+	double*** W = myalloc3(M,P,D);
 
-	hov_forward(tape_tag, M, N, D, P, x, V, y, Y);
-	vector<intp> Y_shp(3); Y_shp[0] = M; Y_shp[1]=D; Y_shp[2] = P;
+	hov_forward(tape_tag, M, N, D, P, x, V, y, W);
+	vector<intp> W_shp(3); W_shp[0] = M; W_shp[1]=P; W_shp[2] = D;
 	bpn::array ret_y 	=  nu::makeNum( y, M);
-	bpn::array ret_Y 	=  nu::makeNum( Y[0][0], Y_shp);
+	bpn::array ret_W 	=  nu::makeNum( W[0][0], W_shp);
 
 	bp::list retvals;
 	retvals.append(ret_y);
-	retvals.append(ret_Y);
+	retvals.append(ret_W);
 	return bp::tuple(retvals);
 }
 

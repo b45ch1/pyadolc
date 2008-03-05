@@ -149,11 +149,11 @@ print 'fmin (0.3,a)','/* not implemented */'
 # TESTING THE EVALUATION OF DERIVATIVES
 ####################################################
 
-N = 2 # dimension
-M = 3 # codimension
-P = N # number of directional derivatives
-Q = M # number of adjoint derivatives
-D = 3 # order of derivatives
+N = 6 # dimension
+M = 5 # codimension
+P = 4 # number of directional derivatives
+Q = 3 # number of adjoint derivatives
+D = 2 # order of derivatives
 
 A = npy.zeros((M,N))
 A[:] = [[ 1./N +(n==m) for n in range(N)] for m in range(M)]
@@ -161,10 +161,10 @@ x = npy.array([1./(i+1) for i in range(N)])
 y = npy.zeros(M)
 u = npy.zeros(M); u[0] = 1.
 v = npy.zeros(N); v[0] = 1.
-Vnp = npy.array([[n==p for n in range(N)]for p in range(P)], dtype=float)
-Vnd = npy.array([[n==d for n in range(N)]for d in range(D)], dtype=float)
-Vnpd = npy.array([[[ n==p and d == 0 for n in range(N)] for p in range(P)] for d in range(D)], dtype = float)
-Uqm = npy.array([[q==n for q in range(Q)]for m in range(M)], dtype=float)
+Vnp = npy.array([[n==p for  p in range(P)]for n in range(N)], dtype=float)
+Vnd = npy.array([[n==d and d==0 for d in range(D)]for n in range(N)], dtype=float)
+Vnpd = npy.array([[[ n==p and d == 0 for d in range(D)] for p in range(P)] for n in range(N)], dtype = float)
+Uqm = npy.array([[q==n for m in range(M)]for q in range(Q)], dtype=float)
 
 b = npy.zeros(N,dtype=float)
 ax = npy.array([adouble(0.) for i in range(N)])
@@ -213,18 +213,21 @@ print 'lagra_hess_vec evaluation correct?\t', near_equal_with_num_error_increase
 	#pass
 
 # low level functions
-print zos_forward(1,x,0)
-print fos_forward(1,x,v,0)
-print fov_forward(1,x,Vnp)
-print hov_forward(1,D,x,Vnpd)
+print 'zos_forward correct?\t\t\t', near_equal_with_num_error_increase(zos_forward(1,x,0), vector_f(x))
+print 'fos_forward correct?\t\t\t', near_equal_with_num_error_increase(fos_forward(1,x,v,0)[1], A[:,0])
+print 'fov_forward correct?\t\t\t', near_equal_with_num_error_increase(fov_forward(1,x,Vnp)[1], A[:,:P])
+print 'hov_forward correct?\t\t\t', near_equal_with_num_error_increase(hov_forward(1,D,x,Vnpd)[1][:,:,-1], npy.zeros((M,P)))
+uA = npy.dot(u,A)
+print 'fos_reverse correct?\t\t\t', near_equal_with_num_error_increase(fos_reverse(1,u), uA)
+UqmA = npy.dot(Uqm,A)
+print 'fov_reverse correct?\t\t\t', near_equal_with_num_error_increase(fov_reverse(1,Uqm), UqmA)
+print 'hos_forward correct?\t\t\t', near_equal_with_num_error_increase(hos_forward(1,D,x, Vnd,D+1)[1][:,-1], npy.zeros(M))
+print 'hos_reverse correct?\t\t\t', near_equal_with_num_error_increase(hos_reverse(1,D,u)[:,-1], npy.zeros(N))
+print 'hov_reverse correct?\t\t\t', near_equal_with_num_error_increase(hov_reverse(1,D,Uqm)[0][:,:,-1], npy.zeros((Q,N)))
 
-print fos_reverse(1,u)
-print fov_reverse(1,Uqm)
 
-print hos_forward(1,D,x,Vnd,D+1)
-print hos_reverse(1,D,u)
-print hov_reverse(1,D,Uqm)
 
+# c style functions
 y = npy.zeros(1, dtype=float)
 g = npy.zeros(N, dtype=float)
 H = npy.zeros((N,N), dtype=float)
@@ -234,6 +237,10 @@ function(0,1,N,x,y)
 gradient(0,N,x,g)
 hessian(0,N,x,H)
 hess_vec(0, N, x,v, z)
+
+
+
+print 'number of failed tests =',number_of_errors
 
 
 
