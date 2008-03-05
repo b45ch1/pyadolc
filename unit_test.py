@@ -1,14 +1,19 @@
 #!/usr/bin/env python
 import numpy as npy
+import numpy.linalg as lin
 from adolc import *
 
 number_of_errors = 0
 def near_equal(lhs,rhs):
-	return ( abs((lhs-rhs)/rhs) < 10**(-10))
+	nominator = lin.norm((lhs-rhs))
+	denominator = max(lin.norm(lhs), lin.norm(rhs))
+	if  denominator < 10**(-10) and nominator <= denominator:
+		return True
+	return ( nominator/denominator < 10**(-10))
 
 def near_equal_with_num_error_increase(lhs,rhs):
 	global number_of_errors
-	test_passed = near_equal( lhs.val, rhs)
+	test_passed = near_equal( lhs, rhs)
 	if test_passed is False:
 		number_of_errors=number_of_errors+1
 	return test_passed
@@ -72,18 +77,18 @@ test_expression('a / b: ',	lambda x: x[0]/x[1], (a,b),		(a.val,b.val))
 # operator +=,-=,*=,/= for badouble
 c = adouble(a)
 d = c.val
-c+=b; d+=b.val; print 'c+=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
-c-=b; d-=b.val; print 'c-=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
-c*=b; d*=b.val; print 'c*=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
-c/=b; d/=b.val; print 'c/=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+c+=b; d+=b.val; print 'c+=b  \t ',c,'==',d,near_equal_with_num_error_increase(c.val,d)
+c-=b; d-=b.val; print 'c-=b  \t ',c,'==',d,near_equal_with_num_error_increase(c.val,d)
+c*=b; d*=b.val; print 'c*=b  \t ',c,'==',d,near_equal_with_num_error_increase(c.val,d)
+c/=b; d/=b.val; print 'c/=b  \t ',c,'==',d,near_equal_with_num_error_increase(c.val,d)
 
 # operator +=,-=,*=,/= for badouble
 c = adouble(a)
 d = c.val
-c+=b.val; d+=b.val; print 'c+=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
-c-=b.val; d-=b.val; print 'c-=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
-c*=b.val; d*=b.val; print 'c*=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
-c/=b.val; d/=b.val; print 'c/=b  \t ',c,'==',d,near_equal_with_num_error_increase(c,d)
+c+=b.val; d+=b.val; print 'c+=b  \t ',c,'==',d,near_equal_with_num_error_increase(c.val,d)
+c-=b.val; d-=b.val; print 'c-=b  \t ',c,'==',d,near_equal_with_num_error_increase(c.val,d)
+c*=b.val; d*=b.val; print 'c*=b  \t ',c,'==',d,near_equal_with_num_error_increase(c.val,d)
+c/=b.val; d/=b.val; print 'c/=b  \t ',c,'==',d,near_equal_with_num_error_increase(c.val,d)
 
 # operator **
 test_expression('a**2: ',	lambda x: x**2, a,		a.val)
@@ -133,18 +138,33 @@ print 'fmin (a,b)',			    a.fmin (b)
 print 'fmin (a,0.3)',			a.fmin (0.3)
 print 'fmin (0.3,a)','/* not implemented */'
 
-N = 2
-M = 3
-P = N
-D = 3
+
+
+
+
+
+
+
+####################################################
+# TESTING THE EVALUATION OF DERIVATIVES
+####################################################
+
+N = 2 # dimension
+M = 3 # codimension
+P = N # number of directional derivatives
+Q = M # number of adjoint derivatives
+D = 3 # order of derivatives
+
 A = npy.zeros((M,N))
 A[:] = [[ 1./N +(n==m) for n in range(N)] for m in range(M)]
 x = npy.array([1./(i+1) for i in range(N)])
 y = npy.zeros(M)
 u = npy.zeros(M); u[0] = 1.
 v = npy.zeros(N); v[0] = 1.
-V = npy.array([[m==p for m in range(M)]for p in range(P)], dtype=float)
-W = npy.array([[m==d for m in range(M)]for d in range(D)], dtype=float)
+Vnp = npy.array([[n==p for n in range(N)]for p in range(P)], dtype=float)
+Vnd = npy.array([[n==d for n in range(N)]for d in range(D)], dtype=float)
+Vnpd = npy.array([[[ n==p and d == 0 for n in range(N)] for p in range(P)] for d in range(D)], dtype = float)
+Uqm = npy.array([[q==n for q in range(Q)]for m in range(M)], dtype=float)
 
 b = npy.zeros(N,dtype=float)
 ax = npy.array([adouble(0.) for i in range(N)])
@@ -173,24 +193,47 @@ for m in range(M):
 trace_off()
 
 # basic drivers
-print function(0,x)
-print gradient(0,x)
-print hessian(0,x)
-print hess_vec(0,x,v)
+print 'Function evaluation correct?\t\t',near_equal_with_num_error_increase(function(0,x), scalar_f(x))
+y = 2*x #gradient of scalar_f
+print 'Gradient evaluation correct?\t\t',near_equal_with_num_error_increase(gradient(0,x), y)
+H = 2*npy.eye(N) #hessian of scalar_f
+print 'Hessian evaluation correct?\t\t', near_equal_with_num_error_increase(hessian(0,x), H)
+Hv = npy.dot(H,v)
+print 'Hess_vec evaluation correct?\t\t', near_equal_with_num_error_increase(hess_vec(0,x,v), Hv)
+print 'Jacobian evaluation correct?\t\t', near_equal_with_num_error_increase(jacobian(1,x), A )
+uJ = npy.dot(u,A)
+print 'vec_jac evaluation correct?\t\t', near_equal_with_num_error_increase(vec_jac(1,x,u, 0), uJ )
+Jv = npy.dot(A,v)
+print 'vec_jac evaluation correct?\t\t', near_equal_with_num_error_increase(jac_vec(1,x,v), Jv )
+print 'lagra_hess_vec evaluation correct?\t', near_equal_with_num_error_increase(lagra_hess_vec(1,x,v,u), npy.zeros(N,dtype=float) )
 
-print jacobian(1,x)
-print vec_jac(1,x,u, 0)
-print jac_vec(1,x,v)
-print lagra_hess_vec(1,x,v,u)
-#jac_solv(1,x,b, 0, 2); print b
+#try:
+	#jac_solv(1,x,b, 0, 2); print b
+#except:
+	#pass
 
 # low level functions
 print zos_forward(1,x,0)
 print fos_forward(1,x,v,0)
-print fov_forward(1,x,V)
-print hos_forward(1,D,x,W,0)
+print fov_forward(1,x,Vnp)
+print hov_forward(1,D,x,Vnpd)
 
+print fos_reverse(1,u)
+print fov_reverse(1,Uqm)
 
+print hos_forward(1,D,x,Vnd,D+1)
+print hos_reverse(1,D,u)
+print hov_reverse(1,D,Uqm)
+
+y = npy.zeros(1, dtype=float)
+g = npy.zeros(N, dtype=float)
+H = npy.zeros((N,N), dtype=float)
+z = npy.zeros(N, dtype=float)
+
+function(0,1,N,x,y)
+gradient(0,N,x,g)
+hessian(0,N,x,H)
+hess_vec(0, N, x,v, z)
 
 
 
