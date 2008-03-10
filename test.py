@@ -2,7 +2,7 @@
 from adolc import *
 import numpy as npy
 
-N = 10000000
+N = 100000000
 #x = npy.array([1./(i+1) for i in range(N)])
 #ax = npy.array([adouble(0.) for i in range(N)])
 #print 'trace_on'
@@ -22,8 +22,9 @@ N = 10000000
 ##tape_to_latex(10,x,npy.array([y]))
 
 
+tmpay = adouble(0.)
 ax = adouble(0.)
-x = 1
+x = 1.
 
 
 trace_on(10)
@@ -31,5 +32,11 @@ ax.is_independent(x)
 ay = ax
 for i in range(N):
 	ay = ay * ay
+	if i%1000 == 0:
+		tmpay <<= ay
+		del(ay)
+		ay = tmpay
+		
 depends_on(ay)
 trace_off()
+tape_to_latex(10,npy.array([x]),npy.array([0]))
