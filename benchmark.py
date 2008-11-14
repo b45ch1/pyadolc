@@ -22,7 +22,7 @@ def run_test(f,N,M, message='', print_derivatives=False):
 	print 'Adolc\tfunction taping:\t........\telapsed time: %f'%runtime_taping
 
 	start_time = time.time()
-	y_adolc = function(1,M,x)
+	y_adolc = function(1,x)
 	runtime_adolc = time.time() - start_time
 	print 'Adolc\tfunction evaluation:\t%f\telapsed time: %f'%(y_adolc[0],runtime_adolc)
 	
@@ -38,7 +38,7 @@ def run_test(f,N,M, message='', print_derivatives=False):
 		print 'gradient evaluation:\t\t........\telapsed time: %f'%runtime_gradient
 
 	start_time = time.time()
-	J = jacobian(1,x,M)
+	J = jacobian(1,x)
 	runtime_jacobian = time.time() - start_time
 	print 'jacobian evaluation:\t\t........\telapsed time: %f'%runtime_jacobian
 
@@ -59,8 +59,8 @@ def run_test(f,N,M, message='', print_derivatives=False):
 	#return y_normal
 
 
-N = 200
-M = 200
+N = 500
+M = 500
 direction = npy.zeros(N)
 direction[0] = 1.
 
@@ -83,11 +83,11 @@ direction[0] = 1.
 	#return npy.sum(avec)
 #run_test(f,x,direction)
 
-print "N=%d   M=%d"%(N,M)
+#print "N=%d   M=%d"%(N,M)
 
-def f(avec):
-	return npy.array([npy.prod(avec)])
-run_test(f,N,1,'\n\nspeelpenning')
+#def f(avec):
+	#return npy.array([npy.prod(avec)])
+#run_test(f,N,1,'\n\nspeelpenning')
 
 
 A = npy.zeros((M,N))

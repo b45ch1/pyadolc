@@ -193,7 +193,7 @@ BOOST_PYTHON_MODULE(adolc)
 	def("vec_jac",			&wrapped_vec_jac,  "z=vec_jac(tape_tag,x,u):\nevaluate u^T F'(x), F:R^N -> R^M\n");
 	def("jac_vec",			&wrapped_jac_vec,  "z=jac_vec(tape_tag,x,v):\nevaluate  F\"(x)v, F:R^N -> R^M\n");
 	def("hess_vec",			&wrapped_hess_vec, "z=hess_vec(tape_tag,x,v):\nevaluate  f\"(x)v, f:R^N -> R\n");
-	def("lagra_hess_vec", 	&wrapped_lagra_hess_vec,  "z=lagra_hess_vec(tape_tag,x,u,v):\nevaluate  F\"(x)v, F:R^N -> R^M\n");
+	def("lagra_hess_vec", 	&wrapped_lagra_hess_vec,  "z=lagra_hess_vec(tape_tag,x,u,v):\nevaluate  u^T F\"(x)v, F:R^N -> R^M\n");
 	def("jac_solv",			&wrapped_jac_solv,  "(void*)lagra_hess_vec(tape_tag,x,b,sparse=0,mode=2):\nsolve F'(x) b_new - b = 0  , F:R^N -> R^M\n"); /* buggy ! */
 
 	def("zos_forward",		&wrapped_zos_forward, 	"zero order scalar forward:\n"\
@@ -212,13 +212,11 @@ BOOST_PYTHON_MODULE(adolc)
 													"keep = 2 prepares for hos_reverse or hov_reverse\n"\
 													"");
 	def("fov_forward",		&wrapped_fov_forward,	"first order vector forward:\n"\
-													"(y,W) = fov_forward(tape_tag, x, V, keep) \n"\
+													"(y,W) = fov_forward(tape_tag, x, V) \n"\
 													"F:R^N -> R^M\n"\
 													"x is N-vector, y is M-vector\n"\
 													"V is (N x P)-matrix. P directions \n"\
 													"W is (M x P)-matrix. P directiona derivatives \n"\
-													"keep = 1 prepares for fos_reverse or fov_reverse\n"\
-													"keep = 2 prepares for hos_reverse or hov_reverse\n"\
 													"");
 	def("hos_forward",		&wrapped_hos_forward,	"higher order scalar forward:\n"\
 													"(y,W) = hos_forward(tape_tag, D, x, V, keep) \n"\
@@ -240,39 +238,35 @@ BOOST_PYTHON_MODULE(adolc)
 													"");
              
 	def("fos_reverse",		&wrapped_fos_reverse,	"first order scalar reverse:\n"\
-													"z = fos_reverse(tape_tag, x, u) \n"\
+													"z = fos_reverse(tape_tag, u) \n"\
 													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
 													"u is M-vector, adjoint direction \n"\
 													"z is N-vector, adjoint directional derivative z= u F'(x) \n"\
 													"after calling zos_forward, fos_forward or hos_forward with keep = 1 \n"\
 													"");
      
 	def("fov_reverse",		&wrapped_fov_reverse,	"first order vector reverse:\n"\
-													"Z = fov_reverse(tape_tag, x, u) \n"\
+													"Z = fov_reverse(tape_tag, u) \n"\
 													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
 													"U is (QxM)-matrix, Q adjoint directions \n"\
 													"Z is (QxN)-matrix, adjoint directional derivative Z = U F'(x) \n"\
 													"after calling zos_forward, fos_forward or hos_forward with keep = 1 \n"\
 													"");
 													
 	def("hos_reverse",		&wrapped_hos_reverse,	"higher order scalar reverse:\n"\
-													"Z = hos_reverse(tape_tag, D, x, u) \n"\
+													"Z = hos_reverse(tape_tag, D, u) \n"\
 													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
 													"D is the order of the derivative\n"\
 													"u is M-vector, adjoint vector \n"\
-													"Z is (N x D+1)-matrix, adjoint directional derivative Z = [u^T F'(x), u^T F\" v[:,0], ...] \n"\
+													"Z is (N x D+1)-matrix, adjoint directional derivative Z = [u^T F'(x), u^T F\" v[:,0],U F\" v[:,1] + 0.5 u^T F^(3) v[:,0],...] \n"\
 													"after calling fos_forward or hos_forward with keep = D+1 \n"\
 													"");
-	def("hov_reverse", 		&wrapped_hov_reverse,	"higher order scalar reverse:\n"\
-													"(Z,nz) = hov_reverse(tape_tag, x, D, U)\n"\
+	def("hov_reverse", 		&wrapped_hov_reverse,	"higher order vector reverse:\n"\
+													"(Z,nz) = hov_reverse(tape_tag, D, U)\n"\
 													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
-													"D is the order of the derivative\n"\      
+													"D is the order of the derivative\n"\
 													"U is (Q x M)-matrix, Q adjoint directions \n"\
-													"Z is (Q x N x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0], ...] \n"\
+													"Z is (Q x N x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0],  U F\" v[:,1] + 0.5 U F^(3) v[:,0],... ] \n"\
 													"nz is (Q x N)-matrix, information about the sparsity of Z:\n"\
 													"0:trivial, 1:linear, 2:polynomial, 3:rational, 4:transcendental, 5:non-smooth\n"\
 													"after calling fos_forward or hos_forward with keep = D+1 \n"\

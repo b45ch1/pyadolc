@@ -28,14 +28,6 @@ env = Environment(
 	SHLIBPREFIX="", #gets rid of lib prefix
 )
 Default('.')
-env.SharedLibrary(target='adolc', source=['py_adolc.cpp', 'num_util.cpp'])
+adolc = env.SharedLibrary(target='adolc', source=['py_adolc.cpp', 'num_util.cpp'])
+env.Install("./release/adolc", adolc)
 
-LIBS = ['adolc']
-purecppenv = Environment(
-	CPPPATH= INCLUDEPATH,
-	CXXFLAGS="-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB -O2",
-	LIBPATH= LIBPATH,
-	LIBS= LIBS,
-	RPATH = LIBPATH #include information where shared libraries can be found to avoid errors like: "ImportError: libboost_python-gcc42-mt-1_34_1.so.1.34.1: cannot open shared object file: No such file or directory"
-)
-purecppenv.Program(target='benchmark', source=['benchmark.cpp'])

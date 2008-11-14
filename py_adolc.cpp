@@ -123,6 +123,9 @@ bpn::array wrapped_hess_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bp
 
 bpn::array wrapped_lagra_hess_vec	(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u, bpn::array &bpn_v){
 	nu::check_rank(bpn_x,1);
+	nu::check_rank(bpn_u,1);
+	nu::check_rank(bpn_v,1);
+	
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
