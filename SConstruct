@@ -1,18 +1,23 @@
 import distutils.sysconfig
+import os
 import numpy
+
+adolc_include_path = os.getcwd() + '/adolc-1.11.0-trunk/include'
+adolc_library_path = os.getcwd() + '/adolc-1.11.0-trunk/lib'
+
 
 LIBS		= ['adolc',
 				#'boost_python-gcc42-mt-1_34_1'
 				'boost_python-gcc42-1_34_1'
 			]
 LIBPATH		= [
-				'/u/walter/workspace/python_extension_for_adolc/adolc-1.11.0-trunk/lib',
+				adolc_library_path,
 				#'/u/walter/workspace/python_extension_for_adolc/adolc-1.10.2/lib',
 				#'/data/walter/opt_software/boost_1_34_1/bin.v2/libs/python/build/gcc-4.2.1/release/threading-multi'
 				'/data/walter/opt_software/boost_1_34_1/bin.v2/libs/python/build/gcc-4.2.1/release'
 		  ]
 INCLUDEPATH	= [
-			'/u/walter/workspace/python_extension_for_adolc/adolc-1.11.0-trunk/include',
+			adolc_include_path,
 			'/u/walter/opt_software/my_global_cpp_libaries',
 			#'/u/walter/workspace/python_extension_for_adolc/adolc-1.10.2/include/adolc',
 			'/data/walter/opt_software/boost_1_34_1',
