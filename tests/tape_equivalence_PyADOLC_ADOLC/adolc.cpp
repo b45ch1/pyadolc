@@ -7,7 +7,7 @@ using namespace std;
 
 
 int main(){
-	int N = 10000000;
+	int N = 20;
 	adouble ax,ay;
 	double *y = myalloc1(1);
 	double x;
@@ -23,6 +23,6 @@ int main(){
 	ay>>=*y;
 	trace_off();
 	
-// / 	tape_doc(11, 1 , N, x, y );	
+	tape_doc(11, 1 , 1, &x, y );
 	return 0;
 } 
