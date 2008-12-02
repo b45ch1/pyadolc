@@ -63,10 +63,13 @@ bp::tuple	wrapped_fos_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &
 bp::tuple 	wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V);
 bp::tuple	wrapped_hos_forward			(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
 bp::tuple	wrapped_hov_forward			(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V);
+bp::tuple	wrapped_hov_wk_forward		(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
 bpn::array wrapped_fos_reverse			(short tape_tag, bpn::array &bpn_u);
 bpn::array wrapped_fov_reverse			(short tape_tag, bpn::array &bpn_U);
 bpn::array wrapped_hos_reverse			(short tape_tag, int D, bpn::array &bpn_u);
 bp::tuple wrapped_hov_reverse			(short tape_tag, int D, bpn::array &bpn_U);
+bp::tuple wrapped_hov_ti_reverse		(short tape_tag, int D, bpn::array &bpn_U);
+
 
 /* C STYLE CALLS OF FUNCTIONS */
 void c_wrapped_function			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_y );
@@ -83,11 +86,15 @@ void c_wrapped_fos_forward		(short tape_tag, int M, int N, int keep, bpn::array 
 void c_wrapped_fov_forward		(short tape_tag, int M, int N, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W);
 void c_wrapped_hos_forward		(short tape_tag, int M, int N, int D, int keep, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W);
 void c_wrapped_hov_forward		(short tape_tag, int M, int N, int D, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W);
+void c_wrapped_hov_wk_forward	(short tape_tag, int M, int N, int D, int keep, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W);
+
 
 void c_wrapped_fos_reverse		(short tape_tag, int M, int N, bpn::array &bpn_u, bpn::array &bpn_z);
 void c_wrapped_fov_reverse		(short tape_tag, int M, int N, int Q, bpn::array &bpn_U, bpn::array &bpn_Z);
 void c_wrapped_hos_reverse		(short tape_tag, int M, int N, int D, bpn::array &bpn_u, bpn::array &bpn_Z);
 void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz);
+void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz);
+
 
 
 void py_tape_doc(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_y );
@@ -229,6 +236,15 @@ BOOST_PYTHON_MODULE(adolc)
 													"D+1 >= keep > 2 prepares for hos_reverse or hov_reverse\n"\
 													"");
 	def("hov_forward",		&wrapped_hov_forward,	"higher order vector forward:\n"\
+													"(y,W) = hov_forward(tape_tag, D, x, V) \n"\
+													"F:R^N -> R^M\n"\
+													"x is N-vector, y is M-vector\n"\
+													"D is the order of the derivative\n"\
+													"V is (N x P x D)-matrix, P directions \n"\
+													"W is (M x P x D)-matrix, P directional derivatives \n"\
+													"");
+
+	def("hov_wk_forward",	&wrapped_hov_wk_forward,"higher order vector forward with keep:\n"\
 													"(y,W) = hov_forward(tape_tag, D, x, V, keep) \n"\
 													"F:R^N -> R^M\n"\
 													"x is N-vector, y is M-vector\n"\
@@ -236,7 +252,7 @@ BOOST_PYTHON_MODULE(adolc)
 													"V is (N x P x D)-matrix, P directions \n"\
 													"W is (M x P x D)-matrix, P directional derivatives \n"\
 													"");
-             
+													
 	def("fos_reverse",		&wrapped_fos_reverse,	"first order scalar reverse:\n"\
 													"z = fos_reverse(tape_tag, u) \n"\
 													"F:R^N -> R^M\n"\
@@ -272,6 +288,18 @@ BOOST_PYTHON_MODULE(adolc)
 													"after calling fos_forward or hos_forward with keep = D+1 \n"\
 													"");
 
+	def("hov_ti_reverse", 	&wrapped_hov_ti_reverse,"higher order vector reverse:\n"\
+													"(Z,nz) = hov_reverse(tape_tag, D, U)\n"\
+													"F:R^N -> R^M\n"\
+													"D is the order of the derivative\n"\
+													"U is (Q x M x D)-matrix, Q adjoint directions \n"\
+													"Z is (Q x N x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0],  U F\" v[:,1] + 0.5 U F^(3) v[:,0],... ] \n"\
+													"nz is (Q x N)-matrix, information about the sparsity of Z:\n"\
+													"0:trivial, 1:linear, 2:polynomial, 3:rational, 4:transcendental, 5:non-smooth\n"\
+													"after calling fos_forward or hos_forward with keep = D+1 \n"\
+													"");
+													
+
 	/* c style functions */
 	def("function", 		&c_wrapped_function);
 	def("gradient", 		&c_wrapped_gradient);
@@ -288,6 +316,8 @@ BOOST_PYTHON_MODULE(adolc)
 	def("fov_forward",		&c_wrapped_fov_forward);
 	def("hos_forward",		&c_wrapped_hos_forward);
 	def("hov_forward",		&c_wrapped_hov_forward);
+// 	def("hov_wk_forward",	&c_wrapped_hov_wk_forward);
+
 
 	def("fos_reverse",		&c_wrapped_fos_reverse);
 	def("fov_reverse",		&c_wrapped_fov_reverse);

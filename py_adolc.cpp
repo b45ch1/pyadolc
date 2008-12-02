@@ -277,6 +277,43 @@ bp::tuple wrapped_hov_forward	(short tape_tag, int D, bpn::array &bpn_x, bpn::ar
 }
 
 
+bp::tuple	wrapped_hov_wk_forward		(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V, int keep){
+	if(!nu::iscontiguous(bpn_x)){
+		printf("not a contiguous array!\n");
+	}
+	nu::check_rank(bpn_x,3);
+	
+	int tape_stats[STAT_SIZE];
+	tapestats(tape_tag, tape_stats);
+	int N = tape_stats[NUM_INDEPENDENTS];
+	int M = tape_stats[NUM_DEPENDENTS];
+	int P = nu::shape(bpn_V)[1];
+
+	double* x = (double*) nu::data(bpn_x);
+	double* V_data = (double*) nu::data(bpn_V);
+	double** V[N];
+	double* V1[N*P];
+	for(int n = 0; n != N; ++n){
+		V[n] = &V1[ n * P];
+	}
+	for( int np = 0; np != N*P; ++np){
+		V1[np] = &V_data[np * D];
+	}
+	
+	double y[M];
+	double*** W = myalloc3(M,P,D);
+
+	hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W);
+	vector<intp> W_shp(3); W_shp[0] = M; W_shp[1]=P; W_shp[2] = D;
+	bpn::array ret_y 	=  nu::makeNum( y, M);
+	bpn::array ret_W 	=  nu::makeNum( W[0][0], W_shp);
+
+	bp::list retvals;
+	retvals.append(ret_y);
+	retvals.append(ret_W);
+	return bp::tuple(retvals);
+}
+
 bpn::array wrapped_fos_reverse	(short tape_tag, bpn::array &bpn_u){
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
@@ -359,6 +396,50 @@ bp::tuple wrapped_hov_reverse(short tape_tag, int D, bpn::array &bpn_U){
 	return bp::tuple(retvals);
 	
 }
+
+
+bp::tuple wrapped_hov_ti_reverse(short tape_tag, int D, bpn::array &bpn_U){
+	if(!nu::iscontiguous(bpn_U)){
+		printf("not a contiguous array!\n");
+	}
+	nu::check_rank(bpn_U,3);
+	int tape_stats[STAT_SIZE];
+	tapestats(tape_tag, tape_stats);
+	int N = tape_stats[NUM_INDEPENDENTS];
+	int M = tape_stats[NUM_DEPENDENTS];
+	int Q = nu::shape(bpn_U)[0];
+
+	double* U_data = (double*) nu::data(bpn_U);
+	double** U[Q];
+	for(int q = 0; q != Q; ++q){
+		U[q] = new double*[M];
+		for(int m = 0; m != M; ++m){
+			U[q][m] = &U_data[q*M*D + m*D];
+		}
+	}
+	
+	double*** Z = myalloc3(Q,N,D+1);
+	short nz_data[Q*N];
+	short* nz[Q];
+	for(int q = 0; q != Q; ++q){
+		nz[q] = &nz_data[q*N];
+	}
+	
+	hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz);
+	
+	vector<intp> Z_shp(3); Z_shp[0] = Q; Z_shp[1] = N;  Z_shp[2]=D+1;
+	vector<intp> nz_shp(2); nz_shp[0] = Q; nz_shp[1]=N;
+
+
+	bpn::array ret_Z = nu::makeNum( Z[0][0], Z_shp);
+	bpn::array ret_nz = nu::makeNum( nz[0], nz_shp);
+	bp::list retvals;
+	retvals.append(ret_Z);
+	retvals.append(ret_nz);
+	return bp::tuple(retvals);
+	
+}
+
 
 
 /* C STYLE CALLS OF FUNCTIONS */
