@@ -1,0 +1,16 @@
+This test shows that PyADOLC usually creates different tapes than ADOLC.
+The reason for that is due to Python's garbage collector that is only called once in a while.
+Only then the destructors of temporary variables are called and ADOLC (potentially) reuses free locints.
+
+Python allows to call the garbage collector manually with the function del().
+In pyadolc.py two tapings are performed: one without calling the garbage collector (tape_9.tex) and one with manual garbage collecting (tape_10.tex).
+
+Step by Step:
+1) compile adolc.exe with scons
+2) run ./adolc.exe ---> output tape_11.tex
+3) run python pyadolc.py ---> ouput tape_9.tex and tape_10.tex
+4) compare tape_9.tex tape_10.tex and tape_11.tex
+
+
+
+

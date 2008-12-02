@@ -1,0 +1,16 @@
+N=100 M=100
+
+
+speelpenning:
+Adolc	function taping:	........	elapsed time: 0.000058
+Adolc	function evaluation:	0.000000	elapsed time: 0.000013
+normal	function evaluation:	0.000000	elapsed time: 0.000001
+jacobian evaluation:		........	elapsed time: 0.000035
+gradient evaluation:		........	elapsed time: 0.000028
+
+
+matrix vector multiplication:
+Adolc	function taping:	........	elapsed time: 0.001564
+Adolc	function evaluation:	1.051874	elapsed time: 0.000209
+normal	function evaluation:	1.051874	elapsed time: 0.000199
+jacobian evaluation:		........	elapsed time: 0.009419

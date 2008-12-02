@@ -1,0 +1,17 @@
+
+
+speelpenning:
+
+PyADOLC	function taping:	........	elapsed time: 0.000535
+Adolc	function evaluation:	0.000000	elapsed time: 0.000031
+normal	function evaluation:	0.000000	elapsed time: 0.000026
+gradient evaluation:		........	elapsed time: 0.000035
+jacobian evaluation:		........	elapsed time: 0.000037
+
+
+matrix vector multiplication:
+
+PyADOLC	function taping:	........	elapsed time: 0.036444
+Adolc	function evaluation:	1.051874	elapsed time: 0.000294
+normal	function evaluation:	1.051874	elapsed time: 0.000034
+jacobian evaluation:		........	elapsed time: 0.015260
