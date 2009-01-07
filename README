@@ -1,0 +1,41 @@
+This is PYADOLC, a Python module to differentiate complex algorithms written in Python.
+
+EXAMPLE:
+# draft: needs careful checking!!!
+import numpy
+from adolc import *
+
+def f(x):
+    return numpy.sum(x)
+
+ax = array([adouble(i) for i in range(10)])
+
+trace_on(1)
+independent(ax)
+ay = f(ax)
+depends_on(ay)
+
+etc...
+
+
+
+
+LICENCE:
+TBA
+
+REQUIREMENTS:
+you need to install:
+scons from http://www.scons.org/
+boost from http://www.boost.org/
+
+
+INSTALLATION:
+1) copy this folder to a place where it is going to stay. This is imporant since the path to the  shared library adolc.so of adolc  is "saved" in the adolc.so file for python as absolute path.
+
+2) go to adolc-1.11.0-trunk and compile the code with: configure make
+do NOT "make install"
+
+3) modify the SConstruct file such that the boost include files and libraries can be found
+
+4) run scons on a command shell
+
