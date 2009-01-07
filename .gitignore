@@ -1,0 +1,26 @@
+.*
+*.*~
+*.py~
+*.pyc
+*.txt
+trash/*
+adolc-1.11.0-trunk/
+adolc-1.11.0-trunk/*
+adolc-2.0.0
+release
+release/*
+report/*
+*.png
+*.svg
+*.dot
+*.o
+*.os
+*.so
+*.eps
+*~
+*.tex
+Doxyfile
+
+# EXCEPTIONS
+!README
+!.gitignore
