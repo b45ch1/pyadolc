@@ -2,9 +2,12 @@ import distutils.sysconfig
 import os
 import numpy
 
-adolc_include_path = os.getcwd() + '/adolc-1.11.0-trunk/include'
-adolc_library_path = os.getcwd() + '/adolc-1.11.0-trunk/lib'
+#adolc_include_path = os.getcwd() + '/adolc-1.11.0-trunk/include'
+#adolc_library_path = os.getcwd() + '/adolc-1.11.0-trunk/lib'
 
+
+adolc_include_path = os.getcwd() + '/adolc-2.0.0/include'
+adolc_library_path = os.getcwd() + '/adolc-2.0.0/lib'
 
 LIBS		= ['adolc',
 				#'boost_python-gcc42-mt-1_34_1'

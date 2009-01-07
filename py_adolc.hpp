@@ -57,7 +57,7 @@ bpn::array	wrapped_vec_jac				(short tape_tag, bpn::array &bpn_x, bpn::array &bp
 bpn::array	wrapped_jac_vec				(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v);
 bpn::array	wrapped_hess_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v);
 bpn::array	wrapped_lagra_hess_vec		(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u, bpn::array &bpn_v);
-void		wrapped_jac_solv			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode);
+// void		wrapped_jac_solv			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode);
 bpn::array	wrapped_zos_forward			(short tape_tag, bpn::array &bpn_x, int keep);
 bp::tuple	wrapped_fos_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v, int keep);
 bp::tuple 	wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V);
@@ -80,7 +80,7 @@ void c_wrapped_vec_jac			(short tape_tag, int M, int N, bool repeat, bpn::array 
 void c_wrapped_jac_vec			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_z);
 void c_wrapped_hess_vec			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_z);
 void c_wrapped_lagra_hess_vec	(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_u,bpn::array &bpn_h);
-void c_wrapped_jac_solv			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode);
+// void c_wrapped_jac_solv			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode);
 void c_wrapped_zos_forward		(short tape_tag, int M, int N, int keep, bpn::array &bpn_x, bpn::array &bpn_y);
 void c_wrapped_fos_forward		(short tape_tag, int M, int N, int keep, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_y, bpn::array &bpn_w);
 void c_wrapped_fov_forward		(short tape_tag, int M, int N, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W);
@@ -201,7 +201,7 @@ BOOST_PYTHON_MODULE(adolc)
 	def("jac_vec",			&wrapped_jac_vec,  "z=jac_vec(tape_tag,x,v):\nevaluate  F\"(x)v, F:R^N -> R^M\n");
 	def("hess_vec",			&wrapped_hess_vec, "z=hess_vec(tape_tag,x,v):\nevaluate  f\"(x)v, f:R^N -> R\n");
 	def("lagra_hess_vec", 	&wrapped_lagra_hess_vec,  "z=lagra_hess_vec(tape_tag,x,u,v):\nevaluate  u^T F\"(x)v, F:R^N -> R^M\n");
-	def("jac_solv",			&wrapped_jac_solv,  "(void*)lagra_hess_vec(tape_tag,x,b,sparse=0,mode=2):\nsolve F'(x) b_new - b = 0  , F:R^N -> R^M\n"); /* buggy ! */
+// 	def("jac_solv",			&wrapped_jac_solv,  "(void*)lagra_hess_vec(tape_tag,x,b,sparse=0,mode=2):\nsolve F'(x) b_new - b = 0  , F:R^N -> R^M\n"); /* buggy ! */
 
 	def("zos_forward",		&wrapped_zos_forward, 	"zero order scalar forward:\n"\
 													"y = zos_forward(tape_tag, x, keep)\n" \
@@ -309,7 +309,7 @@ BOOST_PYTHON_MODULE(adolc)
 	def("jac_vec",			&c_wrapped_jac_vec);
 	def("hess_vec",			&c_wrapped_hess_vec);
 	def("lagra_hess_vec", 	&c_wrapped_lagra_hess_vec);
-	def("jac_solv",			&c_wrapped_jac_solv); /* buggy ! */
+// 	def("jac_solv",			&c_wrapped_jac_solv); /* buggy ! */
 
 	def("zos_forward",		&c_wrapped_zos_forward);
 	def("fos_forward",		&c_wrapped_fos_forward);
@@ -416,8 +416,8 @@ BOOST_PYTHON_MODULE(adolc)
 			.def(init<const adub&>())
 	;
 	
-	class_<asub, bases<badouble> >("asub",init<locint,locint>())
-	;
+// 	class_<asub, bases<badouble> >("asub",init<locint,locint>())
+// 	;
 
 }
 

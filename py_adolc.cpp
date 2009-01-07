@@ -138,16 +138,16 @@ bpn::array wrapped_lagra_hess_vec	(short tape_tag, bpn::array &bpn_x, bpn::array
 	return nu::makeNum( z, N);
 }
 
-void wrapped_jac_solv(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode){
-	nu::check_rank(bpn_x,1);
-	int tape_stats[STAT_SIZE];
-	tapestats(tape_tag, tape_stats);
-	int N = tape_stats[NUM_INDEPENDENTS];
-	double* x = (double*) nu::data(bpn_x);
-	double* b = (double*) nu::data(bpn_b);
-
-	jac_solv(tape_tag, N, x, b, sparse, mode);
-}
+// void wrapped_jac_solv(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode){
+// 	nu::check_rank(bpn_x,1);
+// 	int tape_stats[STAT_SIZE];
+// 	tapestats(tape_tag, tape_stats);
+// 	int N = tape_stats[NUM_INDEPENDENTS];
+// 	double* x = (double*) nu::data(bpn_x);
+// 	double* b = (double*) nu::data(bpn_b);
+// 
+// 	jac_solv(tape_tag, N, x, b, sparse, mode);
+// }
 
 bpn::array wrapped_zos_forward (short tape_tag, bpn::array &bpn_x, int keep){
 	int tape_stats[STAT_SIZE];
@@ -498,11 +498,11 @@ void c_wrapped_lagra_hess_vec	(short tape_tag, int M, int N, bpn::array &bpn_x, 
 	double* h = (double*) nu::data(bpn_h);
 	lagra_hess_vec(tape_tag, M, N, x, v, u, h);
 }
-void c_wrapped_jac_solv			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode){
-	double* x = (double*) nu::data(bpn_x);
-	double* b = (double*) nu::data(bpn_b);
-	jac_solv(tape_tag, N, x, b, sparse, mode);
-}
+// void c_wrapped_jac_solv			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode){
+// 	double* x = (double*) nu::data(bpn_x);
+// 	double* b = (double*) nu::data(bpn_b);
+// 	jac_solv(tape_tag, N, x, b, sparse, mode);
+// }
 
 /* low level functions */
 void c_wrapped_zos_forward		(short tape_tag, int M, int N, int keep, bpn::array &bpn_x, bpn::array &bpn_y){
