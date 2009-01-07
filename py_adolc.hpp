@@ -136,6 +136,10 @@ adub	(*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 // adub (*erf_adub) 		( const badouble& ) = &erf;
 
 /* WRAPPED OPERATORS */
+/* unary */
+adub *adub_neg_badouble(const badouble &rhs){ return new adub(operator*(-1.,rhs));}
+
+/* binary */
 adub *adub_add_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator+(lhs,rhs));}
 adub *adub_sub_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator-(lhs,rhs));}
 adub *adub_mul_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator*(lhs,rhs));}
@@ -345,8 +349,7 @@ BOOST_PYTHON_MODULE(adolc)
 
 			.def("__irshift__", &badouble::operator>>=, return_internal_reference<>())
 
-			.def(-self)
-			.def(+self)
+
 			.def(self += double() )
 			.def(self -= double() )
 			.def(self *= double() )
@@ -356,6 +359,11 @@ BOOST_PYTHON_MODULE(adolc)
 			.def(self -= self )
 			.def(self *= self )
 			.def(self /= self )
+
+// 			.def(-self)  using this unary operator somehow screws up LATER computations, i.e. the operator works correctly, but subsequent calculations screw up!!
+// 			.def(+self)
+
+			.def("__neg__", adub_neg_badouble, return_value_policy<manage_new_object>())		
 
 			.def("__add__", adub_add_badouble_badouble, return_value_policy<manage_new_object>())
 			.def("__sub__", adub_sub_badouble_badouble, return_value_policy<manage_new_object>())
