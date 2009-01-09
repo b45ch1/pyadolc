@@ -1,0 +1,20 @@
+##############################################################################
+## README -- additional information
+## Revision: $Id: README 270 2008-12-15 13:04:25Z awalther $
+##
+## Copyright (C) 2008
+##               Technical University Dresden
+##               Department of Mathematics
+##               Institute of Scientific Computing
+##
+## This file is part of ADOL-C. This software is provided as open source.
+## Any use, reproduction, or distribution of the software constitutes 
+## recipient's acceptance of the terms of the accompanying license file.
+## 
+##############################################################################
+
+CONTENTS OF THE DIRECTORY
+
+  powexam        --> calculate x^e, both given as user input
+
+                     powexam.cpp

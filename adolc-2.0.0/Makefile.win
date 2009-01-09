@@ -1,0 +1,15 @@
+
+library:
+	@if exist adolc\error_out del adolc\error_out
+	@make -f Makefile.win -C adolc adolc.dll
+ifeq ($(EXA),1)
+	@if exist examples\error_out del examples\error_out
+	@make -f Makefile.win -C examples docexa
+endif
+
+clean:
+	@if exist *~ del *~
+	@make -f Makefile.win -C adolc clean
+	@make -f Makefile.win -C examples clean
+	@echo "Cleaned up!"
+

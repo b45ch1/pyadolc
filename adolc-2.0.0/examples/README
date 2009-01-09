@@ -1,0 +1,37 @@
+##############################################################################
+## README -- additional information
+## Revision: $Id: README 277 2008-12-19 08:02:52Z awalther $
+##
+## Copyright (C) 2008
+##               Technical University Dresden
+##               Department of Mathematics
+##               Institute of Scientific Computing
+##
+## This file is part of ADOL-C. This software is provided as open source.
+## Any use, reproduction, or distribution of the software constitutes 
+## recipient's acceptance of the terms of the accompanying license file.
+## 
+##############################################################################
+
+--------------------------------------------------------------
+
+The directory contains the examples described in the manual
+
+The subdirectory additional_examples contains further example
+code for numerous drivers and applications of ADOL-C
+
+--------------------------------------------------------------
+
+CONTENTS OF THE DIRECTORY
+
+  detexam.cpp         ---> Computation of determinants    
+  speelpenning.cpp    ---> Speelpenning's product
+  powexam.cpp         ---> Computation of n-th power
+  odexam.cpp          ---> Nonlinear ordinary differential 
+                           equation based on the Robertson test 
+                           problem
+  gaussexam.cpp       ---> Gaussian Elimination
+  tapeless_scalar.cpp ---> coordinate transform with tapeless
+                           scalar forward mode
+  tapeless_vector.cpp ---> coordinate with tapeless
+                           vector forward mode

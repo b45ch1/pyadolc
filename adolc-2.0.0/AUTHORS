@@ -1,0 +1,22 @@
+authors currently working on ADOL-C:
+====================================
+
+Andrea Walther
+   Institute of Scientific Computing
+   Technical University Dresden
+   D-01062, Germany
+
+Andreas Griewank
+   Department of Mathematics
+   Humboldt University Berlin
+   D-10099, Germany
+ 
+   
+Parts of the ADOL-C source were developed by Andreas Kowarz, 
+Hristo Mitev, Sebastian Schlenkrich, and Olaf Vogel. 
+
+We are also indebted to George Corliss, Tom Epperly, Bruce Christianson, 
+David Gay,  David Juedes, Brad Karp, Koichi Kubota, Bob Olson,  
+Marcela Rosemblun, Dima Shiriaev, Jay Srinivasan, Chuck Tyner, Jean Utke, 
+and Duane Yoder for helping in various ways with the development and 
+documentation of ADOL-C. 
