@@ -255,7 +255,7 @@ public:
 
 class ADOLC_DLL_EXPORT adub:public badouble {
     friend ADOLC_DLL_EXPORT class adouble;
-protected:
+public:
     adub( locint lo ):badouble(lo) {};
     adub( void ):badouble(0) {
         fprintf(DIAG_OUT,"ADOL-C error: illegal default construction of adub"

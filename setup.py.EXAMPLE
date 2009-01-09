@@ -13,9 +13,9 @@ from numpy.distutils.core import setup
 from numpy.distutils.core import Command
 
 # ADAPT THIS TO FIT YOUR SYSTEM
-include_dirs = [get_numpy_include_dirs(),'./adolc-2.0.0/include']
+include_dirs = [get_numpy_include_dirs(),'./adolc-2.0.0']
 extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
-library_dirs = ['/data/walter/opt_software/boost_1_34_1/bin.v2/libs/python/build/gcc-4.2.1/release','./adolc-2.0.0/lib']
+library_dirs = ['/data/walter/opt_software/boost_1_34_1/bin.v2/libs/python/build/gcc-4.2.1/release','./adolc-2.0.0/adolc/.libs']
 libraries = ['boost_python-gcc42-1_34_1','adolc']
 
 
