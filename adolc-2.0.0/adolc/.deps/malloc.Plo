@@ -1,5 +1,0 @@
-malloc.lo malloc.o: malloc.c ../adolc/malloc.h ../adolc/config.h
-
-../adolc/malloc.h:
-
-../adolc/config.h:
