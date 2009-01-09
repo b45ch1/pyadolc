@@ -281,7 +281,8 @@ bp::tuple	wrapped_hov_wk_forward		(short tape_tag, int D, bpn::array &bpn_x, bpn
 	if(!nu::iscontiguous(bpn_x)){
 		printf("not a contiguous array!\n");
 	}
-	nu::check_rank(bpn_x,3);
+	nu::check_rank(bpn_x,1);
+	nu::check_rank(bpn_V,3);
 	
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);

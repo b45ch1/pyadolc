@@ -106,24 +106,32 @@ def test_dependent():
 	assert numpy.prod( ax == bx )
 	
 	
-#def test_hov_wk_forward():
-	#def f(x):
-		#return numpy.sum(x)
+def test_hov_wk_forward():
+	def f(x):
+		return numpy.sum(x)
 	
-	#N = 10
+	N = 10
+	P = N
+	D = 2
+	keep = N+1
 	
-	#x = numpy.ones(N)
-	#ax = numpy.array([adouble(1.) for n in range(N)])
+	x  = numpy.ones(N)
+	ax = numpy.array([adouble(1.) for n in range(N)])
 	
-	
-	#trace_on(0)
-    #map(adouble.is_independent,ax,x)
-    #ay = f(ax)
-    #y = array(map(depends_on,ay))
-    #trace_off()
+	trace_on(17)
+	independent(ax)
+	ay = f(ax)
+	dependent(ay)
+	trace_off()
 
+	# directions V
+	V = numpy.ones((N,P,D))
+	(y,W) = hov_wk_forward(17, D, x, V, keep)
 	
-	#(y,W) = hov_forward(tape_tag, D, x, V, keep)
+	print y
+	print W
+	
+	assert False
 	
 	
 

@@ -249,7 +249,7 @@ BOOST_PYTHON_MODULE(_adolc)
 													"");
 
 	def("hov_wk_forward",	&wrapped_hov_wk_forward,"higher order vector forward with keep:\n"\
-													"(y,W) = hov_forward(tape_tag, D, x, V, keep) \n"\
+													"(y,W) = hov_wk_forward(tape_tag, D, x, V, keep) \n"\
 													"F:R^N -> R^M\n"\
 													"x is N-vector, y is M-vector\n"\
 													"D is the order of the derivative\n"\
