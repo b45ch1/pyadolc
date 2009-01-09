@@ -65,9 +65,8 @@ if M==1:
 
 REQUIREMENTS:
 =============
-you need to install:
-scons from http://www.scons.org/
-boost from http://www.boost.org/
+* Python and Numpy, both with header files
+* boost::python from http://www.boost.org/
 
 
 INSTALLATION:
