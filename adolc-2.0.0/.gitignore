@@ -1,1 +1,3 @@
-!.deps
+*.lo
+*.Plo
+Makefile
