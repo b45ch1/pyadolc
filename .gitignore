@@ -21,6 +21,8 @@ report/*
 Doxyfile
 build
 
+adolc-2.0.0
+
 setup.py
 SConstruct
 
