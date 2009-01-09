@@ -242,9 +242,10 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-AM_CFLAGS = @ac_adolc_cflags@ -DADOLC_INTERNAL=1
-AM_CXXFLAGS = @ac_adolc_cxxflags@ -DADOLC_INTERNAL=1
-#AM_LDFLAGS           = -no-undefined
+@SPARSE_FALSE@AM_CFLAGS = @ac_adolc_cflags@ -DADOLC_INTERNAL=1
+@SPARSE_TRUE@AM_CFLAGS = @ac_adolc_cflags@ -DADOLC_INTERNAL=1 -DSPARSE=1
+@SPARSE_FALSE@AM_CXXFLAGS = @ac_adolc_cxxflags@ -DADOLC_INTERNAL=1
+@SPARSE_TRUE@AM_CXXFLAGS = @ac_adolc_cxxflags@ -DADOLC_INTERNAL=1 -DSPARSE=1
 INCLUDES = -I$(top_builddir)
 @SPARSE_FALSE@SUBDIRS = drivers tapedoc
 @SPARSE_TRUE@SUBDIRS = drivers sparse tapedoc

@@ -1,6 +1,6 @@
 ##############################################################################
 ## Makefile.am -- Process this file with automake to produce Makefile.in
-## Revision: $Id: Makefile.am 278 2008-12-19 09:11:26Z awalther $
+## Revision: $Id: Makefile.am 281 2009-01-09 07:24:42Z awalther $
 ##
 ## Copyright (C) 2008
 ##               Technical University Dresden
@@ -13,10 +13,13 @@
 ## 
 ##############################################################################
 
+if SPARSE
+AM_CFLAGS            = @ac_adolc_cflags@ -DADOLC_INTERNAL=1 -DSPARSE=1
+AM_CXXFLAGS          = @ac_adolc_cxxflags@ -DADOLC_INTERNAL=1 -DSPARSE=1
+else
 AM_CFLAGS            = @ac_adolc_cflags@ -DADOLC_INTERNAL=1
 AM_CXXFLAGS          = @ac_adolc_cxxflags@ -DADOLC_INTERNAL=1
-#AM_LDFLAGS           = -no-undefined
-
+endif
 INCLUDES             = -I$(top_builddir)
 
 if SPARSE

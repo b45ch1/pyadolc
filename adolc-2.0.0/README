@@ -1,9 +1,6 @@
-This is a patched version of 
+
      ADOL-C Version 2.0.0
      http://www.math.tu-dresden.de/~adol-c/
-
-The only difference is in "adolc/adouble.h" on line 258:
-The constructor is changed from protected to public.
 
 This new version of ADOL-C features new library functions for
 
