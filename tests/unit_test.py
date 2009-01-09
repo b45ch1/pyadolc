@@ -68,6 +68,63 @@ def test_div():
 	
 	assert b.val == 3./2.
 	assert c.val == 2./3.
+
+def test_independent():
+	# 0D
+	ax = adouble(1)
+	bx = independent(ax)
+	assert ax == bx
+	
+	# 1D
+	N = 10
+	ax = numpy.array([adouble(n) for n in range(N)])
+	bx = independent(ax)
+	assert numpy.prod( ax == bx )
+	
+	# 2D
+	N = 2; M=3
+	ax = numpy.array([[adouble(n+m) for n in range(N)] for m in range(M)])
+	bx = independent(ax)
+	assert numpy.prod( ax == bx )
+	
+def test_dependent():
+	# 0D
+	ax = adouble(1)
+	bx = dependent(ax)
+	assert ax == bx	
+	
+	# 1D
+	N = 10
+	ax = numpy.array([adouble(n) for n in range(N)])
+	bx = dependent(ax)
+	assert numpy.prod( ax == bx )
+	
+	# 2D
+	N = 2; M=3
+	ax = numpy.array([[adouble(n+m) for n in range(N)] for m in range(M)])
+	bx = dependent(ax)
+	assert numpy.prod( ax == bx )
+	
+	
+#def test_hov_wk_forward():
+	#def f(x):
+		#return numpy.sum(x)
+	
+	#N = 10
+	
+	#x = numpy.ones(N)
+	#ax = numpy.array([adouble(1.) for n in range(N)])
+	
+	
+	#trace_on(0)
+    #map(adouble.is_independent,ax,x)
+    #ay = f(ax)
+    #y = array(map(depends_on,ay))
+    #trace_off()
+
+	
+	#(y,W) = hov_forward(tape_tag, D, x, V, keep)
+	
 	
 
 ## operator / for int and double

@@ -36,6 +36,6 @@ env = Environment(
 	SHLIBPREFIX="", #gets rid of lib prefix
 )
 Default('.')
-adolc = env.SharedLibrary(target='adolc', source=['py_adolc.cpp', 'num_util.cpp'])
-env.Install("./release/adolc", adolc)
+adolc = env.SharedLibrary(target='_adolc', source=['py_adolc.cpp', 'num_util.cpp'])
+#env.Install("./release/adolc", adolc)
 

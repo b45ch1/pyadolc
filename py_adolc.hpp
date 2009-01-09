@@ -166,7 +166,7 @@ badouble& (badouble::*operator_eq_badouble) ( const badouble& ) = &badouble::ope
 badouble& (badouble::*operator_eq_adub) ( const adub& ) = &badouble::operator=;
 
 
-BOOST_PYTHON_MODULE(adolc)
+BOOST_PYTHON_MODULE(_adolc)
 {
 	using namespace boost::python;
 	import_array(); 										/* some kind of hack to get numpy working */
@@ -174,7 +174,7 @@ BOOST_PYTHON_MODULE(adolc)
 	
 	scope().attr("__doc__") =" Adolc: Algorithmic Differentiation Software \n\
 	see http://www.math.tu-dresden.de/~adol-c/ for documentation of Adolc \n\
-	http://mathematik.hu-berlin.de/~walter for more information and documentation of this Python extension\n\
+	http://github.com/b45ch1/pyadolc/tree/master for more information and documentation of this Python extension\n\
 	\n\
 	return values are always numpy arrays!\n\
 	\n\
