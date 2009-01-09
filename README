@@ -76,7 +76,9 @@ INSTALLATION:
 configure make
 do NOT "make install"
 
-3) modify the SConstruct file such that the boost include files and libraries can be found
+3) rename setup.py.EXAMPLE to setup.py to fit your system:
+Run     python setup.py build_ext --inplace
 
-4) run scons on a command shell
+Alternatively you can rename SConstruct.EXAMPLE to SConstruct and modify it to fit your system and build with
+    scons
 
