@@ -47,7 +47,6 @@ extern adub ldexp ( const badouble&, int );
 void trace_on_default_argument(short tape_tag){ trace_on(tape_tag,0);}
 void trace_off_default_argument(){ trace_off(0);}
 
-
 /* PYTHONIC CALLS OF FUNCTIONS */
 bpn::array	wrapped_function			(short tape_tag, bpn::array &bpn_x);
 bpn::array	wrapped_gradient			(short tape_tag, bpn::array &bpn_x);
@@ -94,7 +93,6 @@ void c_wrapped_fov_reverse		(short tape_tag, int M, int N, int Q, bpn::array &bp
 void c_wrapped_hos_reverse		(short tape_tag, int M, int N, int D, bpn::array &bpn_u, bpn::array &bpn_Z);
 void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz);
 void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz);
-
 
 
 void py_tape_doc(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_y );

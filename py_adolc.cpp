@@ -24,7 +24,6 @@ void print_array(double *vec, int length, string msg=""){
 }
 
 
-
 bpn::array wrapped_function(short tape_tag, bpn::array &bpn_x){
 	if(!nu::iscontiguous(bpn_x)){
 		printf("not a contiguous array!\n");
