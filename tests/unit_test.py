@@ -131,8 +131,42 @@ def test_hov_wk_forward():
 	print y
 	print W
 	
-	assert False
+	#assert False
+
+
+
+def test_simple_function():
+	def f(x):
+		y1 = 1./(x.fabs())
+		print y1
+		y2 = x*5.
+		print y2
+		y3 = y1 + y2
+		print y1,y2,y3
+		return y3
+	def g(x):
+		return 1./x.fabs() + 5.*x
+
+	#tape f
+	trace_on(0)
+	ax = adouble(2)
+	ax.is_independent(2)
+	ay = f(ax)
+	depends_on(ay)
+	trace_off()
 	
+def test_adub_locations():
+	x = adub(0)
+	print 'x.loc=',x.loc
+	y1 =  x.sin()
+	print 'y1.loc=',y1.loc
+	print 'y1=',y1
+	y2 = 5.*x
+	print 'y2.loc=',y2.loc
+	print 'y1=',y1	
+	print 'y2=',y2
+
+	assert False
 	
 
 ## operator / for int and double
