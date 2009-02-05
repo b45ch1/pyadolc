@@ -403,6 +403,7 @@ BOOST_PYTHON_MODULE(_adolc)
 // 			.def("atanh",atanh_adub)
 
 			.def("fabs",fabs_adub)
+			.def("abs",fabs_adub)
 			.def("ceil", ceil_adub)
 			.def("floor", floor_adub)
 			.def("fmax", fmax_adub_badouble_badouble)
