@@ -311,10 +311,10 @@ BOOST_PYTHON_MODULE(_adolc)
 													"");
 
 	def("hov_ti_reverse", 	&wrapped_hov_ti_reverse,"higher order vector reverse:\n"\
-													"(Z,nz) = hov_reverse(tape_tag, D, U)\n"\
+													"(Z,nz) = hov_ti_reverse(tape_tag, D, U)\n"\
 													"F:R^N -> R^M\n"\
 													"D is the order of the derivative\n"\
-													"U is (Q x M x D)-matrix, Q adjoint directions \n"\
+													"U is (Q x M x D+1)-matrix, Q adjoint directions \n"\
 													"Z is (Q x N x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0],  U F\" v[:,1] + 0.5 U F^(3) v[:,0],... ] \n"\
 													"nz is (Q x N)-matrix, information about the sparsity of Z:\n"\
 													"0:trivial, 1:linear, 2:polynomial, 3:rational, 4:transcendental, 5:non-smooth\n"\
