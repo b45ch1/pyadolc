@@ -214,12 +214,15 @@ bp::tuple wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &
 	return bp::tuple(retvals);
 }
 
-bp::tuple wrapped_hos_forward			(short tape_tag, int order, bpn::array &bpn_x, bpn::array &bpn_V, int keep){
+bp::tuple wrapped_hos_forward		(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V, int keep){
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
 	int M = tape_stats[NUM_DEPENDENTS];
 	int D = nu::shape(bpn_V)[1];
+
+// 	printf("called hos_forward with (N=%d, D=%d) and keep=%d\n", N,D,keep);
+
 
 	double* x = (double*) nu::data(bpn_x);
 	double* V_data = (double*) nu::data(bpn_V);
@@ -398,7 +401,7 @@ bp::tuple wrapped_hov_reverse(short tape_tag, int D, bpn::array &bpn_U){
 }
 
 
-bp::tuple wrapped_hov_ti_reverse(short tape_tag, int D, bpn::array &bpn_U){
+bp::tuple wrapped_hov_ti_reverse(short tape_tag, bpn::array &bpn_U){
 	if(!nu::iscontiguous(bpn_U)){
 		printf("not a contiguous array!\n");
 	}
@@ -408,6 +411,9 @@ bp::tuple wrapped_hov_ti_reverse(short tape_tag, int D, bpn::array &bpn_U){
 	int N = tape_stats[NUM_INDEPENDENTS];
 	int M = tape_stats[NUM_DEPENDENTS];
 	int Q = nu::shape(bpn_U)[0];
+	int D = nu::shape(bpn_U)[2];
+
+// 	printf("called hov_ti_reverse with (Q=%d, M=%d, D=%d)\n", Q,M,D);
 
 	double* U_data = (double*) nu::data(bpn_U);
 	double** U[Q];
@@ -418,16 +424,16 @@ bp::tuple wrapped_hov_ti_reverse(short tape_tag, int D, bpn::array &bpn_U){
 		}
 	}
 	
-	double*** Z = myalloc3(Q,N,D+1);
+	double*** Z = myalloc3(Q,N,D);
 	short nz_data[Q*N];
 	short* nz[Q];
 	for(int q = 0; q != Q; ++q){
 		nz[q] = &nz_data[q*N];
 	}
 	
-	hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz);
+	hov_ti_reverse(tape_tag, M, N, D-1, Q, U, Z, nz);
 	
-	vector<intp> Z_shp(3); Z_shp[0] = Q; Z_shp[1] = N;  Z_shp[2]=D+1;
+	vector<intp> Z_shp(3); Z_shp[0] = Q; Z_shp[1] = N;  Z_shp[2]=D;
 	vector<intp> nz_shp(2); nz_shp[0] = Q; nz_shp[1]=N;
 
 

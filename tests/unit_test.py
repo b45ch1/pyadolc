@@ -166,7 +166,37 @@ def test_adub_locations():
 	print 'y1=',y1	
 	print 'y2=',y2
 
-	assert False
+	#assert False
+
+def test_hov_ti_reverse():
+	"""compute the first columnt of the hessian of f = x_1 x_2 x_3"""
+	def f(x):
+		return x[0]*x[1]*x[2]
+	
+	#tape f
+	ax = numpy.array([adouble(0.) for i in range(3)])
+	trace_on(0)
+	for i in range(3):
+		independent(ax[i])
+	ay = f(ax)
+	dependent(ay)
+	trace_off()
+
+	x = numpy.array([3.,5.,7.])
+	V = numpy.zeros((3,1))
+	V[0,0]=1
+
+	(y,W) = hos_forward(0,x,V,2)
+	assert y[0] == 105.
+	assert W[0] == 35.
+
+	U = numpy.zeros((1,1,2))
+	U[0,0,0] = 1.
+	Z = hov_ti_reverse(0,U)[0]
+	print Z[0,:,0]
+	assert numpy.prod( Z[0,:,0] == numpy.array([35., 21., 15.]))
+	assert numpy.prod( Z[0,:,1] == numpy.array([0., 7., 5.]))
+
 	
 
 ## operator / for int and double

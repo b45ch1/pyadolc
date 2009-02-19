@@ -60,14 +60,14 @@ bpn::array	wrapped_lagra_hess_vec		(short tape_tag, bpn::array &bpn_x, bpn::arra
 bpn::array	wrapped_zos_forward			(short tape_tag, bpn::array &bpn_x, int keep);
 bp::tuple	wrapped_fos_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v, int keep);
 bp::tuple 	wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V);
-bp::tuple	wrapped_hos_forward			(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
+bp::tuple	wrapped_hos_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
 bp::tuple	wrapped_hov_forward			(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V);
 bp::tuple	wrapped_hov_wk_forward		(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
 bpn::array wrapped_fos_reverse			(short tape_tag, bpn::array &bpn_u);
 bpn::array wrapped_fov_reverse			(short tape_tag, bpn::array &bpn_U);
 bpn::array wrapped_hos_reverse			(short tape_tag, int D, bpn::array &bpn_u);
 bp::tuple wrapped_hov_reverse			(short tape_tag, int D, bpn::array &bpn_U);
-bp::tuple wrapped_hov_ti_reverse		(short tape_tag, int D, bpn::array &bpn_U);
+bp::tuple wrapped_hov_ti_reverse		(short tape_tag, bpn::array &bpn_U);
 
 
 /* C STYLE CALLS OF FUNCTIONS */
@@ -248,10 +248,10 @@ BOOST_PYTHON_MODULE(_adolc)
 													"W is (M x P)-matrix. P directiona derivatives \n"\
 													"");
 	def("hos_forward",		&wrapped_hos_forward,	"higher order scalar forward:\n"\
-													"(y,W) = hos_forward(tape_tag, D, x, V, keep) \n"\
+													"(y,W) = hos_forward(tape_tag, x, V, keep) \n"\
 													"F:R^N -> R^M\n"\
 													"x is N-vector, y is M-vector\n"\
-													"D is the order of the derivative\n"\
+													"D is the highest order of the derivative\n"\
 													"V is (N x D)-matrix \n"\
 													"W is (M x D)-matrix \n"\
 													"keep = 1 prepares for fos_reverse or fov_reverse\n"\
@@ -311,9 +311,9 @@ BOOST_PYTHON_MODULE(_adolc)
 													"");
 
 	def("hov_ti_reverse", 	&wrapped_hov_ti_reverse,"higher order vector reverse:\n"\
-													"(Z,nz) = hov_ti_reverse(tape_tag, D, U)\n"\
+													"(Z,nz) = hov_ti_reverse(tape_tag, U)\n"\
 													"F:R^N -> R^M\n"\
-													"D is the order of the derivative\n"\
+													"D is the highest order of the derivative\n"\
 													"U is (Q x M x D+1)-matrix, Q adjoint directions \n"\
 													"Z is (Q x N x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0],  U F\" v[:,1] + 0.5 U F^(3) v[:,0],... ] \n"\
 													"nz is (Q x N)-matrix, information about the sparsity of Z:\n"\
