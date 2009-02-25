@@ -96,7 +96,7 @@ void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::
 
 
 void py_tape_doc(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_y );
-bpn::array wrapped_tapestats(short tape_tag);
+bp::dict wrapped_tapestats(short tape_tag);
 
 
 /* of class badouble */
@@ -357,6 +357,25 @@ BOOST_PYTHON_MODULE(_adolc)
 											"x is N-vector  y is M-vector\n\n"\
 											"writes the tape to a file called tape_x.tex that can be compile with Latex\n\n"\
 											"");
+
+	def("tapestats", &wrapped_tapestats,
+	"\n\n tapestats(tape_tag)\n"\
+	"returns a dictionary with information on the tape:\n" \
+	"NUM_INDEPENDENTS,                          /* # of independent variables */ \n" \
+	"NUM_DEPENDENTS,                              /* # of dependent variables */ \n" \
+	"NUM_MAX_LIVES,                                /* max # of live variables */ \n" \
+	"TAY_STACK_SIZE,               /* # of values in the taylor (value) stack */ \n" \
+	"OP_BUFFER_SIZE,   /* # of operations per buffer == OBUFSIZE (usrparms.h) */ \n" \
+	"NUM_OPERATIONS,                               /* overall # of operations */ \n" \
+	"OP_FILE_ACCESS,                        /* operations file written or not */ \n" \
+	"NUM_LOCATIONS,                                 /* overall # of locations */ \n" \
+	"LOC_FILE_ACCESS,                        /* locations file written or not */ \n" \
+	"NUM_VALUES,                                       /* overall # of values */ \n" \
+	"VAL_FILE_ACCESS,                           /* values file written or not */ \n" \
+	"LOC_BUFFER_SIZE,   /* # of locations per buffer == LBUFSIZE (usrparms.h) */ \n" \
+	"VAL_BUFFER_SIZE,      /* # of values per buffer == CBUFSIZE (usrparms.h) */ \n" \
+	"TAY_BUFFER_SIZE,     /* # of taylors per buffer <= TBUFSIZE (usrparms.h) */ \n" \
+    );
 
 	def("exp",  adub_exp_badouble, return_value_policy<manage_new_object>()  );
 	def("log",  adub_log_badouble, return_value_policy<manage_new_object>()  );

@@ -24,6 +24,28 @@ void print_array(double *vec, int length, string msg=""){
 }
 
 
+bp::dict wrapped_tapestats(short tape_tag){
+	int tape_stats[STAT_SIZE];
+	tapestats(tape_tag, tape_stats);
+	bp::dict retval;
+	retval["NUM_INDEPENDENTS"] = tape_stats[NUM_INDEPENDENTS];
+	retval["NUM_DEPENDENTS"]   = tape_stats[NUM_DEPENDENTS];
+	retval["NUM_MAX_LIVES"]    = tape_stats[NUM_MAX_LIVES];
+	retval["TAY_STACK_SIZE"] = tape_stats[TAY_STACK_SIZE];
+	retval["OP_BUFFER_SIZE"] = tape_stats[OP_BUFFER_SIZE];
+	retval["NUM_OPERATIONS"] = tape_stats[NUM_OPERATIONS];
+	retval["OP_FILE_ACCESS"] = tape_stats[OP_FILE_ACCESS];
+	retval["NUM_LOCATIONS"] = tape_stats[NUM_LOCATIONS];
+	retval["LOC_FILE_ACCESS"] = tape_stats[LOC_FILE_ACCESS];
+	retval["NUM_VALUES"] = tape_stats[NUM_VALUES];
+	retval["VAL_FILE_ACCESS"] = tape_stats[VAL_FILE_ACCESS];
+	retval["LOC_BUFFER_SIZE"] = tape_stats[LOC_BUFFER_SIZE];
+	retval["VAL_BUFFER_SIZE"] = tape_stats[VAL_BUFFER_SIZE];
+	retval["TAY_BUFFER_SIZE"] = tape_stats[TAY_BUFFER_SIZE];
+	return retval;
+}
+
+
 bpn::array wrapped_function(short tape_tag, bpn::array &bpn_x){
 	if(!nu::iscontiguous(bpn_x)){
 		printf("not a contiguous array!\n");
@@ -654,11 +676,11 @@ void py_tape_doc(short tape_tag, bpn::array &x, bpn::array &y ){
 	tape_doc(tape_tag, m , n, dataPtr_x, dataPtr_y);
 }
 
-/* from taping.h and taping.c */
-bpn::array wrapped_tapestats(short tape_tag) {
-	int tape_stats[STAT_SIZE];
-	tapestats(tape_tag, tape_stats);
-	return nu::makeNum( tape_stats, STAT_SIZE);
-}
+// /* from taping.h and taping.c */
+// bpn::array wrapped_tapestats(short tape_tag) {
+// 	int tape_stats[STAT_SIZE];
+// 	tapestats(tape_tag, tape_stats);
+// 	return nu::makeNum( tape_stats, STAT_SIZE);
+// }
 
 
