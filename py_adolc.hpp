@@ -154,6 +154,8 @@ adub *adub_ceil_badouble  (const badouble &rhs){	return new adub(ceil(rhs));}
 adub *adub_floor_badouble (const badouble &rhs){	return new adub(floor(rhs));}
 adub *adub_log10_badouble (const badouble &rhs){	return new adub(log10(rhs));}
 
+
+
 /* binary */
 adub *adub_add_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator+(lhs,rhs));}
 adub *adub_sub_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator-(lhs,rhs));}
@@ -169,6 +171,9 @@ adub *adub_add_double_badouble(const badouble &rhs,double lhs){	return new adub(
 adub *adub_sub_double_badouble(const badouble &rhs,double lhs){	return new adub(operator-(lhs,rhs));}
 adub *adub_mul_double_badouble(const badouble &rhs,double lhs){	return new adub(operator*(lhs,rhs));}
 adub *adub_div_double_badouble(const badouble &rhs,double lhs){	return new adub(operator/(lhs,rhs));}
+
+
+adub *adub_pow_badouble_double(const badouble &lhs, const double &rhs){	return new adub(pow(lhs,rhs));}
 
 
 
@@ -414,9 +419,9 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("__mul__", adub_mul_badouble_double, return_value_policy<manage_new_object>())
 			.def("__div__", adub_div_badouble_double, return_value_policy<manage_new_object>())
                         
-			.def("__pow__",pow_adub)
-			.def("__pow__",pow_adouble_badouble_badouble)
-			.def("__rpow__",pow_adouble_double_badouble)
+			.def("__pow__", adub_pow_badouble_double, return_value_policy<manage_new_object>())
+// 			.def("__pow__",pow_adouble_badouble_badouble, return_value_policy<manage_new_object>())
+// 			.def("__rpow__",pow_adouble_double_badouble, return_value_policy<manage_new_object>())
 
 			.def("exp",  adub_exp_badouble, return_value_policy<manage_new_object>()  )
 			.def("log",  adub_log_badouble, return_value_policy<manage_new_object>()  )
