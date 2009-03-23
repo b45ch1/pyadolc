@@ -30,18 +30,11 @@ def test_tape_to_latex():
 
 def test_tape_stats():
 	def f(avec):
-		a = avec[0]*avec[-1]
-		c =avec[0]*avec[0]
-		if isinstance(a,badouble):
-			print avec[0].loc
-			print avec[1].loc
-			print a.loc
-			print c.loc
-		return a
+		return avec[0]*avec[1]
 	
-	N = 2
-	x = numpy.array([1.,2.])
-	ax = numpy.array([adouble(0.),adouble(0.)])
+	N = 10
+	x = numpy.array([i+1 for i in range(N)])
+	ax = numpy.array([adouble(0.) for i in range(N)])
 
 	trace_on(1)
 	for n in range(N):
