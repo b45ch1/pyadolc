@@ -13,8 +13,7 @@ sx = array([DerivVar(1., i, 2) for i in range(N)])
 ax = array([adouble(1.) for i in range(N)])
 
 trace_on(0)
-for i in range(N):
-	independent(ax[i])
+independent(ax)
 y = f(ax)
 dependent(y)
 trace_off()
