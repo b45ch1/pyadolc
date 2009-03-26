@@ -47,12 +47,11 @@ def f(x):
 	return numpy.dot(A,x)
 
 # tape a function evaluation
+ax = numpy.array([adouble(0) for n in range(N)])
 trace_on(1)
-for n in range(N):
-	ax[n].is_independent(x[n])
+independent(ax)
 ay = f(ax)
-for m in range(M):
-	y[m] = depends_on(ay[m])
+dependent(ay)
 trace_off()
 
 # compute jacobian of f at x
