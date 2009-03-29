@@ -59,10 +59,11 @@ bpn::array wrapped_function(short tape_tag, bpn::array &bpn_x){
 	vector<double> y(M);
 	function(tape_tag, M, N, x, &y[0]);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, &y[0], sizeof(double) * M); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, &y[0], sizeof(double) * M); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
+	return nu::makeNum( &y[0], M);
 }
 
 bpn::array wrapped_gradient(short tape_tag, bpn::array &bpn_x){
@@ -73,10 +74,11 @@ bpn::array wrapped_gradient(short tape_tag, bpn::array &bpn_x){
 	double g[N];
 	gradient(tape_tag, N, x, g);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, &g[0], sizeof(double) * N); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, &g[0], sizeof(double) * N); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
+	return nu::makeNum( &g[0], N);
 }
 
 bpn::array wrapped_hessian(short tape_tag, bpn::array &bpn_x){
@@ -87,14 +89,15 @@ bpn::array wrapped_hessian(short tape_tag, bpn::array &bpn_x){
 	double* x = (double*) nu::data(bpn_x);
 	double** H = myalloc2(N,N);
 	hessian(tape_tag, N, x, H);
-	vector<npy_intp> H_shape(2);
-	H_shape[0]=N;
-	H_shape[1]=N;
+	vector<npy_intp> H_shp(2);
+	H_shp[0]=N;
+	H_shp[1]=N;
+	return nu::makeNum( H[0], H_shp);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(2, &H_shape[0], PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, H[0], sizeof(double) * N * N); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(2, &H_shape[0], PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, H[0], sizeof(double) * N * N); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
 }
 
 bpn::array wrapped_jacobian(short tape_tag, bpn::array &bpn_x){
@@ -108,14 +111,16 @@ bpn::array wrapped_jacobian(short tape_tag, bpn::array &bpn_x){
 	double* x = (double*) nu::data(bpn_x);
 	double** J = myalloc2(M,N);
 	jacobian(tape_tag, M, N, x, J);
-	vector<npy_intp> J_shape(2);
-	J_shape[0]=M;
-	J_shape[1]=N;
+	vector<npy_intp> J_shp(2);
+	J_shp[0]=M;
+	J_shp[1]=N;
+	return nu::makeNum( J[0], J_shp);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(2, &J_shape[0], PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, J[0], sizeof(double) * N * M); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
+
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(2, &J_shape[0], PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, J[0], sizeof(double) * N * M); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
 }
 
 bpn::array wrapped_vec_jac(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u, bool repeat){
@@ -129,10 +134,13 @@ bpn::array wrapped_vec_jac(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u,
 	double	z[N];
 	vec_jac(tape_tag, M, N, repeat, x, u, z);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
+
+	return nu::makeNum( z, N);
+
 }
 
 bpn::array wrapped_jac_vec(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v){
@@ -146,11 +154,11 @@ bpn::array wrapped_jac_vec(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v)
 	double	z[M];
 	jac_vec(tape_tag, M, N, x, v, z);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, &z[0], sizeof(double) * M); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
-// 	return nu::makeNum( z, M);
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, &z[0], sizeof(double) * M); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
+	return nu::makeNum( z, M);
 }
 
 bpn::array wrapped_hess_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v){
@@ -163,12 +171,12 @@ bpn::array wrapped_hess_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bp
 	double	z[N];
 	hess_vec(tape_tag, N, x, v, z);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
 
-// 	return nu::makeNum( z, N);
+	return nu::makeNum( z, N);
 }
 
 
@@ -187,13 +195,13 @@ bpn::array wrapped_lagra_hess_vec	(short tape_tag, bpn::array &bpn_x, bpn::array
 	double	z[N];
 	lagra_hess_vec(tape_tag, M, N, x, v, u, z);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
 
 
-// 	return nu::makeNum( z, N);
+	return nu::makeNum( z, N);
 }
 
 // void wrapped_jac_solv(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode){
@@ -218,13 +226,13 @@ bpn::array wrapped_zos_forward (short tape_tag, bpn::array &bpn_x, int keep){
 
 	zos_forward(tape_tag, M, N, keep, x, y);
 
-	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-	memcpy(ptr, &y[0], sizeof(double) * M); // copies the input data to 
-	return boost::python::extract<boost::python::numeric::array>(obj);
+// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
+// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
+// 	memcpy(ptr, &y[0], sizeof(double) * M); // copies the input data to 
+// 	return boost::python::extract<boost::python::numeric::array>(obj);
 
 
-// 	return nu::makeNum( y, M);
+	return nu::makeNum( y, M);
 }
 
 
@@ -243,17 +251,17 @@ bp::tuple wrapped_fos_forward(short tape_tag, bpn::array &bpn_x, bpn::array &bpn
 
 	fos_forward(tape_tag, M, N, keep, x, v, &y[0], &directional_derivative[0]);
 
-	bp::object y_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-	double *y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( y_obj.ptr() )));
-	memcpy(y_ptr, &y[0], sizeof(double) * M); // copies the input data to 
-	bpn::array ret_y =  boost::python::extract<boost::python::numeric::array>(y_obj);
-// 	bpn::array ret_y 	=  nu::makeNum( &y[0], M);
+// 	bp::object y_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
+// 	double *y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( y_obj.ptr() )));
+// 	memcpy(y_ptr, &y[0], sizeof(double) * M); // copies the input data to 
+// 	bpn::array ret_y =  boost::python::extract<boost::python::numeric::array>(y_obj);
+	bpn::array ret_y 	=  nu::makeNum( &y[0], M);
 
-	bp::object directional_derivative_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
+/*	bp::object directional_derivative_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
 	double *directional_derivative_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( directional_derivative_obj.ptr() )));
 	memcpy(directional_derivative_ptr, &directional_derivative[0], sizeof(double) * M); // copies the input data to 
-	bpn::array ret_directional_derivative =  boost::python::extract<boost::python::numeric::array>(directional_derivative_obj);
-// 	bpn::array ret_directional_derivative 	=  nu::makeNum( &directional_derivative[0], M);
+	bpn::array ret_directional_derivative =  boost::python::extract<boost::python::numeric::array>(directional_derivative_obj)*/;
+	bpn::array ret_directional_derivative 	=  nu::makeNum( &directional_derivative[0], M);
 	
 	bp::list retvals;
 	retvals.append(ret_y);
@@ -281,17 +289,17 @@ bp::tuple wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &
 	fov_forward(tape_tag, M, N, P, x, V, y, Y);
 	vector<npy_intp> Y_shp(2); Y_shp[0] = M; Y_shp[1]=P;
 
-	bp::object y_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-	double *y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( y_obj.ptr() )));
-	memcpy(y_ptr, &y[0], sizeof(double) * M); // copies the input data to 
-	bpn::array ret_y =  boost::python::extract<boost::python::numeric::array>(y_obj);
-// 	bpn::array ret_y 	=  nu::makeNum( y, M);
+// 	bp::object y_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
+// 	double *y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( y_obj.ptr() )));
+// 	memcpy(y_ptr, &y[0], sizeof(double) * M); // copies the input data to 
+// 	bpn::array ret_y =  boost::python::extract<boost::python::numeric::array>(y_obj);
+	bpn::array ret_y 	=  nu::makeNum( y, M);
 
-	bp::object Y_obj(bp::handle<>(PyArray_SimpleNew(2, &Y_shp[0], PyArray_DOUBLE)));
-	double *Y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( Y_obj.ptr() )));
-	memcpy(Y_ptr, Y[0], sizeof(double) * M * P); // copies the input data to 
-	bpn::array ret_Y =  boost::python::extract<boost::python::numeric::array>(Y_obj);
-// 	bpn::array ret_Y 	=  nu::makeNum( Y[0], Y_shp);
+// 	bp::object Y_obj(bp::handle<>(PyArray_SimpleNew(2, &Y_shp[0], PyArray_DOUBLE)));
+// 	double *Y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( Y_obj.ptr() )));
+// 	memcpy(Y_ptr, Y[0], sizeof(double) * M * P); // copies the input data to 
+// 	bpn::array ret_Y =  boost::python::extract<boost::python::numeric::array>(Y_obj);
+	bpn::array ret_Y 	=  nu::makeNum( Y[0], Y_shp);
 
 	bp::list retvals;
 	retvals.append(ret_y);

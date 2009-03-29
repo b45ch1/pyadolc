@@ -278,7 +278,7 @@ std::vector<intp> shape(numeric::array arr){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
     throw_error_already_set();
   }
-  int* dims_ptr = PyArray_DIMS(arr.ptr());
+  npy_intp* dims_ptr = PyArray_DIMS(arr.ptr());
   int the_rank = rank(arr);
   for (int i = 0; i < the_rank; i++){
     out_dims.push_back(*(dims_ptr + i));
