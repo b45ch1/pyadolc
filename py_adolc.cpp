@@ -501,12 +501,12 @@ bp::tuple wrapped_hov_ti_reverse(short tape_tag, bpn::array &bpn_U){
 	nu::check_rank(bpn_U,3);
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
-	int N = tape_stats[NUM_INDEPENDENTS];
-	int M = tape_stats[NUM_DEPENDENTS];
-	int Q = nu::shape(bpn_U)[0];
-	int D = nu::shape(bpn_U)[2];
-
-// 	printf("called hov_ti_reverse with (Q=%d, M=%d, D=%d)\n", Q,M,D);
+	npy_intp N = tape_stats[NUM_INDEPENDENTS];
+	npy_intp M = tape_stats[NUM_DEPENDENTS];
+	npy_intp Q = nu::shape(bpn_U)[0];
+	npy_intp D = nu::shape(bpn_U)[2];
+// 
+// // 	printf("called hov_ti_reverse with (Q=%d, M=%d, D=%d)\n", Q,M,D);
 
 	double* U_data = (double*) nu::data(bpn_U);
 	double** U[Q];
@@ -520,18 +520,27 @@ bp::tuple wrapped_hov_ti_reverse(short tape_tag, bpn::array &bpn_U){
 	double*** Z = myalloc3(Q,N,D);
 	short nz_data[Q*N];
 	short* nz[Q];
-	for(int q = 0; q != Q; ++q){
+	for(npy_intp q = 0; q != Q; ++q){
 		nz[q] = &nz_data[q*N];
 	}
 	
 	hov_ti_reverse(tape_tag, M, N, D-1, Q, U, Z, nz);
-	
-	vector<intp> Z_shp(3); Z_shp[0] = Q; Z_shp[1] = N;  Z_shp[2]=D;
-	vector<intp> nz_shp(2); nz_shp[0] = Q; nz_shp[1]=N;
 
-
+	/* prepare Z for returning to Python */
+	vector<npy_intp> Z_shp(3); Z_shp[0] = Q; Z_shp[1] = N;  Z_shp[2]=D;
 	bpn::array ret_Z = nu::makeNum( Z[0][0], Z_shp);
-	bpn::array ret_nz = nu::makeNum( nz[0], nz_shp);
+
+	/* prepare nz for returning to Python */
+	vector<npy_intp> nz_shp(2); nz_shp[0] = Q; nz_shp[1]=N;
+	bp::object nz_obj(bp::handle<>(PyArray_SimpleNew(2, &nz_shp[0], PyArray_INT)));
+	npy_intp *nz_ptr = static_cast<npy_intp*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( nz_obj.ptr() )));
+	for(npy_intp q=0; q != Q; ++q){
+		for(npy_intp n=0; n != N; ++n){
+			nz_ptr[n + q*N] = static_cast<npy_intp>(nz_data[n + q*N]);
+		}
+	}
+	bpn::array ret_nz = boost::python::extract<boost::python::numeric::array>(nz_obj);
+
 	bp::list retvals;
 	retvals.append(ret_Z);
 	retvals.append(ret_nz);

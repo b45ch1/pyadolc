@@ -46,7 +46,7 @@ namespace num_util{
    *@param t elements' numpy type. Default is double.
    *@return a numeric array of shape dimens with elements initialized to zero.
    */
-  boost::python::numeric::array makeNum(std::vector<intp> dimens, 
+  boost::python::numeric::array makeNum(std::vector<npy_intp> dimens, 
 					PyArray_TYPES t);
 				      
   /** 
@@ -73,7 +73,6 @@ namespace num_util{
    */
 
   template <typename T> boost::python::numeric::array makeNum(T* data, npy_intp n = 0){
-//     npy_intp asdf = n;
     boost::python::object obj(boost::python::handle<>((PyArray_SimpleNew(1, &n, getEnum<T>()))));
     void *arr_data = PyArray_DATA((PyArrayObject*) obj.ptr());
     memcpy(arr_data, data, PyArray_ITEMSIZE((PyArrayObject*) obj.ptr()) * n); // copies the input data to 
@@ -91,7 +90,7 @@ namespace num_util{
 
 
   template <typename T> boost::python::numeric::array makeNum(T * data, std::vector<npy_intp> dims){
-    intp total = std::accumulate(dims.begin(),dims.end(),1,std::multiplies<intp>());
+    npy_intp total = std::accumulate(dims.begin(),dims.end(),1,std::multiplies<npy_intp>());
     boost::python::object obj(boost::python::handle<>(PyArray_SimpleNew(dims.size(),&dims[0], getEnum<T>())));
     void *arr_data = PyArray_DATA((PyArrayObject*) obj.ptr());
     memcpy(arr_data, data, PyArray_ITEMSIZE((PyArrayObject*) obj.ptr()) * total);

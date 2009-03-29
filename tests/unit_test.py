@@ -190,8 +190,9 @@ def test_hov_ti_reverse():
 	assert y[0] == 105.
 	assert W[0] == 35.
 
-	U = numpy.zeros((1,1,2))
+	U = numpy.zeros((1,1,2), dtype=float)
 	U[0,0,0] = 1.
+
 	Z = hov_ti_reverse(0,U)[0]
 	print Z[0,:,0]
 	assert numpy.prod( Z[0,:,0] == numpy.array([35., 21., 15.]))
