@@ -195,14 +195,14 @@ numeric::array makeNum(object x){
 
 //Create a one-dimensional Numeric array of length n and Numeric type t
 numeric::array makeNum(intp n, PyArray_TYPES t=PyArray_DOUBLE){
-  object obj(handle<>(PyArray_FromDims(1, &n, t)));
+  object obj(handle<>(PyArray_SimpleNew(1, &n, t)));
   return extract<numeric::array>(obj);
 }
   
 //Create a Numeric array with dimensions dimens and Numeric type t
 numeric::array makeNum(std::vector<intp> dimens, 
 		       PyArray_TYPES t=PyArray_DOUBLE){
-  object obj(handle<>(PyArray_FromDims(dimens.size(), &dimens[0], t)));
+  object obj(handle<>(PyArray_SimpleNew(dimens.size(), &dimens[0], t)));
   return extract<numeric::array>(obj);
 }
 

@@ -72,8 +72,9 @@ namespace num_util{
    *@return a numpy array of size n with elements initialized to data.
    */
 
-  template <typename T> boost::python::numeric::array makeNum(T* data, intp n = 0){
-    boost::python::object obj(boost::python::handle<>(PyArray_FromDims(1, &n, getEnum<T>())));
+  template <typename T> boost::python::numeric::array makeNum(T* data, npy_intp n = 0){
+//     npy_intp asdf = n;
+    boost::python::object obj(boost::python::handle<>((PyArray_SimpleNew(1, &n, getEnum<T>()))));
     void *arr_data = PyArray_DATA((PyArrayObject*) obj.ptr());
     memcpy(arr_data, data, PyArray_ITEMSIZE((PyArrayObject*) obj.ptr()) * n); // copies the input data to 
     return boost::python::extract<boost::python::numeric::array>(obj);
@@ -89,9 +90,9 @@ namespace num_util{
    */
 
 
-  template <typename T> boost::python::numeric::array makeNum(T * data, std::vector<intp> dims){
+  template <typename T> boost::python::numeric::array makeNum(T * data, std::vector<npy_intp> dims){
     intp total = std::accumulate(dims.begin(),dims.end(),1,std::multiplies<intp>());
-    boost::python::object obj(boost::python::handle<>(PyArray_FromDims(dims.size(),&dims[0], getEnum<T>())));
+    boost::python::object obj(boost::python::handle<>(PyArray_SimpleNew(dims.size(),&dims[0], getEnum<T>())));
     void *arr_data = PyArray_DATA((PyArrayObject*) obj.ptr());
     memcpy(arr_data, data, PyArray_ITEMSIZE((PyArrayObject*) obj.ptr()) * total);
     return boost::python::extract<boost::python::numeric::array>(obj);
