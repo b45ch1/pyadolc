@@ -82,6 +82,10 @@ bpn::array wrapped_gradient(short tape_tag, bpn::array &bpn_x){
 }
 
 bpn::array wrapped_hessian(short tape_tag, bpn::array &bpn_x){
+  /* return_value_structue defines how the Hessian is returned: Since it is a symmetric matrix, only the upper (resp.
+     lower triangular matrix has to be returned. However, to keep things simple, by standard the full Hessian is returned,
+	 but the user gets the option to return only the distinct elements.
+  */
 	nu::check_rank(bpn_x,1);
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
@@ -89,6 +93,14 @@ bpn::array wrapped_hessian(short tape_tag, bpn::array &bpn_x){
 	double* x = (double*) nu::data(bpn_x);
 	double** H = myalloc2(N,N);
 	hessian(tape_tag, N, x, H);
+	
+	/* adolc returns only the lower triangular matrix. filling the other triangular matrix too */
+	for(int r = 0; r != N; ++r){
+	  for(int c = r;  c != N; ++c){
+		H[r][c] = H[c][r];
+	  }
+	}
+
 	vector<npy_intp> H_shp(2);
 	H_shp[0]=N;
 	H_shp[1]=N;

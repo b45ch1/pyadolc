@@ -1,8 +1,26 @@
+# -*- coding: utf-8 -*-
 import numpy
 import _adolc
 from _adolc import *
 
 __doc__ = _adolc.__doc__
+
+def adouble(x):
+	"""
+	Return adouble from scalar or array of arbitrary shape
+	INPUT:  either a float or an array of floats
+	OUTPUT: adouble or array of adoubles
+	"""
+	if numpy.isscalar(x) or isinstance(x,_adolc.adouble):
+		return _adolc.adouble(x)
+	else:
+		x = numpy.asarray(x)
+		shp = numpy.shape(x)
+		xr = numpy.ravel(x)
+		axr = numpy.array([_adolc.adouble(xr[n]) for n in range(len(xr))])
+		ax = axr.reshape(shp)
+		return ax
+
 
 def iadouble(x):
 	"""
@@ -28,7 +46,8 @@ def independent(ax):
 	OUTPUT:  ax
 	Mark ax as independent
 	"""
-	if numpy.isscalar(ax):
+
+	if isinstance(ax, _adolc.adouble):
 		x = ax.val
 		ax.is_independent(x)
 		return ax
@@ -36,7 +55,7 @@ def independent(ax):
 		axr = numpy.ravel(ax)
 		N   = numpy.size(axr)
 		xr = numpy.array([axr[n].val for n in range(N)])
-		map(adouble.is_independent,axr,xr)
+		map(_adolc.adouble.is_independent,axr,xr)
 		return ax
 	
 
@@ -48,7 +67,7 @@ def dependent(ax):
 	
 	Mark ax as dependent.
 	"""
-	if numpy.isscalar(ax):
+	if isinstance(ax, _adolc.adouble):
 		depends_on(ax)
 		return ax
 	else:

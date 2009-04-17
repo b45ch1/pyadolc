@@ -1,12 +1,15 @@
+# -*- coding: utf-8 -*-
 # This file is to be used with py.test
 
 import sys
 sys.path = ['.'] + sys.path #adding current working directory to the $PYTHONPATH
 import numpy
 import numpy.linalg
+import numpy.random
+from numpy.testing import assert_almost_equal, assert_array_almost_equal
 from adolc import *
 
-def test_constructors():	
+def test_constructors():
 	a = adouble(13.);
 	b = adouble(5)
 	c = adouble(a)
@@ -107,16 +110,16 @@ def test_dependent():
 	
 	
 def test_hov_wk_forward():
+	""" hov_wk_forward is necessary to propagate multiple directions of Taylor coefficients"""
 	def f(x):
 		return numpy.sum(x)
-	
 	N = 10
 	P = N
 	D = 2
 	keep = N+1
 	
 	x  = numpy.ones(N)
-	ax = numpy.array([adouble(1.) for n in range(N)])
+	ax = adouble(x)
 	
 	trace_on(17)
 	independent(ax)
@@ -131,42 +134,10 @@ def test_hov_wk_forward():
 	print y
 	print W
 	
-	#assert False
-
-
-
-def test_simple_function():
-	def f(x):
-		y1 = 1./(x.fabs())
-		print y1
-		y2 = x*5.
-		print y2
-		y3 = y1 + y2
-		print y1,y2,y3
-		return y3
-	def g(x):
-		return 1./x.fabs() + 5.*x
-
-	#tape f
-	trace_on(0)
-	ax = adouble(2)
-	ax.is_independent(2)
-	ay = f(ax)
-	depends_on(ay)
-	trace_off()
-	
-def test_adub_locations():
-	x = adub(0)
-	print 'x.loc=',x.loc
-	y1 =  x.sin()
-	print 'y1.loc=',y1.loc
-	print 'y1=',y1
-	y2 = 5.*x
-	print 'y2.loc=',y2.loc
-	print 'y1=',y1	
-	print 'y2=',y2
-
-	#assert False
+	# need to improve this test!
+	true_W = 10.*numpy.ones((1,P,D))
+	assert_almost_equal(10.,y)
+	assert_array_almost_equal(true_W, W)
 
 def test_hov_ti_reverse():
 	"""compute the first columnt of the hessian of f = x_1 x_2 x_3"""
@@ -198,7 +169,244 @@ def test_hov_ti_reverse():
 	assert numpy.prod( Z[0,:,0] == numpy.array([35., 21., 15.]))
 	assert numpy.prod( Z[0,:,1] == numpy.array([0., 7., 5.]))
 
+def test_simple_function():
+	def f(x):
+		y1 = 1./(numpy.fabs(x))
+		y2 = x*5.
+		y3 = y1 + y2
+		return y3
+	def g(x):
+		return -1./numpy.fabs(x)**2 + 5.
+
+	#tape f
+	trace_on(0)
+	x = 2.
+	ax = adouble(x)
+	independent(ax)
+	ay = f(ax)
+	depends_on(ay)
+	trace_off()
+	assert_array_almost_equal(g(x), gradient(0,numpy.array([x])))
+
+def test_tape_to_latex():
+	N = 40
+	def scalar_f(x):
+		return 0.5*numpy.dot(x,x)
+
+	x = numpy.array([1.*n for n in range(N)])
+	ax = adouble(x)
 	
+	trace_on(123)
+	independent(ax)
+	ay = scalar_f(ax)
+	dependent(ay)
+	trace_off()	
+	y = numpy.zeros(1)
+	tape_to_latex(123,x,y)
+	import os
+	os.system("mv tape_123.tex /tmp")
+	cwd = os.getcwd()
+	os.chdir("/tmp")
+	os.system("pdflatex tape_123.tex ")
+	os.chdir(cwd)
+
+
+
+#######################################################################
+## TESTING HIGH LEVEL CONVENICENCE FUNCTIONS (GRADIENT,HESSIAN, ETC..)
+#######################################################################
+
+def test_function():
+	N = 10
+	def scalar_f(x):
+		return numpy.dot(x,x)
+
+	x = numpy.ones(N)
+	ax = adouble(x)
+	
+	trace_on(0)
+	independent(ax)
+	ay = scalar_f(ax)
+	dependent(ay)
+	trace_off()
+	assert_almost_equal(scalar_f(x),function(0,x))
+	
+def test_gradient():
+	N = 10
+	def scalar_f(x):
+		return 0.5*numpy.dot(x,x)
+
+	x = numpy.array([1.*n for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(0)
+	independent(ax)
+	ay = scalar_f(ax)
+	dependent(ay)
+	trace_off()
+	assert_array_almost_equal(x,gradient(0,x))
+	
+def test_hessian():
+	N = 10
+	def scalar_f(x):
+		return 0.5*numpy.dot(x,x)
+
+	x = numpy.array([1.*n for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(0)
+	independent(ax)
+	ay = scalar_f(ax)
+	dependent(ay)
+	trace_off()
+	true_H = numpy.eye(N)
+	assert_array_almost_equal(true_H, hessian(0,x))
+
+def test_Jacobian():
+	N = 31 # dimension
+	M = 29 # codimension
+	A = numpy.array([[ 1./N +(n==m) for n in range(N)] for m in range(M)])
+	def vector_f(x):
+		return numpy.dot(A,x)
+		
+	x = numpy.array([1.*n for n in range(N)])
+	#ax = adouble(x)
+	ax = numpy.array([adouble(0.) for n in range(N)])
+	
+	trace_on(123)
+	for n in range(N):
+		ax[n].is_independent(x[n])
+	ay = vector_f(ax)
+	dependent(ay)
+	trace_off()
+	assert_array_almost_equal(A, jacobian(123,x))
+	
+def test_Hessvec():
+	N = 1132
+	def scalar_f(x):
+		return 0.5*numpy.dot(x,x)
+
+	x = numpy.array([1.*n for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(0)
+	independent(ax)
+	ay = scalar_f(ax)
+	dependent(ay)
+	trace_off()
+	
+	v = numpy.random.rand(N)
+	H = numpy.eye(N)
+	Hv = numpy.dot(H,v)
+	assert_array_almost_equal( Hv, hess_vec(0,x,v))
+
+def test_vec_jac():
+	N = 3 # dimension
+	M = 2 # codimension
+	A = numpy.array([[ 1./N +(n==m) for n in range(N)] for m in range(M)])
+	def vector_f(x):
+		return numpy.dot(A,x)
+		
+	x = numpy.array([1.*n for n in range(N)])
+	#ax = adouble(x)
+	ax = numpy.array([adouble(0.) for n in range(N)])
+	
+	trace_on(123)
+	for n in range(N):
+		ax[n].is_independent(x[n])
+	ay = vector_f(ax)
+	dependent(ay)
+	trace_off()
+
+	#uJ = numpy.dot(u,A)
+	#print 'vec_jac evaluation correct?\t\t', near_equal_with_num_error_increase(vec_jac(1,x,u, 0), uJ )
+
+
+#def test_gradient_and_jacobian_and_hessian():
+	#N = 6 # dimension
+	#M = 5 # codimension
+	#P = 4 # number of directional derivatives
+	#Q = 3 # number of adjoint derivatives
+	#D = 2 # order of derivatives
+
+	#A = numpy.array([[ 1./N +(n==m) for n in range(N)] for m in range(M)])
+	#x = numpy.array([1./(i+1) for i in range(N)])
+	#y = numpy.zeros(M)
+	#u = numpy.zeros(M); u[0] = 1.
+	#v = numpy.zeros(N); v[0] = 1.
+	#Vnp = numpy.array([[n==p for  p in range(P)]for n in range(N)], dtype=float)
+	#Vnd = numpy.array([[n==d and d==0 for d in range(D)]for n in range(N)], dtype=float)
+	#Vnpd = numpy.array([[[ n==p and d == 0 for d in range(D)] for p in range(P)] for n in range(N)], dtype = float)
+	#Uqm = numpy.array([[q==n for m in range(M)]for q in range(Q)], dtype=float)
+
+	#b = numpy.zeros(N,dtype=float)
+	#ax = numpy.array([adouble(1.) for i in range(N)])
+
+	#def scalar_f(x):
+		#return numpy.dot(x,x)
+
+	#def vector_f(x):
+		#return numpy.dot(A,x)
+
+	#trace_on(0)
+	#independent(ax)
+	#ay = scalar_f(ax)
+	#dependent(ay)
+	#trace_off()
+
+	#trace_on(1)
+	#independent(ax)
+	#ay = vector_f(ax)
+	#dependent(ay)
+	#trace_off()
+
+	## basic drivers
+	#assert_almost_equal(function(0,x)[0],scalar_f(x))
+	#y = 2*x #gradient of scalar_f
+	#print 'Gradient evaluation correct?\t\t',near_equal_with_num_error_increase(gradient(0,x), y)
+	#H = 2*numpy.eye(N) #hessian of scalar_f
+	#print 'Hessian evaluation correct?\t\t', near_equal_with_num_error_increase(hessian(0,x), H)
+	#Hv = numpy.dot(H,v)
+	#print 'Hess_vec evaluation correct?\t\t', near_equal_with_num_error_increase(hess_vec(0,x,v), Hv)
+	#print 'Jacobian evaluation correct?\t\t', near_equal_with_num_error_increase(jacobian(1,x), A )
+	#uJ = numpy.dot(u,A)
+	#print 'vec_jac evaluation correct?\t\t', near_equal_with_num_error_increase(vec_jac(1,x,u, 0), uJ )
+	#Jv = numpy.dot(A,v)
+	#print 'vec_jac evaluation correct?\t\t', near_equal_with_num_error_increase(jac_vec(1,x,v), Jv )
+	#print 'lagra_hess_vec evaluation correct?\t', near_equal_with_num_error_increase(lagra_hess_vec(1,x,v,u), numpy.zeros(N,dtype=float) )
+
+	## low level functions
+	#print 'zos_forward correct?\t\t\t', near_equal_with_num_error_increase(zos_forward(1,x,0), vector_f(x))
+	#print 'fos_forward correct?\t\t\t', near_equal_with_num_error_increase(fos_forward(1,x,v,0)[1], A[:,0])
+	#print 'fov_forward correct?\t\t\t', near_equal_with_num_error_increase(fov_forward(1,x,Vnp)[1], A[:,:P])
+	#print 'hov_forward correct?\t\t\t', near_equal_with_num_error_increase(hov_forward(1,D,x,Vnpd)[1][:,:,-1], numpy.zeros((M,P)))
+	#uA = numpy.dot(u,A)
+	#print 'fos_reverse correct?\t\t\t', near_equal_with_num_error_increase(fos_reverse(1,u), uA)
+	#UqmA = numpy.dot(Uqm,A)
+	#print 'fov_reverse correct?\t\t\t', near_equal_with_num_error_increase(fov_reverse(1,Uqm), UqmA)
+	#print 'hos_forward correct?\t\t\t', near_equal_with_num_error_increase(hos_forward(1,D,x, Vnd,D+1)[1][:,-1], numpy.zeros(M))
+	#print 'hos_reverse correct?\t\t\t', near_equal_with_num_error_increase(hos_reverse(1,D,u)[:,-1], numpy.zeros(N))
+	#print 'hov_reverse correct?\t\t\t', near_equal_with_num_error_increase(hov_reverse(1,D,Uqm)[0][:,:,-1], numpy.zeros((Q,N)))
+
+
+
+## c style functions
+#y = numpy.zeros(1, dtype=float)
+#g = numpy.zeros(N, dtype=float)
+#H = numpy.zeros((N,N), dtype=float)
+#z = numpy.zeros(N, dtype=float)
+
+#function(0,1,N,x,y)
+#gradient(0,N,x,g)
+#hessian(0,N,x,H)
+#hess_vec(0, N, x,v, z)
+
+
+
+#print 'number of failed tests =',number_of_errors
+
+
+
 
 ## operator / for int and double
 #test_expression('a / 2: ',	lambda x: x[0]/x[1], (a,2),		(a.val,2))
@@ -234,41 +442,41 @@ def test_hov_ti_reverse():
 
 
 ##functions
-#import numpy as npy
+#import numpy as numpy
 #a = adouble(0.4);	print 'a=adouble(13.)\t= ',a,'\t\ta.val =',a.val
-#test_expression('exp  (a)     : ',		lambda x: npy.exp  (x),  a,		a.val)
-#test_expression('log  (a)     : ',		lambda x: npy.log  (x),  a,		a.val)
-#test_expression('sqrt (a)     : ',		lambda x: npy.sqrt (x),  a,		a.val)
-#test_expression('sin  (a)     : ',		lambda x: npy.sin  (x),  a,		a.val)
-#test_expression('cos  (a)     : ',		lambda x: npy.cos  (x),  a,		a.val)
-#test_expression('tan  (a)     : ',		lambda x: npy.tan  (x),  a,		a.val)
-#test_expression('asin (a)     : ',		lambda x: npy.arcsin (x),  a,		a.val)
-#test_expression('acos (a)     : ',		lambda x: npy.arccos (x),  a,		a.val)
-#test_expression('atan (a)     : ',		lambda x: npy.arctan (x),  a,		a.val)
-#test_expression('log10(a)     : ',		lambda x: npy.log10(x),  a,		a.val)
-#test_expression('sinh (a)     : ',		lambda x: npy.sinh (x),  a,		a.val)
-#test_expression('cosh (a)     : ',		lambda x: npy.cosh (x),  a,		a.val)
-#test_expression('tanh (a)     : ',		lambda x: npy.tanh (x),  a,		a.val)
-#test_expression('fabs (a)     : ',		lambda x: npy.fabs (x),  a,		a.val)
-#test_expression('ceil (a)     : ',		lambda x: npy.ceil (x),  a,		a.val)
-#test_expression('floor(a)    : ',		lambda x: npy.floor(x),	 a,		a.val)
+#test_expression('exp  (a)     : ',		lambda x: numpy.exp  (x),  a,		a.val)
+#test_expression('log  (a)     : ',		lambda x: numpy.log  (x),  a,		a.val)
+#test_expression('sqrt (a)     : ',		lambda x: numpy.sqrt (x),  a,		a.val)
+#test_expression('sin  (a)     : ',		lambda x: numpy.sin  (x),  a,		a.val)
+#test_expression('cos  (a)     : ',		lambda x: numpy.cos  (x),  a,		a.val)
+#test_expression('tan  (a)     : ',		lambda x: numpy.tan  (x),  a,		a.val)
+#test_expression('asin (a)     : ',		lambda x: numpy.arcsin (x),  a,		a.val)
+#test_expression('acos (a)     : ',		lambda x: numpy.arccos (x),  a,		a.val)
+#test_expression('atan (a)     : ',		lambda x: numpy.arctan (x),  a,		a.val)
+#test_expression('log10(a)     : ',		lambda x: numpy.log10(x),  a,		a.val)
+#test_expression('sinh (a)     : ',		lambda x: numpy.sinh (x),  a,		a.val)
+#test_expression('cosh (a)     : ',		lambda x: numpy.cosh (x),  a,		a.val)
+#test_expression('tanh (a)     : ',		lambda x: numpy.tanh (x),  a,		a.val)
+#test_expression('fabs (a)     : ',		lambda x: numpy.fabs (x),  a,		a.val)
+#test_expression('ceil (a)     : ',		lambda x: numpy.ceil (x),  a,		a.val)
+#test_expression('floor(a)    : ',		lambda x: numpy.floor(x),	 a,		a.val)
 
-##print 'exp  (a)', npy.exp  (a), a.exp  ()
-##print 'log  (a)', npy.log  (a), a.log  ()
-##print 'sqrt (a)', npy.sqrt (a), a.sqrt ()
-##print 'sin  (a)', npy.sin  (a), a.sin  ()
-##print 'cos  (a)', npy.cos  (a), a.cos  ()
-##print 'tan  (a)', npy.tan  (a), a.tan  ()
-##print 'asin (a)', npy.arcsin(a),a.asin ()
-##print 'acos (a)', npy.arccos(a),a.acos ()
-##print 'atan (a)', npy.arctan(a),a.atan ()
-##print 'log10(a)', npy.log10(a), a.log10()
-##print 'sinh (a)', npy.sinh (a), a.sinh ()
-##print 'cosh (a)', npy.cosh (a), a.cosh ()
-##print 'tanh (a)', npy.tanh (a), a.tanh ()
-##print 'fabs (a)', npy.fabs (a), a.fabs ()
-##print 'ceil (a)', npy.ceil (a), a.ceil ()
-##print 'floor (a)',npy.floor (a),a.floor ()
+##print 'exp  (a)', numpy.exp  (a), a.exp  ()
+##print 'log  (a)', numpy.log  (a), a.log  ()
+##print 'sqrt (a)', numpy.sqrt (a), a.sqrt ()
+##print 'sin  (a)', numpy.sin  (a), a.sin  ()
+##print 'cos  (a)', numpy.cos  (a), a.cos  ()
+##print 'tan  (a)', numpy.tan  (a), a.tan  ()
+##print 'asin (a)', numpy.arcsin(a),a.asin ()
+##print 'acos (a)', numpy.arccos(a),a.acos ()
+##print 'atan (a)', numpy.arctan(a),a.atan ()
+##print 'log10(a)', numpy.log10(a), a.log10()
+##print 'sinh (a)', numpy.sinh (a), a.sinh ()
+##print 'cosh (a)', numpy.cosh (a), a.cosh ()
+##print 'tanh (a)', numpy.tanh (a), a.tanh ()
+##print 'fabs (a)', numpy.fabs (a), a.fabs ()
+##print 'ceil (a)', numpy.ceil (a), a.ceil ()
+##print 'floor (a)',numpy.floor (a),a.floor ()
 #print 'fmax (a,b)',			    a.fmax (b)
 #print 'fmax (a,0.3)',			a.fmax (0.3)
 #print 'fmax (0.3,a)','/* not implemented */'
@@ -279,106 +487,6 @@ def test_hov_ti_reverse():
 
 
 
-
-
-
-
-#####################################################
-## TESTING THE EVALUATION OF DERIVATIVES
-#####################################################
-
-#N = 6 # dimension
-#M = 5 # codimension
-#P = 4 # number of directional derivatives
-#Q = 3 # number of adjoint derivatives
-#D = 2 # order of derivatives
-
-#A = npy.zeros((M,N))
-#A[:] = [[ 1./N +(n==m) for n in range(N)] for m in range(M)]
-#x = npy.array([1./(i+1) for i in range(N)])
-#y = npy.zeros(M)
-#u = npy.zeros(M); u[0] = 1.
-#v = npy.zeros(N); v[0] = 1.
-#Vnp = npy.array([[n==p for  p in range(P)]for n in range(N)], dtype=float)
-#Vnd = npy.array([[n==d and d==0 for d in range(D)]for n in range(N)], dtype=float)
-#Vnpd = npy.array([[[ n==p and d == 0 for d in range(D)] for p in range(P)] for n in range(N)], dtype = float)
-#Uqm = npy.array([[q==n for m in range(M)]for q in range(Q)], dtype=float)
-
-#b = npy.zeros(N,dtype=float)
-#ax = npy.array([adouble(0.) for i in range(N)])
-
-#def scalar_f(x):
-	#global A
-	#return npy.dot(x,x)
-
-#def vector_f(x):
-	#global A
-	#return npy.dot(A,x)
-
-#trace_on(0)
-#for n in range(N):
-	#ax[n].is_independent(x[n])
-#ay = scalar_f(ax)
-#depends_on(ay)
-#trace_off()
-
-#trace_on(1)
-#for n in range(N):
-	#ax[n].is_independent(x[n])
-#ay = vector_f(ax)
-#for m in range(M):
-	#y[m] = depends_on(ay[m])
-#trace_off()
-
-## basic drivers
-#print 'Function evaluation correct?\t\t',near_equal_with_num_error_increase(function(0,x), scalar_f(x))
-#y = 2*x #gradient of scalar_f
-#print 'Gradient evaluation correct?\t\t',near_equal_with_num_error_increase(gradient(0,x), y)
-#H = 2*npy.eye(N) #hessian of scalar_f
-#print 'Hessian evaluation correct?\t\t', near_equal_with_num_error_increase(hessian(0,x), H)
-#Hv = npy.dot(H,v)
-#print 'Hess_vec evaluation correct?\t\t', near_equal_with_num_error_increase(hess_vec(0,x,v), Hv)
-#print 'Jacobian evaluation correct?\t\t', near_equal_with_num_error_increase(jacobian(1,x), A )
-#uJ = npy.dot(u,A)
-#print 'vec_jac evaluation correct?\t\t', near_equal_with_num_error_increase(vec_jac(1,x,u, 0), uJ )
-#Jv = npy.dot(A,v)
-#print 'vec_jac evaluation correct?\t\t', near_equal_with_num_error_increase(jac_vec(1,x,v), Jv )
-#print 'lagra_hess_vec evaluation correct?\t', near_equal_with_num_error_increase(lagra_hess_vec(1,x,v,u), npy.zeros(N,dtype=float) )
-
-##try:
-	##jac_solv(1,x,b, 0, 2); print b
-##except:
-	##pass
-
-## low level functions
-#print 'zos_forward correct?\t\t\t', near_equal_with_num_error_increase(zos_forward(1,x,0), vector_f(x))
-#print 'fos_forward correct?\t\t\t', near_equal_with_num_error_increase(fos_forward(1,x,v,0)[1], A[:,0])
-#print 'fov_forward correct?\t\t\t', near_equal_with_num_error_increase(fov_forward(1,x,Vnp)[1], A[:,:P])
-#print 'hov_forward correct?\t\t\t', near_equal_with_num_error_increase(hov_forward(1,D,x,Vnpd)[1][:,:,-1], npy.zeros((M,P)))
-#uA = npy.dot(u,A)
-#print 'fos_reverse correct?\t\t\t', near_equal_with_num_error_increase(fos_reverse(1,u), uA)
-#UqmA = npy.dot(Uqm,A)
-#print 'fov_reverse correct?\t\t\t', near_equal_with_num_error_increase(fov_reverse(1,Uqm), UqmA)
-#print 'hos_forward correct?\t\t\t', near_equal_with_num_error_increase(hos_forward(1,D,x, Vnd,D+1)[1][:,-1], npy.zeros(M))
-#print 'hos_reverse correct?\t\t\t', near_equal_with_num_error_increase(hos_reverse(1,D,u)[:,-1], npy.zeros(N))
-#print 'hov_reverse correct?\t\t\t', near_equal_with_num_error_increase(hov_reverse(1,D,Uqm)[0][:,:,-1], npy.zeros((Q,N)))
-
-
-
-## c style functions
-#y = npy.zeros(1, dtype=float)
-#g = npy.zeros(N, dtype=float)
-#H = npy.zeros((N,N), dtype=float)
-#z = npy.zeros(N, dtype=float)
-
-#function(0,1,N,x,y)
-#gradient(0,N,x,g)
-#hessian(0,N,x,H)
-#hess_vec(0, N, x,v, z)
-
-
-
-#print 'number of failed tests =',number_of_errors
 
 
 
