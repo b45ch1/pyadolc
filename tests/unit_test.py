@@ -270,8 +270,7 @@ def test_Jacobian():
 		return numpy.dot(A,x)
 		
 	x = numpy.array([1.*n for n in range(N)])
-	#ax = adouble(x)
-	ax = numpy.array([adouble(0.) for n in range(N)])
+	ax = adouble(x)
 	
 	trace_on(123)
 	for n in range(N):
@@ -281,7 +280,7 @@ def test_Jacobian():
 	trace_off()
 	assert_array_almost_equal(A, jacobian(123,x))
 	
-def test_Hessvec():
+def test_hess_vec():
 	N = 1132
 	def scalar_f(x):
 		return 0.5*numpy.dot(x,x)
@@ -308,19 +307,62 @@ def test_vec_jac():
 		return numpy.dot(A,x)
 		
 	x = numpy.array([1.*n for n in range(N)])
-	#ax = adouble(x)
-	ax = numpy.array([adouble(0.) for n in range(N)])
+	ax = adouble(x)
 	
-	trace_on(123)
+	trace_on(1)
 	for n in range(N):
 		ax[n].is_independent(x[n])
 	ay = vector_f(ax)
 	dependent(ay)
 	trace_off()
+	u = numpy.random.rand(M)
+	uJ = numpy.dot(u,A)
+	assert_array_almost_equal( uJ, vec_jac(1,x,u, 0))
 
-	#uJ = numpy.dot(u,A)
-	#print 'vec_jac evaluation correct?\t\t', near_equal_with_num_error_increase(vec_jac(1,x,u, 0), uJ )
 
+def test_jac_vec():
+	N = 3 # dimension
+	M = 2 # codimension
+	A = numpy.array([[ 1./N +(n==m) for n in range(N)] for m in range(M)])
+	def vector_f(x):
+		return numpy.dot(A,x)
+		
+	x = numpy.array([1.*n for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(1)
+	for n in range(N):
+		ax[n].is_independent(x[n])
+	ay = vector_f(ax)
+	dependent(ay)
+	trace_off()
+	v = numpy.random.rand(N)
+	Jv = numpy.dot(A,v)
+	assert_array_almost_equal( Jv, jac_vec(1,x,v) )
+
+def test_lagra_hess_vec():
+	""" This test needs improvement: the result is always 0!!"""
+	N = 3 # dimension
+	M = 2 # codimension
+	A = numpy.array([[ 1./N +(n==m) for n in range(N)] for m in range(M)])
+	def vector_f(x):
+		return numpy.dot(A,x)
+		
+	x = numpy.array([1.*n for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(1)
+	for n in range(N):
+		ax[n].is_independent(x[n])
+	ay = vector_f(ax)
+	dependent(ay)
+	trace_off()
+	u = numpy.random.rand(M)
+	v = numpy.random.rand(N)
+	assert_array_almost_equal(numpy.zeros(N,dtype=float), lagra_hess_vec(1,x,v,u) )
+
+
+	
 
 #def test_gradient_and_jacobian_and_hessian():
 	#N = 6 # dimension
