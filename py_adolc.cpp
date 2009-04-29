@@ -58,11 +58,6 @@ bpn::array wrapped_function(short tape_tag, bpn::array &bpn_x){
 	double* x = (double*) nu::data(bpn_x);
 	vector<double> y(M);
 	function(tape_tag, M, N, x, &y[0]);
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, &y[0], sizeof(double) * M); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
 	return nu::makeNum( &y[0], M);
 }
 
@@ -73,11 +68,6 @@ bpn::array wrapped_gradient(short tape_tag, bpn::array &bpn_x){
 	double* x = (double*) nu::data(bpn_x);
 	double g[N];
 	gradient(tape_tag, N, x, g);
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, &g[0], sizeof(double) * N); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
 	return nu::makeNum( &g[0], N);
 }
 
@@ -105,11 +95,6 @@ bpn::array wrapped_hessian(short tape_tag, bpn::array &bpn_x){
 	H_shp[0]=N;
 	H_shp[1]=N;
 	return nu::makeNum( H[0], H_shp);
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(2, &H_shape[0], PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, H[0], sizeof(double) * N * N); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
 }
 
 bpn::array wrapped_jacobian(short tape_tag, bpn::array &bpn_x){
@@ -127,12 +112,6 @@ bpn::array wrapped_jacobian(short tape_tag, bpn::array &bpn_x){
 	J_shp[0]=M;
 	J_shp[1]=N;
 	return nu::makeNum( J[0], J_shp);
-
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(2, &J_shape[0], PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, J[0], sizeof(double) * N * M); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
 }
 
 bpn::array wrapped_vec_jac(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u, bool repeat){
@@ -145,14 +124,7 @@ bpn::array wrapped_vec_jac(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_u,
 	double* u = (double*) nu::data(bpn_u);
 	double	z[N];
 	vec_jac(tape_tag, M, N, repeat, x, u, z);
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
-
 	return nu::makeNum( z, N);
-
 }
 
 bpn::array wrapped_jac_vec(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v){
@@ -165,11 +137,6 @@ bpn::array wrapped_jac_vec(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v)
 	double* v = (double*) nu::data(bpn_v);
 	double	z[M];
 	jac_vec(tape_tag, M, N, x, v, z);
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, &z[0], sizeof(double) * M); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
 	return nu::makeNum( z, M);
 }
 
@@ -182,12 +149,6 @@ bpn::array wrapped_hess_vec			(short tape_tag, bpn::array &bpn_x, bpn::array &bp
 	double* v = (double*) nu::data(bpn_v);
 	double	z[N];
 	hess_vec(tape_tag, N, x, v, z);
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
-
 	return nu::makeNum( z, N);
 }
 
@@ -206,13 +167,6 @@ bpn::array wrapped_lagra_hess_vec	(short tape_tag, bpn::array &bpn_x, bpn::array
 	double* u = (double*) nu::data(bpn_u);
 	double	z[N];
 	lagra_hess_vec(tape_tag, M, N, x, v, u, z);
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &N, PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, &z[0], sizeof(double) * N); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
-
-
 	return nu::makeNum( z, N);
 }
 
@@ -232,18 +186,9 @@ bpn::array wrapped_zos_forward (short tape_tag, bpn::array &bpn_x, int keep){
 	tapestats(tape_tag, tape_stats);
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 	npy_intp M = tape_stats[NUM_DEPENDENTS];
-
 	double* x = (double*) nu::data(bpn_x);
 	double y[M];
-
 	zos_forward(tape_tag, M, N, keep, x, y);
-
-// 	bp::object obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-// 	double *ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( obj.ptr() )));
-// 	memcpy(ptr, &y[0], sizeof(double) * M); // copies the input data to 
-// 	return boost::python::extract<boost::python::numeric::array>(obj);
-
-
 	return nu::makeNum( y, M);
 }
 
@@ -262,19 +207,8 @@ bp::tuple wrapped_fos_forward(short tape_tag, bpn::array &bpn_x, bpn::array &bpn
 	vector<double> directional_derivative(M);
 
 	fos_forward(tape_tag, M, N, keep, x, v, &y[0], &directional_derivative[0]);
-
-// 	bp::object y_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-// 	double *y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( y_obj.ptr() )));
-// 	memcpy(y_ptr, &y[0], sizeof(double) * M); // copies the input data to 
-// 	bpn::array ret_y =  boost::python::extract<boost::python::numeric::array>(y_obj);
 	bpn::array ret_y 	=  nu::makeNum( &y[0], M);
-
-/*	bp::object directional_derivative_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-	double *directional_derivative_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( directional_derivative_obj.ptr() )));
-	memcpy(directional_derivative_ptr, &directional_derivative[0], sizeof(double) * M); // copies the input data to 
-	bpn::array ret_directional_derivative =  boost::python::extract<boost::python::numeric::array>(directional_derivative_obj)*/;
 	bpn::array ret_directional_derivative 	=  nu::makeNum( &directional_derivative[0], M);
-	
 	bp::list retvals;
 	retvals.append(ret_y);
 	retvals.append(ret_directional_derivative);
@@ -300,17 +234,7 @@ bp::tuple wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &
 
 	fov_forward(tape_tag, M, N, P, x, V, y, Y);
 	vector<npy_intp> Y_shp(2); Y_shp[0] = M; Y_shp[1]=P;
-
-// 	bp::object y_obj(bp::handle<>(PyArray_SimpleNew(1, &M, PyArray_DOUBLE)));
-// 	double *y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( y_obj.ptr() )));
-// 	memcpy(y_ptr, &y[0], sizeof(double) * M); // copies the input data to 
-// 	bpn::array ret_y =  boost::python::extract<boost::python::numeric::array>(y_obj);
 	bpn::array ret_y 	=  nu::makeNum( y, M);
-
-// 	bp::object Y_obj(bp::handle<>(PyArray_SimpleNew(2, &Y_shp[0], PyArray_DOUBLE)));
-// 	double *Y_ptr = static_cast<double*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( Y_obj.ptr() )));
-// 	memcpy(Y_ptr, Y[0], sizeof(double) * M * P); // copies the input data to 
-// 	bpn::array ret_Y =  boost::python::extract<boost::python::numeric::array>(Y_obj);
 	bpn::array ret_Y 	=  nu::makeNum( Y[0], Y_shp);
 
 	bp::list retvals;
@@ -325,10 +249,6 @@ bp::tuple wrapped_hos_forward		(short tape_tag, bpn::array &bpn_x, bpn::array &b
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 	npy_intp M = tape_stats[NUM_DEPENDENTS];
 	npy_intp D = nu::shape(bpn_V)[1];
-
-// 	printf("called hos_forward with (N=%d, D=%d) and keep=%d\n", N,D,keep);
-
-
 	double* x = (double*) nu::data(bpn_x);
 	double* V_data = (double*) nu::data(bpn_V);
 	double* V[N];
@@ -351,12 +271,14 @@ bp::tuple wrapped_hos_forward		(short tape_tag, bpn::array &bpn_x, bpn::array &b
 }
 
 
-bp::tuple wrapped_hov_forward	(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V){
+bp::tuple wrapped_hov_forward	(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V){
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
 	int M = tape_stats[NUM_DEPENDENTS];
 	int P = nu::shape(bpn_V)[1];
+	int D = nu::shape(bpn_V)[2];
+	
 
 	double* x = (double*) nu::data(bpn_x);
 	double* V_data = (double*) nu::data(bpn_V);
@@ -384,7 +306,7 @@ bp::tuple wrapped_hov_forward	(short tape_tag, int D, bpn::array &bpn_x, bpn::ar
 }
 
 
-bp::tuple	wrapped_hov_wk_forward		(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V, int keep){
+bp::tuple	wrapped_hov_wk_forward		(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V, int keep){
 	if(!nu::iscontiguous(bpn_x)){
 		printf("not a contiguous array!\n");
 	}
@@ -396,6 +318,7 @@ bp::tuple	wrapped_hov_wk_forward		(short tape_tag, int D, bpn::array &bpn_x, bpn
 	int N = tape_stats[NUM_INDEPENDENTS];
 	int M = tape_stats[NUM_DEPENDENTS];
 	int P = nu::shape(bpn_V)[1];
+	int D = nu::shape(bpn_V)[2];
 
 	double* x = (double*) nu::data(bpn_x);
 	double* V_data = (double*) nu::data(bpn_V);

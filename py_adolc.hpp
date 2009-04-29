@@ -61,8 +61,8 @@ bpn::array	wrapped_zos_forward			(short tape_tag, bpn::array &bpn_x, int keep);
 bp::tuple	wrapped_fos_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_v, int keep);
 bp::tuple 	wrapped_fov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V);
 bp::tuple	wrapped_hos_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
-bp::tuple	wrapped_hov_forward			(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V);
-bp::tuple	wrapped_hov_wk_forward		(short tape_tag, int D, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
+bp::tuple	wrapped_hov_forward			(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V);
+bp::tuple	wrapped_hov_wk_forward		(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V, int keep);
 bpn::array wrapped_fos_reverse			(short tape_tag, bpn::array &bpn_u);
 bpn::array wrapped_fov_reverse			(short tape_tag, bpn::array &bpn_U);
 bpn::array wrapped_hos_reverse			(short tape_tag, int D, bpn::array &bpn_u);
@@ -98,7 +98,6 @@ void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::
 void py_tape_doc(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_y );
 bp::dict wrapped_tapestats(short tape_tag);
 
-
 /* of class badouble */
 adub	(*exp_adub) 		( const badouble& ) = &exp;
 adub	(*log_adub) 		( const badouble& ) = &log;
@@ -119,8 +118,6 @@ adub	(*tanh_adub) 		( const badouble& ) = &tanh;
 adub	(*fabs_adub) 		( const badouble& ) = &fabs;
 adub	(*ceil_adub)		( const badouble& ) = &ceil;
 adub	(*floor_adub) 		( const badouble& ) = &floor;
-
-
 
 adub	(*pow_adub)			( const badouble&, double ) = &pow;
 adouble	(*pow_adouble_badouble_badouble)( const badouble&, const badouble& ) = &pow;
@@ -153,8 +150,6 @@ adub *adub_fabs_badouble  (const badouble &rhs){	return new adub(fabs(rhs));}
 adub *adub_ceil_badouble  (const badouble &rhs){	return new adub(ceil(rhs));}
 adub *adub_floor_badouble (const badouble &rhs){	return new adub(floor(rhs));}
 adub *adub_log10_badouble (const badouble &rhs){	return new adub(log10(rhs));}
-
-
 
 /* binary */
 adub *adub_add_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator+(lhs,rhs));}
@@ -195,136 +190,37 @@ BOOST_PYTHON_MODULE(_adolc)
 	import_array(); 										/* some kind of hack to get numpy working */
 	bpn::array::set_module_and_type("numpy", "ndarray");	/* some kind of hack to get numpy working */
 	
-	scope().attr("__doc__") =" Adolc: Algorithmic Differentiation Software \n\
-	see http://www.math.tu-dresden.de/~adol-c/ for documentation of Adolc \n\
-	http://github.com/b45ch1/pyadolc/tree/master for more information and documentation of this Python extension\n\
-	\n\
-	return values are always numpy arrays!\n\
-	\n\
-	Example Session: \n\
-	from numpy import * \n\
-	from adolc import * \n\
-	def vector_f(x): \n\
-	\tV=vander(x) \n\
-	\treturn dot(v,x) \n\
-	\n\
-	trace_on(0)\n\
-	map(adouble.is_independent,ax,x)\n\
-	ay = scalar_f(ax)\n\
-	y = array(map(depends_on,ay)) \n\
-	trace_off() \n\
-	y2 = function(0,x) \n\
-	g = gradient(0,x) \n\
-	";
+	scope().attr("__doc__") ="unused: moved docstring to adolc.py";
 
-	def("trace_on",trace_on_default_argument , "trace_on(tape_tag):\nstart recording to the tape with index tape_tag\n");
-	def("trace_off",trace_off_default_argument ,"turn off tracing\n");
+	def("trace_on",trace_on_default_argument);
+	def("trace_off",trace_off_default_argument);
 
-	def("function", 		&wrapped_function, "f=function(tape_tag,x):\nevaluate the function f(x) recorded on tape with index tape_tag\n");
-	def("gradient", 		&wrapped_gradient, "g=gradient(tape_tag,x):\nevaluate the gradient g = f'(x), f:R^N -> R\n");
-	def("hessian",			&wrapped_hessian,  "H=hessian(tape_tag,x):\nevaluate the hessian H = f\"(x), f:R^N -> R\n");
-	def("jacobian", 		&wrapped_jacobian, "J=jacobian(tape_tag,x):\nevaluate the jacobian J = F'(x), F:R^N -> R^M \n");
-	def("vec_jac",			&wrapped_vec_jac,  "z=vec_jac(tape_tag,x,u):\nevaluate u^T F'(x), F:R^N -> R^M\n");
-	def("jac_vec",			&wrapped_jac_vec,  "z=jac_vec(tape_tag,x,v):\nevaluate  F\"(x)v, F:R^N -> R^M\n");
-	def("hess_vec",			&wrapped_hess_vec, "z=hess_vec(tape_tag,x,v):\nevaluate  f\"(x)v, f:R^N -> R\n");
-	def("lagra_hess_vec", 	&wrapped_lagra_hess_vec,  "z=lagra_hess_vec(tape_tag,x,u,v):\nevaluate  u^T F\"(x)v, F:R^N -> R^M\n");
+	def("function", 		&wrapped_function);
+	def("gradient", 		&wrapped_gradient);
+	def("hessian",			&wrapped_hessian);
+	def("jacobian", 		&wrapped_jacobian);
+	def("vec_jac",			&wrapped_vec_jac);
+	def("jac_vec",			&wrapped_jac_vec);
+	def("hess_vec",			&wrapped_hess_vec);
+	def("lagra_hess_vec", 	&wrapped_lagra_hess_vec);
 // 	def("jac_solv",			&wrapped_jac_solv,  "(void*)lagra_hess_vec(tape_tag,x,b,sparse=0,mode=2):\nsolve F'(x) b_new - b = 0  , F:R^N -> R^M\n"); /* buggy ! */
 
-	def("zos_forward",		&wrapped_zos_forward, 	"zero order scalar forward:\n"\
-													"y = zos_forward(tape_tag, x, keep)\n" \
-													"F:R^N -> R^M\n" \
-													"x is N-vector, y is M-vector\n" \
-													"keep = 1 prepares for fos_reverse or fov_reverse\n" \
-													"");
-	def("fos_forward",		&wrapped_fos_forward, 	"first order scalar forward:\n"\
-													"(y,w) = fos_forward(tape_tag, x, v, keep) \n"\
-													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
-													"v is N-vector, direction \n"\
-													"w is M-vector, directional derivative \n"\
-													"keep = 1 prepares for fos_reverse or fov_reverse\n"\
-													"keep = 2 prepares for hos_reverse or hov_reverse\n"\
-													"");
-	def("fov_forward",		&wrapped_fov_forward,	"first order vector forward:\n"\
-													"(y,W) = fov_forward(tape_tag, x, V) \n"\
-													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
-													"V is (N x P)-matrix. P directions \n"\
-													"W is (M x P)-matrix. P directiona derivatives \n"\
-													"");
-	def("hos_forward",		&wrapped_hos_forward,	"higher order scalar forward:\n"\
-													"(y,W) = hos_forward(tape_tag, x, V, keep) \n"\
-													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
-													"D is the highest order of the derivative\n"\
-													"V is (N x D)-matrix \n"\
-													"W is (M x D)-matrix \n"\
-													"keep = 1 prepares for fos_reverse or fov_reverse\n"\
-													"D+1 >= keep > 2 prepares for hos_reverse or hov_reverse\n"\
-													"");
-	def("hov_forward",		&wrapped_hov_forward,	"higher order vector forward:\n"\
-													"(y,W) = hov_forward(tape_tag, D, x, V) \n"\
-													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
-													"D is the order of the derivative\n"\
-													"V is (N x P x D)-matrix, P directions \n"\
-													"W is (M x P x D)-matrix, P directional derivatives \n"\
-													"");
+	def("zos_forward",		&wrapped_zos_forward);
+	def("fos_forward",		&wrapped_fos_forward);
+	def("fov_forward",		&wrapped_fov_forward);
+	def("hos_forward",		&wrapped_hos_forward);
+	def("hov_forward",		&wrapped_hov_forward);
 
-	def("hov_wk_forward",	&wrapped_hov_wk_forward,"higher order vector forward with keep:\n"\
-													"(y,W) = hov_wk_forward(tape_tag, D, x, V, keep) \n"\
-													"F:R^N -> R^M\n"\
-													"x is N-vector, y is M-vector\n"\
-													"D is the order of the derivative\n"\
-													"V is (N x P x D)-matrix, P directions \n"\
-													"W is (M x P x D)-matrix, P directional derivatives \n"\
-													"");
+	def("hov_wk_forward",	&wrapped_hov_wk_forward);
 													
-	def("fos_reverse",		&wrapped_fos_reverse,	"first order scalar reverse:\n"\
-													"z = fos_reverse(tape_tag, u) \n"\
-													"F:R^N -> R^M\n"\
-													"u is M-vector, adjoint direction \n"\
-													"z is N-vector, adjoint directional derivative z= u F'(x) \n"\
-													"after calling zos_forward, fos_forward or hos_forward with keep = 1 \n"\
-													"");
+	def("fos_reverse",		&wrapped_fos_reverse);
      
-	def("fov_reverse",		&wrapped_fov_reverse,	"first order vector reverse:\n"\
-													"Z = fov_reverse(tape_tag, u) \n"\
-													"F:R^N -> R^M\n"\
-													"U is (QxM)-matrix, Q adjoint directions \n"\
-													"Z is (QxN)-matrix, adjoint directional derivative Z = U F'(x) \n"\
-													"after calling zos_forward, fos_forward or hos_forward with keep = 1 \n"\
-													"");
+	def("fov_reverse",		&wrapped_fov_reverse);
 													
-	def("hos_reverse",		&wrapped_hos_reverse,	"higher order scalar reverse:\n"\
-													"Z = hos_reverse(tape_tag, D, u) \n"\
-													"F:R^N -> R^M\n"\
-													"D is the order of the derivative\n"\
-													"u is M-vector, adjoint vector \n"\
-													"Z is (N x D+1)-matrix, adjoint directional derivative Z = [u^T F'(x), u^T F\" v[:,0],U F\" v[:,1] + 0.5 u^T F^(3) v[:,0],...] \n"\
-													"after calling fos_forward or hos_forward with keep = D+1 \n"\
-													"");
-	def("hov_reverse", 		&wrapped_hov_reverse,	"higher order vector reverse:\n"\
-													"(Z,nz) = hov_reverse(tape_tag, D, U)\n"\
-													"F:R^N -> R^M\n"\
-													"D is the order of the derivative\n"\
-													"U is (Q x M)-matrix, Q adjoint directions \n"\
-													"Z is (Q x N x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0],  U F\" v[:,1] + 0.5 U F^(3) v[:,0],... ] \n"\
-													"nz is (Q x N)-matrix, information about the sparsity of Z:\n"\
-													"0:trivial, 1:linear, 2:polynomial, 3:rational, 4:transcendental, 5:non-smooth\n"\
-													"after calling fos_forward or hos_forward with keep = D+1 \n"\
-													"");
+	def("hos_reverse",		&wrapped_hos_reverse);
+	def("hov_reverse", 		&wrapped_hov_reverse);
 
-	def("hov_ti_reverse", 	&wrapped_hov_ti_reverse,"higher order vector reverse:\n"\
-													"(Z,nz) = hov_ti_reverse(tape_tag, U)\n"\
-													"F:R^N -> R^M\n"\
-													"D is the highest order of the derivative\n"\
-													"U is (Q x M x D+1)-matrix, Q adjoint directions \n"\
-													"Z is (Q x N x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0],  U F\" v[:,1] + 0.5 U F^(3) v[:,0],... ] \n"\
-													"nz is (Q x N)-matrix, information about the sparsity of Z:\n"\
-													"0:trivial, 1:linear, 2:polynomial, 3:rational, 4:transcendental, 5:non-smooth\n"\
-													"after calling fos_forward or hos_forward with keep = D+1 \n"\
-													"");
+	def("hov_ti_reverse", 	&wrapped_hov_ti_reverse);
 													
 
 	/* c style functions */
@@ -352,30 +248,9 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("hov_reverse", 		&c_wrapped_hov_reverse);
 		
 	def("depends_on", 		&depends_on);
-	def("tape_to_latex",	py_tape_doc,	"\n\ntape_to_latex(tape_tag,x,y)\n"\
-											"F:R^N -> R^M\n"\
-											"x is N-vector  y is M-vector\n\n"\
-											"writes the tape to a file called tape_x.tex that can be compile with Latex\n\n"\
-											"");
+	def("tape_to_latex",	py_tape_doc);
 
-	def("tapestats", &wrapped_tapestats,
-	"\n\n tapestats(tape_tag)\n"\
-	"returns a dictionary with information on the tape:\n" \
-	"NUM_INDEPENDENTS,                          /* # of independent variables */ \n" \
-	"NUM_DEPENDENTS,                              /* # of dependent variables */ \n" \
-	"NUM_MAX_LIVES,                                /* max # of live variables */ \n" \
-	"TAY_STACK_SIZE,               /* # of values in the taylor (value) stack */ \n" \
-	"OP_BUFFER_SIZE,   /* # of operations per buffer == OBUFSIZE (usrparms.h) */ \n" \
-	"NUM_OPERATIONS,                               /* overall # of operations */ \n" \
-	"OP_FILE_ACCESS,                        /* operations file written or not */ \n" \
-	"NUM_LOCATIONS,                                 /* overall # of locations */ \n" \
-	"LOC_FILE_ACCESS,                        /* locations file written or not */ \n" \
-	"NUM_VALUES,                                       /* overall # of values */ \n" \
-	"VAL_FILE_ACCESS,                           /* values file written or not */ \n" \
-	"LOC_BUFFER_SIZE,   /* # of locations per buffer == LBUFSIZE (usrparms.h) */ \n" \
-	"VAL_BUFFER_SIZE,      /* # of values per buffer == CBUFSIZE (usrparms.h) */ \n" \
-	"TAY_BUFFER_SIZE,     /* # of taylors per buffer <= TBUFSIZE (usrparms.h) */ \n" \
-    );
+	def("tapestats", &wrapped_tapestats);
 
 	def("exp",  adub_exp_badouble, return_value_policy<manage_new_object>()  );
 	def("log",  adub_log_badouble, return_value_policy<manage_new_object>()  );
@@ -477,10 +352,6 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def(init<const adouble&>())
 			.def(init<const adub&>())
 	;
-	
-// 	class_<asub, bases<badouble> >("asub",init<locint,locint>())
-// 	;
-
 }
 
 #endif

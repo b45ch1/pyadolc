@@ -129,7 +129,7 @@ def test_hov_wk_forward():
 
 	# directions V
 	V = numpy.ones((N,P,D))
-	(y,W) = hov_wk_forward(17, D, x, V, keep)
+	(y,W) = hov_wk_forward(17, x, V, keep)
 	
 	print y
 	print W
