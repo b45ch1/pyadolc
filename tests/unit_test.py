@@ -6,7 +6,7 @@ sys.path = ['.'] + sys.path #adding current working directory to the $PYTHONPATH
 import numpy
 import numpy.linalg
 import numpy.random
-from numpy.testing import assert_almost_equal, assert_array_almost_equal
+from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal, assert_equal
 from adolc import *
 
 def test_constructors():
@@ -262,7 +262,7 @@ def test_hessian():
 	true_H = numpy.eye(N)
 	assert_array_almost_equal(true_H, hessian(0,x))
 
-def test_Jacobian():
+def test_jacobian():
 	N = 31 # dimension
 	M = 29 # codimension
 	A = numpy.array([[ 1./N +(n==m) for n in range(N)] for m in range(M)])
@@ -273,8 +273,7 @@ def test_Jacobian():
 	ax = adouble(x)
 	
 	trace_on(123)
-	for n in range(N):
-		ax[n].is_independent(x[n])
+	independent(ax)
 	ay = vector_f(ax)
 	dependent(ay)
 	trace_off()
@@ -361,8 +360,36 @@ def test_lagra_hess_vec():
 	v = numpy.random.rand(N)
 	assert_array_almost_equal(numpy.zeros(N,dtype=float), lagra_hess_vec(1,x,v,u) )
 
+def test_sparse_jac_no_repeat():
+	N = 3 # dimension
+	M = 2 # codimension
+	def vector_f(x):
+		return numpy.array([x[0]*x[1],x[1]*x[2]])
+
+	x = numpy.array([1.*n +1. for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(1)
+	independent(ax)
+	ay = vector_f(ax)
+	dependent(ay)
+	trace_off()
+
+	options = numpy.array([1,1,0,0],dtype=int)
+	result = sparse.sparse_jac_no_repeat(1,x,options)
+	correct_nnz = 4
+	correct_rind   = numpy.array([0,0,1,1])
+	corrent_cind   = numpy.array([0,1,1,2])
+	correct_values = numpy.array([2.,1.,3.,2.])
+
+	assert_equal(result[0], correct_nnz)
+	assert_array_equal(result[1], correct_rind)
+	assert_array_equal(result[2], corrent_cind)
+	assert_array_almost_equal(result[3], correct_values)
 
 	
+
+
 
 #def test_gradient_and_jacobian_and_hessian():
 	#N = 6 # dimension
