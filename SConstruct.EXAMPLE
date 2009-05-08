@@ -32,13 +32,18 @@ adolc = env.SharedLibrary(target='_adolc', source=['py_adolc.cpp', 'num_util.cpp
 
 
 # 2: BUILD SPARSE SUPPORT
+
+colpack_library_path = os.getcwd() + '/adolc-2.0.0/colpack'
+
+
+
 LIBS		= ['adolc',
 				'boost_python',
 				'colpack',
 			]
 LIBPATH		= [
 				adolc_library_path,
-				'/data/walter/opt_software/ColPack/',
+				colpack_library_path,
 			  ]
 INCLUDEPATH	= [
 			adolc_include_path,
