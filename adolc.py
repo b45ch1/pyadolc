@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import numpy
 import _adolc
-import sparse
+
+try:
+	import sparse
+except:
+	print 'Notice: sparse drivers not available'
+	
 
 from _adolc import *
 

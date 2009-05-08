@@ -88,3 +88,18 @@ binaries before you can run  $python setup.py build_ext --inplace again.
 4) Add the directory to your PYTHONPATH.
 E.g. add the following line in your ~/.bashrc file:
 export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc
+
+
+INSTALLATION OF SPARSE SUPPORT:
+===============================
+To use the functionality of sparse jacobians you will need Colpack (http://www.cs.odu.edu/~dnguyen/dox/colpack/html/).
+For convenience I have already improved the makefile of ColPack and uploaded it to
+http://github.com/b45ch1/colpack/tree/master
+
+1) go to ./colpack
+2) make     to compile
+3) make     install to copy header files and shared library to ./colpack/build/include and ./colpack/build/lib
+4) copy the contents of ./colpack/build/include and ./colpack/build/lib  to ./pyadolc/adolc-2.0.0/colpack
+5) run scons
+
+
