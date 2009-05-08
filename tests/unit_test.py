@@ -387,7 +387,41 @@ def test_sparse_jac_no_repeat():
 	assert_array_equal(result[2], corrent_cind)
 	assert_array_almost_equal(result[3], correct_values)
 
+
+def test_sparse_jac_with_repeat():
+	N = 3 # dimension
+	M = 2 # codimension
+	def vector_f(x):
+		return numpy.array([x[0]*x[1],x[1]*x[2]])
+
+	x = numpy.array([1.*n +1. for n in range(N)])
+	ax = adouble(x)
 	
+	trace_on(1)
+	independent(ax)
+	ay = vector_f(ax)
+	dependent(ay)
+	trace_off()
+
+	options = numpy.array([1,1,0,0],dtype=int)
+
+	# first call
+	result = sparse.sparse_jac_no_repeat(1,x,options)
+
+	# second call
+	x = numpy.array([1.*n +2. for n in range(N)])
+	result = sparse.sparse_jac_repeat(1,x, result[0], result[1], result[2], result[3])
+
+	correct_nnz = 4
+	correct_rind   = numpy.array([0,0,1,1])
+	corrent_cind   = numpy.array([0,1,1,2])
+	correct_values = numpy.array([3.,2.,4.,3.])
+
+	assert_equal(result[0], correct_nnz)
+	assert_array_equal(result[1], correct_rind)
+	assert_array_equal(result[2], corrent_cind)
+	assert_array_almost_equal(result[3], correct_values)
+
 
 
 

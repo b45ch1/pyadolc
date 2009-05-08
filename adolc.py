@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import numpy
 import _adolc
+import sparse
+
 from _adolc import *
 
 __doc__ = """
@@ -42,7 +44,7 @@ def adouble(x):
 	elif isinstance(x,_adolc.adouble):
 		return _adolc.adouble(x)
 	else:
-		x = numpy.asarray(x,dtype=float)
+		x = numpy.asarray(x, dtype=float)
 		shp = numpy.shape(x)
 		xr = numpy.ravel(x)
 		axr = numpy.array([_adolc.adouble(xr[n]) for n in range(len(xr))])
@@ -130,7 +132,7 @@ def function(tape_tag,x):
 	evaluate the function f(x) recorded on tape with index tape_tag
 	"""
 	assert type(tape_tag) == int
-	x = numpy.asarray(x)
+	x = numpy.asarray(x, dtype=float)
 	return _adolc.function(tape_tag,x)
 
 def gradient(tape_tag,x):
@@ -138,7 +140,7 @@ def gradient(tape_tag,x):
 	evaluate the gradient g = f'(x), f:R^N -> R
 	"""
 	assert type(tape_tag) == int
-	x = numpy.asarray(x)
+	x = numpy.asarray(x, dtype=float)
 	return _adolc.gradient(tape_tag,x)
 
 def hessian(tape_tag,x):
@@ -146,7 +148,7 @@ def hessian(tape_tag,x):
 	evaluate the hessian H = f\"(x), f:R^N -> R"
 	"""
 	assert type(tape_tag) == int
-	x = numpy.asarray(x)
+	x = numpy.asarray(x, dtype=float)
 	return _adolc.hessian(tape_tag,x)
 
 def jacobian(tape_tag,x):
@@ -154,7 +156,7 @@ def jacobian(tape_tag,x):
 	evaluate the jacobian J = F'(x), F:R^N -> R^M
 	"""
 	assert type(tape_tag) == int
-	x = numpy.asarray(x)
+	x = numpy.asarray(x, dtype=float)
 	return _adolc.jacobian(tape_tag,x)
 
 def vec_jac(tape_tag,x,u, repeat):
@@ -163,8 +165,8 @@ def vec_jac(tape_tag,x,u, repeat):
 	"""
 	assert type(repeat) == bool or type(repeat) == int
 	assert type(tape_tag) == int
-	x = numpy.asarray(x)
-	u = numpy.asarray(u)
+	x = numpy.asarray(x, dtype=float)
+	u = numpy.asarray(u,dtype=float)
 	return _adolc.vec_jac(tape_tag,x,u, repeat)
 
 def jac_vec(tape_tag,x,v):
@@ -172,8 +174,8 @@ def jac_vec(tape_tag,x,v):
 	evaluate  F'(x)v, F:R^N -> R^M
 	"""
 	assert type(tape_tag) == int
-	x = numpy.asarray(x)
-	v = numpy.asarray(v)
+	x = numpy.asarray(x, dtype=float)
+	v = numpy.asarray(v, dtype=float)
 	return _adolc.jac_vec(tape_tag,x,v)
 
 def hess_vec(tape_tag,x,v):
@@ -181,8 +183,8 @@ def hess_vec(tape_tag,x,v):
 	evaluate  f''(x)v, f:R^N -> R
 	"""
 	assert type(tape_tag) == int
-	x = numpy.asarray(x)
-	v = numpy.asarray(v)
+	x = numpy.asarray(x, dtype=float)
+	v = numpy.asarray(v, dtype=float)
 	return _adolc.hess_vec(tape_tag,x,v)
 
 
@@ -191,9 +193,9 @@ def lagra_hess_vec(tape_tag,x,u,v):
 	evaluate  u^T F''(x)v, F:R^N -> R^M
 	"""
 	assert type(tape_tag) == int
-	y = numpy.asarray(x)
-	u = numpy.asarray(u)
-	v = numpy.asarray(v)
+	x = numpy.asarray(x, dtype=float)
+	u = numpy.asarray(u, dtype=float)
+	v = numpy.asarray(v, dtype=float)
 	return _adolc.lagra_hess_vec(tape_tag,x,u,v)
 
 def zos_forward(tape_tag,x,keep):
@@ -206,10 +208,10 @@ def zos_forward(tape_tag,x,keep):
 	"""
 	assert type(tape_tag) == int
 	assert type(keep) == int
-	x = numpy.asarray(x)
-	return _adolc.zos_forward(tape_tag,x,keep)
+	x = numpy.asarray(x, dtype=float)
+	return _adolc.zos_forward(tape_tag, x, keep)
 
-def fos_forward(tape_tag,x,v,keep):
+def fos_forward(tape_tag, x, v, keep):
 	"""
 	first order scalar forward:
 	(y,w) = fos_forward(tape_tag, x, v, keep)
@@ -222,8 +224,8 @@ def fos_forward(tape_tag,x,v,keep):
 	"""
 	assert type(tape_tag) == int
 	assert type(keep) == int
-	x = numpy.asarray(x)
-	v = numpy.asarray(v)
+	x = numpy.asarray(x, dtype=float)
+	v = numpy.asarray(v, dtype=float)
 	return _adolc.fos_forward(tape_tag,x,v,keep)
 
 def fov_forward(tape_tag,x,V):
@@ -237,8 +239,8 @@ def fov_forward(tape_tag,x,V):
 	"""
 	assert type(tape_tag) == int
 	assert numpy.ndim(V) == 2
-	x = numpy.asarray(x)
-	V = numpy.asarray(V)
+	x = numpy.asarray(x, dtype=float)
+	V = numpy.asarray(V, dtype=float)
 	return _adolc.fov_forward(tape_tag,x,V)
 
 def hos_forward(tape_tag, x, V, keep):
@@ -256,8 +258,8 @@ def hos_forward(tape_tag, x, V, keep):
 	assert type(tape_tag) == int
 	assert numpy.ndim(V) == 2
 	assert type(keep) == int
-	x = numpy.asarray(x)
-	V = numpy.asarray(V)
+	x = numpy.asarray(x, dtype=float)
+	V = numpy.asarray(V, dtype=float)
 	return _adolc.hos_forward(tape_tag, x, V, keep)
 
 def hov_forward(tape_tag, x, V):
@@ -274,8 +276,8 @@ def hov_forward(tape_tag, x, V):
 	"""
 	assert type(tape_tag) == int
 	assert numpy.ndim(V) == 3
-	x = numpy.asarray(x)
-	V = numpy.asarray(V)
+	x = numpy.asarray(x, dtype=float)
+	V = numpy.asarray(V, dtype=float)
 	return _adolc.hov_forward(tape_tag, x, V)
 
 
@@ -292,8 +294,8 @@ def hov_wk_forward(tape_tag, x, V, keep):
 	assert type(tape_tag) == int
 	assert type(keep) == int
 	assert numpy.ndim(V) == 3
-	x = numpy.asarray(x)
-	V = numpy.asarray(V)
+	x = numpy.asarray(x, dtype=float)
+	V = numpy.asarray(V, dtype=float)
 	return _adolc.hov_wk_forward(tape_tag, x, V, keep)
 
 
@@ -310,7 +312,7 @@ def fos_reverse(tape_tag, u):
 	"""
 	assert type(tape_tag) == int
 	assert numpy.ndim(u) == 1
-	u = numpy.asarray(u)
+	u = numpy.asarray(u,dtype=float)
 	return _adolc.fos_reverse(tape_tag, u)
 
 
@@ -326,7 +328,7 @@ def fov_reverse(tape_tag, U):
 	"""
 	assert type(tape_tag) == int
 	assert numpy.ndim(U) == 2
-	U = numpy.asarray(U)
+	U = numpy.asarray(U, dtype=float)
 	return _adolc.fov_reverse(tape_tag, U)
 
 
@@ -344,7 +346,7 @@ def hos_reverse(tape_tag, D, u):
 	assert type(tape_tag) == int
 	assert type(D) == int
 	assert numpy.ndim(u) == 1
-	u = numpy.asarray(u)
+	u = numpy.asarray(u, dtype=float)
 	return _adolc.hos_reverse(tape_tag, D, u)
 
 
@@ -363,7 +365,7 @@ def hov_reverse(tape_tag, D, U):
 	assert type(tape_tag) == int
 	assert type(D) == int
 	assert numpy.ndim(U) == 2
-	U = numpy.asarray(U)
+	U = numpy.asarray(U,dtype=float)
 	return _adolc.hov_reverse(tape_tag, D, U)
 
 
@@ -381,7 +383,7 @@ def hov_ti_reverse(tape_tag, U):
 	"""
 	assert type(tape_tag) == int
 	assert numpy.ndim(U) == 3
-	U = numpy.asarray(U)
+	U = numpy.asarray(U,dtype=float)
 	return _adolc.hov_ti_reverse(tape_tag, U)
 
 def tape_to_latex(tape_tag,x,y):
@@ -394,8 +396,8 @@ def tape_to_latex(tape_tag,x,y):
 
 	"""
 	assert type(tape_tag) == int
-	x = numpy.asarray(x)
-	y = numpy.asarray(y)
+	x = numpy.asarray(x, dtype=float)
+	y = numpy.asarray(y, dtype=float)
 
 	return _adolc.tape_to_latex(tape_tag, x, y)
 
