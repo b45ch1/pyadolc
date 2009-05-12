@@ -70,16 +70,19 @@ REQUIREMENTS:
 
 
 INSTALLATION:
-	1) copy this folder to a place where it is going to stay. This is imporant since the path to the  shared library ``adolc.so`` of adolc  is "saved" in the adolc.so file for python as absolute path (i.e. the ``RPATH`` is set).
+	1) copy this folder to a place where it is going to stay.
+	   This is imporant since the path to the  shared library ``adolc.so`` of adolc  is "saved" in the adolc.so file for python as absolute path (i.e. the ``RPATH`` is set).
 	2) go to the folderadolc-2.0.0 and compile ADOL-C:
-	``./configure && make``	do *NOT* ``make install``
+	   ``./configure && make``	do *NOT* ``make install``
 	3) rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system:
-	Run     ``python setup.py build_ext --inplace``
-	Alternatively you can rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system and build with scons
-	Using scons is more convenient to work with when you often pull new versions: when using the Python distutils you have to remove the oldbinaries before you can run  ``python setup.py build_ext --inplace again``. In the development process it is likely that the ``scons`` version works whereas ``setup.py`` fails because of new features in the code.
+	   Run  ``python setup.py build_ext --inplace``.
+	   Alternatively you can rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system and build with ``scons``.
+	   Using ``scons`` is more convenient to work with when you often pull new versions:
+	   when using the Python distutils you have to remove the oldbinaries before you can run
+	   ``python setup.py build_ext --inplace again``. In the development process it is likely that the ``scons`` version works whereas ``setup.py`` fails because of new features in the code.
 	4) Add the directory to your ``PYTHONPATH``.
-	E.g. add the following line in your ``~/.bashrc`` file:
-	``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
+	   E.g. add the following line in your ``~/.bashrc`` file:
+	   ``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
 
 
 INSTALLATION OF SPARSE SUPPORT:
