@@ -53,7 +53,7 @@ EXAMPLE USAGE:
 >>> ay = f(ax)
 >>> dependent(ay)
 >>> trace_off()
-
+>>> 
 >>> x = numpy.array([n+1 for n in range(N)])
 >>> 
 >>> # compute jacobian of f at x
@@ -73,8 +73,8 @@ INSTALLATION:
 	1) copy this folder to a place where it is going to stay. This is imporant since the path to the  shared library adolc.so of adolc  is "saved" in the adolc.so file for python as absolute path (i.e. the RPATH is set).
 	
 	2) go to the folderadolc-2.0.0 and compile ADOL-C:
-		$ ./configure && make
-	do *NOT* "make install"
+	$ ./configure && make
+	do *NOT* make install
 	
 	3) rename setup.py.EXAMPLE to setup.py to fit your system:
 	Run     python setup.py build_ext --inplace
