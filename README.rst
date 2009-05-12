@@ -1,38 +1,43 @@
-This PYADOLC, a Python module to differentiate complex algorithms written in Python.
-It wraps the functionality of the library ADOL-C (C++).
+=============================
+PYADOLC, a wrapper for ADOL-C
+=============================
 
-Authors: Sebastian F. Walter
+:Short Description:
+	This PYADOLC, a Python module to differentiate complex algorithms written in Python.
+	It wraps the functionality of the library ADOL-C (C++).
 
-Licence: BSD
-============
-* Copyright (c) 2008, Sebastian F. Walter
-* All rights reserved.
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*     * Redistributions of source code must retain the above copyright
-*       notice, this list of conditions and the following disclaimer.
-*     * Redistributions in binary form must reproduce the above copyright
-*       notice, this list of conditions and the following disclaimer in the
-*       documentation and/or other materials provided with the distribution.
-*     * Neither the name of the HU Berlin nor the
-*       names of its contributors may be used to endorse or promote products
-*       derived from this software without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY Sebastian F. Walter ''AS IS'' AND ANY
-* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL Sebastian F. Walter BE LIABLE FOR ANY
-* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+:Author:
+	Sebastian F. Walter
+
+:Licence (new BSD):
+	Copyright (c) 2008, Sebastian F. Walter
+	All rights reserved.
+	
+	Redistribution and use in source and binary forms, with or without
+	modification, are permitted provided that the following conditions are met:
+		* Redistributions of source code must retain the above copyright
+		notice, this list of conditions and the following disclaimer.
+		* Redistributions in binary form must reproduce the above copyright
+		notice, this list of conditions and the following disclaimer in the
+		documentation and/or other materials provided with the distribution.
+		* Neither the name of the HU Berlin nor the
+		names of its contributors may be used to endorse or promote products
+		derived from this software without specific prior written permission.
+	
+	THIS SOFTWARE IS PROVIDED BY Sebastian F. Walter ''AS IS'' AND ANY
+	EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+	DISCLAIMED. IN NO EVENT SHALL Sebastian F. Walter BE LIABLE FOR ANY
+	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 EXAMPLE USAGE:
-==============
+--------------
 
 import numpy
 from adolc import *
@@ -65,13 +70,13 @@ if M==1:
 
 
 REQUIREMENTS:
-=============
+-------------
 * Python and Numpy, both with header files
 * boost::python from http://www.boost.org/
 
 
 INSTALLATION:
-=============
+-------------
 1) copy this folder to a place where it is going to stay. This is imporant since the path to the  shared library adolc.so of adolc  is "saved" in the adolc.so file for python as absolute path (i.e. the RPATH is set).
 
 2) go to the folderadolc-2.0.0 and compile ADOL-C:
@@ -91,7 +96,7 @@ export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc
 
 
 INSTALLATION OF SPARSE SUPPORT:
-===============================
+-------------------------------
 To use the functionality of sparse jacobians you will need Colpack (http://www.cs.odu.edu/~dnguyen/dox/colpack/html/).
 For convenience I have already improved the makefile of ColPack and uploaded it to
 http://github.com/b45ch1/colpack/tree/master
