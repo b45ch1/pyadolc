@@ -89,8 +89,6 @@ def test_pow():
 	
 def test_hyperbolic_functions():
 	x = 3.
-	y = 5.
-	
 	ax = adouble(x)
 	
 	ash = numpy.sinh(ax)
@@ -100,6 +98,18 @@ def test_hyperbolic_functions():
 	assert_almost_equal(ash.val, numpy.sinh(x))
 	assert_almost_equal(ach.val, numpy.cosh(x))
 	assert_almost_equal(ath.val, numpy.tanh(x))
+	
+#def test_arc_hyperbolic_functions():
+	#x = 3.
+	#ax = adouble(x)
+	
+	#aarcsh = numpy.arcsinh(ax)
+	#aarcch = numpy.arccosh(ax)
+	#aarcth = numpy.arctanh(ax)
+	
+	#assert_almost_equal(aarcsh.val, numpy.arcsinh(x))
+	#assert_almost_equal(aarcch.val, numpy.arccosh(x))
+	#assert_almost_equal(aarcth.val, numpy.arctanh(x))
 
 
 def test_independent():
