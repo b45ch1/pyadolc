@@ -27,8 +27,8 @@ extern adub log10	( const badouble& );
 extern adub sinh  ( const badouble& );
 extern adub cosh  ( const badouble& );
 extern adub tanh  ( const badouble& );
-// extern adub asinh ( const badouble& );
-// extern adub acosh ( const badouble& );
+extern adub asinh ( const badouble& );
+// extern adub /*acosh*/ ( const badouble& );
 // extern adub atanh ( const badouble& );
 extern adub fabs  ( const badouble& );
 extern adub ceil  ( const badouble& );
@@ -112,9 +112,9 @@ adub	(*log10_adub)		( const badouble& ) = &log10;
 adub	(*sinh_adub)		( const badouble& ) = &sinh;
 adub	(*cosh_adub) 		( const badouble& ) = &cosh;
 adub	(*tanh_adub) 		( const badouble& ) = &tanh;
-// adub (*asinh_adub) 		( const badouble& ) = &asinh;
-// adub (*acosh_adub) 		( const badouble& ) = &acosh;
-// adub (*atanh_adub) 		( const badouble& ) = &atanh;
+// adub    (*asinh_adub) 		( const badouble& ) = &asinh;
+// adub    (*acosh_adub) 		( const badouble& ) = &acosh;
+// adub    (*atanh_adub) 		( const badouble& ) = &atanh;
 adub	(*fabs_adub) 		( const badouble& ) = &fabs;
 adub	(*ceil_adub)		( const badouble& ) = &ceil;
 adub	(*floor_adub) 		( const badouble& ) = &floor;
@@ -147,6 +147,11 @@ adub *adub_sqrt_badouble  (const badouble &rhs){	return new adub(sqrt(rhs));}
 adub *adub_sinh_badouble  (const badouble &rhs){	return new adub(sinh(rhs));}
 adub *adub_cosh_badouble  (const badouble &rhs){	return new adub(cosh(rhs));}
 adub *adub_tanh_badouble  (const badouble &rhs){	return new adub(tanh(rhs));}
+// adub *adub_asinh_badouble  (const badouble &rhs){	return new adub(asinh(rhs));}
+// adub *adub_acosh_badouble  (const badouble &rhs){	return new adub(acosh(rhs));}
+// adub *adub_atanh_badouble  (const badouble &rhs){	return new adub(atanh(rhs));}
+
+
 adub *adub_fabs_badouble  (const badouble &rhs){	return new adub(fabs(rhs));}
 adub *adub_ceil_badouble  (const badouble &rhs){	return new adub(ceil(rhs));}
 adub *adub_floor_badouble (const badouble &rhs){	return new adub(floor(rhs));}
@@ -323,15 +328,18 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("exp",  adub_exp_badouble, return_value_policy<manage_new_object>()  )
 			.def("log",  adub_log_badouble, return_value_policy<manage_new_object>()  )
 			.def("sin", adub_sin_badouble, return_value_policy<manage_new_object>()  )
-			.def("cos", adub_cos_badouble, return_value_policy<manage_new_object>()  )	
+			.def("cos", adub_cos_badouble, return_value_policy<manage_new_object>()  )
 			.def("tan",  adub_tan_badouble, return_value_policy<manage_new_object>()  )
-			.def("asin", adub_asin_badouble, return_value_policy<manage_new_object>()  )
-			.def("acos", adub_acos_badouble, return_value_policy<manage_new_object>()  )
-			.def("atan", adub_atan_badouble, return_value_policy<manage_new_object>()  )
+			.def("arcsin", adub_asin_badouble, return_value_policy<manage_new_object>()  )
+			.def("arccos", adub_acos_badouble, return_value_policy<manage_new_object>()  )
+			.def("arctan", adub_atan_badouble, return_value_policy<manage_new_object>()  )
 			.def("sqrt", adub_sqrt_badouble, return_value_policy<manage_new_object>()  )
 			.def("sinh", adub_sinh_badouble, return_value_policy<manage_new_object>()  )
 			.def("cosh", adub_cosh_badouble, return_value_policy<manage_new_object>()  )
 			.def("tanh", adub_tanh_badouble, return_value_policy<manage_new_object>()  )
+// 			.def("arcsinh", adub_asinh_badouble, return_value_policy<manage_new_object>()  )
+// 			.def("acosh", adub_acosh_badouble, return_value_policy<manage_new_object>()  )
+// 			.def("arctanh", adub_atanh_badouble, return_value_policy<manage_new_object>()  )
 			.def("fabs", adub_fabs_badouble, return_value_policy<manage_new_object>()  )
 			.def("abs", adub_fabs_badouble, return_value_policy<manage_new_object>()  )
 			.def("ceil", adub_ceil_badouble, return_value_policy<manage_new_object>()  )
