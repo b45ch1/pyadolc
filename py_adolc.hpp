@@ -22,7 +22,7 @@ extern adub acos	( const badouble& );
 extern adub atan	( const badouble& );
 extern adub pow		( const badouble&, double );
 extern adouble pow	( const badouble&, const badouble& );
-extern adouble pow	( double, const badouble& ); /*this one doesnt work correctly yet */
+// extern adouble pow	( double, const badouble& ); /*this one doesnt work correctly yet */
 extern adub log10	( const badouble& );
 extern adub sinh  ( const badouble& );
 extern adub cosh  ( const badouble& );
@@ -119,15 +119,15 @@ adub	(*fabs_adub) 		( const badouble& ) = &fabs;
 adub	(*ceil_adub)		( const badouble& ) = &ceil;
 adub	(*floor_adub) 		( const badouble& ) = &floor;
 
-adub	(*pow_adub)			( const badouble&, double ) = &pow;
-adouble	(*pow_adouble_badouble_badouble)( const badouble&, const badouble& ) = &pow;
-adouble (*pow_adouble_double_badouble)( double, const badouble& ) = &pow;
-adub	(*fmax_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmax;
-adub	(*fmax_adub_double_badouble)		( double, const badouble& ) = &fmax;
-adub	(*fmax_adub_badouble_double)		( const badouble&, double ) = &fmax;
-adub	(*fmin_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmin;
-adub	(*fmin_adub_double_badouble)		( double, const badouble& ) = &fmin;
-adub	(*fmin_adub_badouble_double)		( const badouble&, double ) = &fmin;
+adub	(*pow_adub)                       ( const badouble&, double ) = &pow;
+adouble	(*pow_adouble_badouble_badouble)  ( const badouble&, const badouble& ) = &pow;
+// adouble (*pow_adouble_double_badouble)    ( double, const badouble& ) = &pow;
+adub	(*fmax_adub_badouble_badouble)    ( const badouble&, const badouble& ) = &fmax;
+adub	(*fmax_adub_double_badouble)      ( double, const badouble& ) = &fmax;
+adub	(*fmax_adub_badouble_double)      ( const badouble&, double ) = &fmax;
+adub	(*fmin_adub_badouble_badouble)    ( const badouble&, const badouble& ) = &fmin;
+adub	(*fmin_adub_double_badouble)      ( double, const badouble& ) = &fmin;
+adub	(*fmin_adub_badouble_double)      ( const badouble&, double ) = &fmin;
 adub	(*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 // adub (*frexp_adub) 		( const badouble&, int* ) = &frexp;
 // adub (*erf_adub) 		( const badouble& ) = &erf;
@@ -168,7 +168,8 @@ adub *adub_mul_double_badouble(const badouble &rhs,double lhs){	return new adub(
 adub *adub_div_double_badouble(const badouble &rhs,double lhs){	return new adub(operator/(lhs,rhs));}
 
 
-adub *adub_pow_badouble_double(const badouble &lhs, const double &rhs){	return new adub(pow(lhs,rhs));}
+adub *adub_pow_badouble_double  (const badouble &lhs, const double &rhs)  {	return new adub(pow(lhs,rhs));}
+adouble *adouble_pow_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adouble(pow(lhs,rhs));}
 
 
 
@@ -313,8 +314,8 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("__mul__", adub_mul_badouble_double, return_value_policy<manage_new_object>())
 			.def("__div__", adub_div_badouble_double, return_value_policy<manage_new_object>())
                         
-			.def("__pow__", adub_pow_badouble_double, return_value_policy<manage_new_object>())
-// 			.def("__pow__",pow_adouble_badouble_badouble, return_value_policy<manage_new_object>())
+			.def("__pow__", adub_pow_badouble_double,   return_value_policy<manage_new_object>())
+			.def("__pow__", adouble_pow_badouble_badouble, return_value_policy<manage_new_object>())
 // 			.def("__rpow__",pow_adouble_double_badouble, return_value_policy<manage_new_object>())
 
 			.def("exp",  adub_exp_badouble, return_value_policy<manage_new_object>()  )

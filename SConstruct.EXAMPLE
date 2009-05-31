@@ -8,7 +8,7 @@ adolc_include_path = os.getcwd() + '/adolc-2.0.0'
 adolc_library_path = os.getcwd() + '/adolc-2.0.0/adolc/.libs'
 
 LIBS		= ['adolc',
-				'boost_python',
+				'boost_python-mt',
 			]
 LIBPATH		= [
 				adolc_library_path,
@@ -38,7 +38,7 @@ colpack_library_path = os.getcwd() + '/adolc-2.0.0/colpack'
 
 
 LIBS		= ['adolc',
-				'boost_python',
+				'boost_python-mt',
 				'colpack',
 			]
 LIBPATH		= [
