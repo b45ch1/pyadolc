@@ -71,6 +71,22 @@ def test_div():
 	
 	assert b.val == 3./2.
 	assert c.val == 2./3.
+	
+def test_pow():
+	r  = 5
+	x = 3.
+	y = 2.
+	ax = adouble(x)
+	ay = adouble(y)
+	
+	az1 = ax**ay
+	az2 = ax**r
+	az3 = r**ax
+	
+	assert_almost_equal(az1.val, x**y)
+	assert_almost_equal(az2.val, x**r)
+	assert_almost_equal(az3.val, r**x)
+
 
 def test_independent():
 	# 0D
