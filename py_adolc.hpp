@@ -146,6 +146,7 @@ adub *adub_atan_badouble  (const badouble &rhs){	return new adub(atan(rhs));}
 adub *adub_sqrt_badouble  (const badouble &rhs){	return new adub(sqrt(rhs));}
 adub *adub_sinh_badouble  (const badouble &rhs){	return new adub(sinh(rhs));}
 adub *adub_cosh_badouble  (const badouble &rhs){	return new adub(cosh(rhs));}
+adub *adub_tanh_badouble  (const badouble &rhs){	return new adub(tanh(rhs));}
 adub *adub_fabs_badouble  (const badouble &rhs){	return new adub(fabs(rhs));}
 adub *adub_ceil_badouble  (const badouble &rhs){	return new adub(ceil(rhs));}
 adub *adub_floor_badouble (const badouble &rhs){	return new adub(floor(rhs));}
@@ -330,6 +331,7 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("sqrt", adub_sqrt_badouble, return_value_policy<manage_new_object>()  )
 			.def("sinh", adub_sinh_badouble, return_value_policy<manage_new_object>()  )
 			.def("cosh", adub_cosh_badouble, return_value_policy<manage_new_object>()  )
+			.def("tanh", adub_tanh_badouble, return_value_policy<manage_new_object>()  )
 			.def("fabs", adub_fabs_badouble, return_value_policy<manage_new_object>()  )
 			.def("abs", adub_fabs_badouble, return_value_policy<manage_new_object>()  )
 			.def("ceil", adub_ceil_badouble, return_value_policy<manage_new_object>()  )

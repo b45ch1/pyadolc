@@ -86,6 +86,20 @@ def test_pow():
 	assert_almost_equal(az1.val, x**y)
 	assert_almost_equal(az2.val, x**r)
 	assert_almost_equal(az3.val, r**x)
+	
+def test_hyperbolic_functions():
+	x = 3.
+	y = 5.
+	
+	ax = adouble(x)
+	
+	ash = numpy.sinh(ax)
+	ach = numpy.cosh(ax)
+	ath = numpy.tanh(ax)
+	
+	assert_almost_equal(ash.val, numpy.sinh(x))
+	assert_almost_equal(ach.val, numpy.cosh(x))
+	assert_almost_equal(ath.val, numpy.tanh(x))
 
 
 def test_independent():
