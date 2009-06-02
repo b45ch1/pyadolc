@@ -134,3 +134,37 @@ def sparse_jac_repeat(tape_tag, x, nnz, rind, cind, values):
 
 	return _colpack.sparse_jac_repeat(tape_tag, x, nnz, rind, cind, values)
 
+
+
+
+def hess_pat(tape_tag, x, option = 0):
+	"""
+	Computes the sparsity pattern of a Jacobian J of a function
+	F: R^N -> R^M
+	at the base point x, i.e. J = dF(x)/dx
+	
+	pat = jac_pat(tape_tag, x, options)
+	
+	pat is a nested list in compresses row format.
+	
+	E.g. the pattern of the function:
+	F(x,y,z) = [x*y, y*z] is
+	pat [[0,1],[1,2]] because the Jacobian has in the first row the 0'th and 1'st element nonzero
+	and in the second row the 1'st and the 2'nd
+	
+	option:  option = 0  normal mode (default)
+	         option = 1  tight mode
+	
+
+
+	"""
+	
+	assert type(tape_tag) == int
+	assert type(option)   == int
+
+	assert numpy.ndim(x) == 1
+	x = numpy.asarray(x, dtype=float)
+	
+
+	return _colpack.hess_pat(tape_tag, x, option)
+

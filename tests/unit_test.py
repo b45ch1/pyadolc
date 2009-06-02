@@ -486,7 +486,27 @@ def test_sparse_jac_with_repeat():
 	assert_array_equal(result[2], corrent_cind)
 	assert_array_almost_equal(result[3], correct_values)
 
+def test_hess_pat():
+	N = 3 # dimension
+	
+	def scalar_f(x):
+		return x[0]*x[1] + x[1]*x[2] + x[2]*x[0]
 
+	x = numpy.array([1.*n +1. for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(1)
+	independent(ax)
+	ay = scalar_f(ax)
+	dependent(ay)
+	trace_off()
+
+	option = 0
+	pat = sparse.hess_pat(1,x,option)
+	pat = numpy.asarray(pat,dtype=int)
+
+	correct_pat = numpy.array([[1,2],[0,2], [0,1]], dtype=int)
+	assert_array_equal(pat, correct_pat)
 
 
 

@@ -9,7 +9,7 @@ adolc_include_path = os.getcwd() + '/adolc-2.0.0'
 adolc_library_path = os.getcwd() + '/adolc-2.0.0/adolc/.libs'
 
 LIBS		= ['adolc',
-				'boost_python-mt',
+				'boost_python',
 			]
 LIBPATH		= [
 				adolc_library_path,
@@ -36,7 +36,7 @@ adolc = env.SharedLibrary(target='_adolc', source=['py_adolc.cpp', 'num_util.cpp
 #-----------------------
 colpack_library_path = os.getcwd() + '/adolc-2.0.0/colpack'
 LIBS		= ['adolc',
-				'boost_python-mt',
+				'boost_python',
 				'colpack',
 			]
 LIBPATH		= [

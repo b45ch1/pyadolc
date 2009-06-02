@@ -93,3 +93,30 @@ bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp n
 
 }
 
+
+bp::list	wrapped_hess_pat(short tape_tag, bpn::array &bpn_x,npy_intp option){
+	int tape_stats[STAT_SIZE];
+	tapestats(tape_tag, tape_stats);
+	npy_intp N = tape_stats[NUM_INDEPENDENTS];
+	npy_intp M = tape_stats[NUM_DEPENDENTS];
+
+	double* x = (double*) nu::data(bpn_x);
+	int opt   = static_cast<int>(option);
+	unsigned int* HP[N];
+
+	hess_pat(tape_tag, N, x, HP, opt);
+
+	bp::list ret_HP;
+
+	for(int n = 0; n != N; ++n){
+		bp::list tmp;
+		ret_HP.append(tmp);
+		for(int c = 1; c <= HP[n][0]; ++c){
+			bp::list tmp =  boost::python::extract<boost::python::list>(ret_HP[n]);
+			tmp.append(HP[n][c]);
+		}
+	}
+
+	return ret_HP;
+}
+
