@@ -509,6 +509,70 @@ def test_hess_pat():
 	assert_array_equal(pat, correct_pat)
 
 
+def test_sparse_hess_no_repeat():
+	N = 3 # dimension
+	
+	def scalar_f(x):
+		return x[0]*x[1] + x[1]*x[2] + x[2]*x[0]
+
+	x = numpy.array([1.*n +1. for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(1)
+	independent(ax)
+	ay = scalar_f(ax)
+	dependent(ay)
+	trace_off()
+
+	options = numpy.array([0,0],dtype=int)
+	result = sparse.sparse_hess_no_repeat(1, x, options)
+	correct_nnz = 3
+
+	correct_rind   = numpy.array([0,0,1])
+	corrent_cind   = numpy.array([1,2,2])
+	correct_values = numpy.array([1.,1.,1.])
+
+	assert_equal(result[0], correct_nnz)
+	assert_array_equal(result[1], correct_rind)
+	assert_array_equal(result[2], corrent_cind)
+	assert_array_almost_equal(result[3], correct_values)
+
+
+def test_sparse_hess_repeat():
+	N = 3 # dimension
+	
+	def scalar_f(x):
+		return x[0]**3 + x[0]*x[1] + x[1]*x[2] + x[2]*x[0]
+
+	x = numpy.array([1.*n +1. for n in range(N)])
+	ax = adouble(x)
+	
+	trace_on(1)
+	independent(ax)
+	ay = scalar_f(ax)
+	dependent(ay)
+	trace_off()
+
+	options = numpy.array([1,1],dtype=int)
+
+	# first call
+	result = sparse.sparse_hess_no_repeat(1,x,options)
+
+	# second call
+	x = numpy.array([1.*n +2. for n in range(N)])
+	result = sparse.sparse_hess_repeat(1,x, result[1], result[2], result[3])
+
+	correct_nnz = 4
+
+	correct_rind   = numpy.array([0,0,0,1])
+	corrent_cind   = numpy.array([0,1,2,2])
+	correct_values = numpy.array([6*x[0],1.,1.,1.])
+
+	assert_equal(result[0], correct_nnz)
+	assert_array_equal(result[1], correct_rind)
+	assert_array_equal(result[2], corrent_cind)
+	assert_array_almost_equal(result[3], correct_values)
+
 
 
 #def test_gradient_and_jacobian_and_hessian():

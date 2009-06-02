@@ -45,8 +45,9 @@ BOOST_PYTHON_MODULE(_colpack)
 	def("sparse_jac_no_repeat",  &wrapped_sparse_jac_no_repeat);
 	def("sparse_jac_repeat",  &wrapped_sparse_jac_repeat);
 
-	def("hess_pat", 	             &wrapped_hess_pat);
-
+	def("hess_pat", 	                     &wrapped_hess_pat);
+	def("sparse_hess_no_repeat", 	         &wrapped_sparse_hess_no_repeat);
+	def("sparse_hess_repeat", 	             &wrapped_sparse_hess_repeat);
 	
 }
 
