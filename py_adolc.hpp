@@ -27,8 +27,8 @@ extern adub log10	( const badouble& );
 extern adub sinh  ( const badouble& );
 extern adub cosh  ( const badouble& );
 extern adub tanh  ( const badouble& );
-// extern adub asinh ( const badouble& );
-// extern adub acosh ( const badouble& );
+extern adub asinh ( const badouble& );
+// extern adub /*acosh*/ ( const badouble& );
 // extern adub atanh ( const badouble& );
 extern adub fabs  ( const badouble& );
 extern adub ceil  ( const badouble& );
@@ -112,22 +112,22 @@ adub	(*log10_adub)		( const badouble& ) = &log10;
 adub	(*sinh_adub)		( const badouble& ) = &sinh;
 adub	(*cosh_adub) 		( const badouble& ) = &cosh;
 adub	(*tanh_adub) 		( const badouble& ) = &tanh;
-// adub (*asinh_adub) 		( const badouble& ) = &asinh;
-// adub (*acosh_adub) 		( const badouble& ) = &acosh;
-// adub (*atanh_adub) 		( const badouble& ) = &atanh;
+// adub    (*asinh_adub) 		( const badouble& ) = &asinh;
+// adub    (*acosh_adub) 		( const badouble& ) = &acosh;
+// adub    (*atanh_adub) 		( const badouble& ) = &atanh;
 adub	(*fabs_adub) 		( const badouble& ) = &fabs;
 adub	(*ceil_adub)		( const badouble& ) = &ceil;
 adub	(*floor_adub) 		( const badouble& ) = &floor;
 
-adub	(*pow_adub)			( const badouble&, double ) = &pow;
-adouble	(*pow_adouble_badouble_badouble)( const badouble&, const badouble& ) = &pow;
-adouble (*pow_adouble_double_badouble)( double, const badouble& ) = &pow;
-adub	(*fmax_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmax;
-adub	(*fmax_adub_double_badouble)		( double, const badouble& ) = &fmax;
-adub	(*fmax_adub_badouble_double)		( const badouble&, double ) = &fmax;
-adub	(*fmin_adub_badouble_badouble)		( const badouble&, const badouble& ) = &fmin;
-adub	(*fmin_adub_double_badouble)		( double, const badouble& ) = &fmin;
-adub	(*fmin_adub_badouble_double)		( const badouble&, double ) = &fmin;
+adub	(*pow_adub)                       ( const badouble&, double ) = &pow;
+adouble	(*pow_adouble_badouble_badouble)  ( const badouble&, const badouble& ) = &pow;
+adouble (*pow_adouble_double_badouble)    ( double, const badouble& ) = &pow;
+adub	(*fmax_adub_badouble_badouble)    ( const badouble&, const badouble& ) = &fmax;
+adub	(*fmax_adub_double_badouble)      ( double, const badouble& ) = &fmax;
+adub	(*fmax_adub_badouble_double)      ( const badouble&, double ) = &fmax;
+adub	(*fmin_adub_badouble_badouble)    ( const badouble&, const badouble& ) = &fmin;
+adub	(*fmin_adub_double_badouble)      ( double, const badouble& ) = &fmin;
+adub	(*fmin_adub_badouble_double)      ( const badouble&, double ) = &fmin;
 adub	(*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 // adub (*frexp_adub) 		( const badouble&, int* ) = &frexp;
 // adub (*erf_adub) 		( const badouble& ) = &erf;
@@ -146,6 +146,12 @@ adub *adub_atan_badouble  (const badouble &rhs){	return new adub(atan(rhs));}
 adub *adub_sqrt_badouble  (const badouble &rhs){	return new adub(sqrt(rhs));}
 adub *adub_sinh_badouble  (const badouble &rhs){	return new adub(sinh(rhs));}
 adub *adub_cosh_badouble  (const badouble &rhs){	return new adub(cosh(rhs));}
+adub *adub_tanh_badouble  (const badouble &rhs){	return new adub(tanh(rhs));}
+// adub *adub_asinh_badouble  (const badouble &rhs){	return new adub(asinh(rhs));}
+// adub *adub_acosh_badouble  (const badouble &rhs){	return new adub(acosh(rhs));}
+// adub *adub_atanh_badouble  (const badouble &rhs){	return new adub(atanh(rhs));}
+
+
 adub *adub_fabs_badouble  (const badouble &rhs){	return new adub(fabs(rhs));}
 adub *adub_ceil_badouble  (const badouble &rhs){	return new adub(ceil(rhs));}
 adub *adub_floor_badouble (const badouble &rhs){	return new adub(floor(rhs));}
@@ -168,7 +174,9 @@ adub *adub_mul_double_badouble(const badouble &rhs,double lhs){	return new adub(
 adub *adub_div_double_badouble(const badouble &rhs,double lhs){	return new adub(operator/(lhs,rhs));}
 
 
-adub *adub_pow_badouble_double(const badouble &lhs, const double &rhs){	return new adub(pow(lhs,rhs));}
+adub *adub_pow_badouble_double  (const badouble &lhs, const double &rhs)  {	return new adub(pow(lhs,rhs));}
+adouble *adouble_pow_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adouble(pow(lhs,rhs));}
+adouble *adouble_pow_double_badouble(const badouble &rhs, double lhs){	return new adouble(pow(lhs,rhs));}
 
 
 
@@ -313,21 +321,25 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("__mul__", adub_mul_badouble_double, return_value_policy<manage_new_object>())
 			.def("__div__", adub_div_badouble_double, return_value_policy<manage_new_object>())
                         
-			.def("__pow__", adub_pow_badouble_double, return_value_policy<manage_new_object>())
-// 			.def("__pow__",pow_adouble_badouble_badouble, return_value_policy<manage_new_object>())
-// 			.def("__rpow__",pow_adouble_double_badouble, return_value_policy<manage_new_object>())
+			.def("__pow__", adub_pow_badouble_double,   return_value_policy<manage_new_object>())
+			.def("__pow__", adouble_pow_badouble_badouble, return_value_policy<manage_new_object>())
+			.def("__rpow__",adouble_pow_double_badouble, return_value_policy<manage_new_object>())
 
 			.def("exp",  adub_exp_badouble, return_value_policy<manage_new_object>()  )
 			.def("log",  adub_log_badouble, return_value_policy<manage_new_object>()  )
 			.def("sin", adub_sin_badouble, return_value_policy<manage_new_object>()  )
-			.def("cos", adub_cos_badouble, return_value_policy<manage_new_object>()  )	
+			.def("cos", adub_cos_badouble, return_value_policy<manage_new_object>()  )
 			.def("tan",  adub_tan_badouble, return_value_policy<manage_new_object>()  )
-			.def("asin", adub_asin_badouble, return_value_policy<manage_new_object>()  )
-			.def("acos", adub_acos_badouble, return_value_policy<manage_new_object>()  )
-			.def("atan", adub_atan_badouble, return_value_policy<manage_new_object>()  )
+			.def("arcsin", adub_asin_badouble, return_value_policy<manage_new_object>()  )
+			.def("arccos", adub_acos_badouble, return_value_policy<manage_new_object>()  )
+			.def("arctan", adub_atan_badouble, return_value_policy<manage_new_object>()  )
 			.def("sqrt", adub_sqrt_badouble, return_value_policy<manage_new_object>()  )
 			.def("sinh", adub_sinh_badouble, return_value_policy<manage_new_object>()  )
 			.def("cosh", adub_cosh_badouble, return_value_policy<manage_new_object>()  )
+			.def("tanh", adub_tanh_badouble, return_value_policy<manage_new_object>()  )
+// 			.def("arcsinh", adub_asinh_badouble, return_value_policy<manage_new_object>()  )
+// 			.def("acosh", adub_acosh_badouble, return_value_policy<manage_new_object>()  )
+// 			.def("arctanh", adub_atanh_badouble, return_value_policy<manage_new_object>()  )
 			.def("fabs", adub_fabs_badouble, return_value_policy<manage_new_object>()  )
 			.def("abs", adub_fabs_badouble, return_value_policy<manage_new_object>()  )
 			.def("ceil", adub_ceil_badouble, return_value_policy<manage_new_object>()  )

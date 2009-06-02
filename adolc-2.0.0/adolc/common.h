@@ -18,6 +18,9 @@
 #if !defined(ADOLC_COMMON_H)
 #define ADOLC_COMMON_H 1
 
+#define ATRIG_ERF
+
+
 /*--------------------------------------------------------------------------*/
 /* standard includes */
 #if !defined(__cplusplus)

@@ -71,6 +71,46 @@ def test_div():
 	
 	assert b.val == 3./2.
 	assert c.val == 2./3.
+	
+def test_pow():
+	r  = 5
+	x = 3.
+	y = 2.
+	ax = adouble(x)
+	ay = adouble(y)
+	
+	az1 = ax**ay
+	az2 = ax**r
+	az3 = r**ax
+	
+	assert_almost_equal(az1.val, x**y)
+	assert_almost_equal(az2.val, x**r)
+	assert_almost_equal(az3.val, r**x)
+	
+def test_hyperbolic_functions():
+	x = 3.
+	ax = adouble(x)
+	
+	ash = numpy.sinh(ax)
+	ach = numpy.cosh(ax)
+	ath = numpy.tanh(ax)
+	
+	assert_almost_equal(ash.val, numpy.sinh(x))
+	assert_almost_equal(ach.val, numpy.cosh(x))
+	assert_almost_equal(ath.val, numpy.tanh(x))
+	
+#def test_arc_hyperbolic_functions():
+	#x = 3.
+	#ax = adouble(x)
+	
+	#aarcsh = numpy.arcsinh(ax)
+	#aarcch = numpy.arccosh(ax)
+	#aarcth = numpy.arctanh(ax)
+	
+	#assert_almost_equal(aarcsh.val, numpy.arcsinh(x))
+	#assert_almost_equal(aarcch.val, numpy.arccosh(x))
+	#assert_almost_equal(aarcth.val, numpy.arctanh(x))
+
 
 def test_independent():
 	# 0D
