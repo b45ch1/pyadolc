@@ -9,7 +9,7 @@ Step by Step:
 1) compile adolc.exe with scons
 2) run ./adolc.exe ---> output tape_11.tex
 3) run python pyadolc.py ---> ouput tape_9.tex and tape_10.tex
-4) compare tape_9.tex tape_10.tex and tape_11.tex
+4) compare tape_9.tex resp. tape_10.tex with tape_11.tex, e.g. with kompare or diff
 
 
 

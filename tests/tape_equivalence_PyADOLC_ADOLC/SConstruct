@@ -2,11 +2,13 @@ LIBS		= [
 				'adolc',
 			]
 LIBPATH		= [
-				'../../adolc-1.11.0-trunk/lib',
+				'../../adolc-2.0.0/adolc/.libs',
 			]
 INCLUDEPATH	= [
-				'../../adolc-1.11.0-trunk/include',
+				'../../adolc-2.0.0',
+				'/data/walter/opt_software/boost_1_34_1',
 			]
+
 
 env = Environment(
 	CPPPATH = INCLUDEPATH,
