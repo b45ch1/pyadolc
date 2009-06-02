@@ -3,6 +3,7 @@ import os
 import numpy
 
 # 1: BUILD ADOL-C FUNCTIONALITY WITHOUT SPARSE DRIVERS
+#-----------------------------------------------------
 
 adolc_include_path = os.getcwd() + '/adolc-2.0.0'
 adolc_library_path = os.getcwd() + '/adolc-2.0.0/adolc/.libs'
@@ -31,12 +32,9 @@ adolc = env.SharedLibrary(target='_adolc', source=['py_adolc.cpp', 'num_util.cpp
 #env.Install("./release/adolc", adolc)
 
 
-# 2: BUILD SPARSE SUPPORT
-
+#2: BUILD SPARSE SUPPORT
+#-----------------------
 colpack_library_path = os.getcwd() + '/adolc-2.0.0/colpack'
-
-
-
 LIBS		= ['adolc',
 				'boost_python',
 				'colpack',
@@ -77,3 +75,4 @@ colpack = env.SharedLibrary(target='_colpack',
 	adolc_include_path +'/adolc/indopro_forward_s.c',
 	adolc_include_path +'/adolc/indopro_forward_t.c',
    ])
+
