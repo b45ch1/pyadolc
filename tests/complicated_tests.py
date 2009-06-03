@@ -200,13 +200,13 @@ def test_solve_minimal_surface_optimization_problem_with_projected_gradients():
 
 
 def test_chemical_reaction_equations():
-	""" Example of a chemical reaction. Provided by Tilman Barz (TU Berlin)"""
+	""" Example of a chemical equilibrium. Provided by Tilman Barz (TU Berlin)"""
 
 	def g(k_ggw, sigma, nu, lam, q, c):
-		alpha  = k_ggw[:]*q[0] *c[0]
+		alpha = k_ggw[:]*q[0] *c[0]**(nu[:] - 1.)
 		s = 0.
 		for i in range(3):
-			s += alpha[i] * (sigma[i] + nu[i]) * c[i] **(nu[i] - 1.)
+			s += alpha[i] * (sigma[i] + nu[i]) * c[i]
 		
 		return q[:] - lam * alpha[:] * c[:]/s
 
@@ -242,7 +242,12 @@ def test_chemical_reaction_equations():
 
 
 def test_ipopt_optimization():
-	import pyipopt
+	try:
+		import pyipopt
+	except:
+		print '"pyipopt is not installed, skipping test'
+		return
+		#raise NotImplementedError("pyipopt is not installed, skipping test")
 	import time
 
 	nvar = 4
