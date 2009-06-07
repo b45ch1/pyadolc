@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # This file is to be used with py.test
 
-import sys
-sys.path = ['.'] + sys.path #adding current working directory to the $PYTHONPATH
 import numpy
 import numpy.linalg
 import numpy.random
+import unittest
 from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal, assert_equal
+
+import sys
+sys.path = ['.'] + sys.path #adding current working directory to the $PYTHONPATH
 from adolc import *
 
 def test_minimal_surface_objective_function_gradient():
@@ -409,6 +411,10 @@ def test_ipopt_optimization():
 	#print "Objective value"
 	#print "f(x*) =", obj
 
+try:
+	import nose
+except:
+	print 'Please install nose for unit testing'
 
-	
-	
+if __name__ == '__main__':
+    nose.runmodule()
