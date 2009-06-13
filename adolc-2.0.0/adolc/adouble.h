@@ -1,17 +1,15 @@
 /* ---------------------------------------------------------------------------
  ADOL-C -- Automatic Differentiation by Overloading in C++
 
- Revision: $Id: adouble.h 278 2008-12-19 09:11:26Z awalther $
+ Revision: $Id: adouble.h 295 2009-02-25 13:32:25Z awalther $
  Contents: adouble.h contains the basis for the class of adouble
            included here are all the possible functions defined on
            the adouble class.  Notice that, as opposed to ealier versions,
            both the class adub and the class adouble are derived from a base
            class (badouble).  See below for further explanation.
 
- Copyright (c) 2008
-               Technical University Dresden
-               Department of Mathematics
-               Institute of Scientific Computing
+ Copyright (c) Andrea Walther, Andreas Griewank, Andreas Kowarz, 
+               Hristo Mitev, Sebastian Schlenkrich, Jean Utke, Olaf Vogel
   
  This file is part of ADOL-C. This software is provided as open source.
  Any use, reproduction, or distribution of the software constitutes 
@@ -30,8 +28,6 @@
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
-
-
 using std::cout;
 using std::cin;
 using std::cerr;
@@ -257,7 +253,7 @@ public:
 
 class ADOLC_DLL_EXPORT adub:public badouble {
     friend ADOLC_DLL_EXPORT class adouble;
-public:
+protected:
     adub( locint lo ):badouble(lo) {};
     adub( void ):badouble(0) {
         fprintf(DIAG_OUT,"ADOL-C error: illegal default construction of adub"
@@ -1468,7 +1464,7 @@ while (c!=')' && !in.eof());
     while (c!=')' && !in.eof());
     return in;
 }
-};
+}
 
 /****************************************************************************/
 #endif /* ADOLC_TAPELESS */

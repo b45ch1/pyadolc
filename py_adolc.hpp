@@ -356,10 +356,11 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("fmin", fmin_adub_badouble_double)
 	;
 
-	class_<adub, bases<badouble> >("adub",init<locint>())
-			.def(init<const adub &>())
+	class_<adub, bases<badouble> >("adub", no_init)
+// 			.def(init<locint>())
+// 			.def(init<const adub &>())
 	;
-	
+
 	class_<adouble, bases<badouble> >("adouble", init<double>())
 			.def(init<const adouble&>())
 			.def(init<const adub&>())
