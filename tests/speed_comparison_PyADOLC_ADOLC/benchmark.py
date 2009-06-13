@@ -15,15 +15,13 @@ def benchmark(f,N,M,message):
 	print message
 	x = numpy.array([1./(i+1) for i in range(N)])
 	y = numpy.zeros(M)
-	ax = numpy.array([adouble(0.) for i in range(N)])
+	ax = adouble(x)
 	
 	start_time = time.time()
 	trace_on(1)
-	for n in range(N):
-		ax[n].is_independent(x[n])
+	independent(ax)
 	ay = f(ax)
-	for m in range(M):
-		y[m] = depends_on(ay[m])
+	dependent(ay)
 	trace_off()
 	#tape_to_latex(1,x,y)
 	runtime_taping = time.time() - start_time

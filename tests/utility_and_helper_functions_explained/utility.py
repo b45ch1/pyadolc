@@ -20,10 +20,9 @@ def test_tape_to_latex():
 	ax = numpy.array([adouble(0.),adouble(0.)])
 
 	trace_on(1)
-	for n in range(N):
-		ax[n].is_independent(x[n])
+	independent(ax)
 	ay = f(ax)
-	depends_on(ay)
+	dependent(ay)
 	trace_off()
 
 	tape_to_latex(1,x,numpy.array([0]))
