@@ -10,12 +10,12 @@ x = 1.
 
 # usual way: leads to increasing locints
 trace_on(9)
-ax.is_independent(x)
+independent(ax)
 ay = ax
 for i in range(N):
 	ay = ay * ay
 
-depends_on(ay)
+dependent(ay)
 trace_off()
 
 

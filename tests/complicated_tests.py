@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # This file is to be used with py.test
 
-import sys
-sys.path = ['.'] + sys.path #adding current working directory to the $PYTHONPATH
 import numpy
 import numpy.linalg
 import numpy.random
+import unittest
 from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal, assert_equal
+
+import sys
+sys.path = ['.'] + sys.path #adding current working directory to the $PYTHONPATH
 from adolc import *
 
 def test_minimal_surface_objective_function_gradient():
@@ -200,13 +202,13 @@ def test_solve_minimal_surface_optimization_problem_with_projected_gradients():
 
 
 def test_chemical_reaction_equations():
-	""" Example of a chemical reaction. Provided by Tilman Barz (TU Berlin)"""
+	""" Example of a chemical equilibrium. Provided by Tilman Barz (TU Berlin)"""
 
 	def g(k_ggw, sigma, nu, lam, q, c):
-		alpha  = k_ggw[:]*q[0] *c[0]
+		alpha = k_ggw[:]*q[0] *c[0]**(nu[:] - 1.)
 		s = 0.
 		for i in range(3):
-			s += alpha[i] * (sigma[i] + nu[i]) * c[i] **(nu[i] - 1.)
+			s += alpha[i] * (sigma[i] + nu[i]) * c[i]
 		
 		return q[:] - lam * alpha[:] * c[:]/s
 
@@ -242,7 +244,12 @@ def test_chemical_reaction_equations():
 
 
 def test_ipopt_optimization():
-	import pyipopt
+	try:
+		import pyipopt
+	except:
+		print '"pyipopt is not installed, skipping test'
+		return
+		#raise NotImplementedError("pyipopt is not installed, skipping test")
 	import time
 
 	nvar = 4
@@ -404,6 +411,10 @@ def test_ipopt_optimization():
 	#print "Objective value"
 	#print "f(x*) =", obj
 
+try:
+	import nose
+except:
+	print 'Please install nose for unit testing'
 
-	
-	
+if __name__ == '__main__':
+    nose.runmodule()

@@ -741,5 +741,11 @@ def test_sparse_hess_repeat():
 
 
 
+try:
+	import nose
+except:
+	print 'Please install nose for unit testing'
 
+if __name__ == '__main__':
+    nose.runmodule()
 
