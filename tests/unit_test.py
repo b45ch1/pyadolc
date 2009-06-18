@@ -26,6 +26,26 @@ def test_unary_operators():
 	
 	print type(b)
 	print type(a)
+
+def test_conditional_operators():
+	ax = adouble(2.)
+	ay = adouble(1.)
+
+	assert ax <= 2
+	assert ax <= 2.
+	assert not ax < 2
+	assert not ax < 2.
+	
+
+	assert ax >= 2
+	assert ax >= 2.
+	assert not ax > 2
+	assert not ax > 2.
+
+	assert ax >  ay
+	assert ax >= ay
+	assert not ax <  ay
+	assert not ax <= ay
 	
 	
 def test_radd():

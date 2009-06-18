@@ -301,6 +301,18 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def(self *= self )
 			.def(self /= self )
 
+		
+			.def(self < double() )
+			.def(self <= double() )
+			.def(self > double() )
+			.def(self >= double() )
+		
+			.def(self <  self  )
+			.def(self <= self  )
+			.def(self >  self  )
+			.def(self >= self  )
+			
+
 // 			.def(-self)  using this unary operator somehow screws up LATER computations, i.e. the operator works correctly, but subsequent calculations screw up!!
 // 			.def(+self)
 
