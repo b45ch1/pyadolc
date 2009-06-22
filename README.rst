@@ -65,23 +65,25 @@ EXAMPLE USAGE::
 
 REQUIREMENTS:
     * Python and Numpy, both with header files
+    * ADOL-C http://www.coin-or.org/projects/ADOL-C.xml
     * boost::python from http://www.boost.org/
+    * scons build tool
+
+OPTIONAL REQUIREMENTS:
+    * Colpack from http://www.cscapes.org/coloringpage/software.htm  or alternatively http://github.com/b45ch1/colpack
+      Colpack is needed for sparse Jacobians and sparse Hessians
 
 
 INSTALLATION:
-    1) copy this folder to a place where it is going to stay.
-       This is imporant since the path to the  shared library ``adolc.so`` of adolc  is saved in the adolc.so file for python as absolute path (i.e. the ``RPATH`` is set).
-    2) go to the folderadolc-2.0.0 and compile ADOL-C:
-       ``./configure && make``	do *NOT* ``make install``
-    3) rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system:
-       Run  ``python setup.py build_ext --inplace``.
-       Alternatively you can rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system and build with ``scons``.
-       Using ``scons`` is more convenient to work with when you often pull new versions:
-       when using the Python distutils you have to remove the oldbinaries before you can run
-       ``python setup.py build_ext --inplace again``. In the development process it is likely that the ``scons`` version works whereas ``setup.py`` fails because of new features in the code.
-    4) Add the directory to your ``PYTHONPATH``.
+    1) Rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system and build with ``scons``.
+       Using ``scons`` is more convenient to work with when you often pull new versions.
+       Alternatively you can try to use distutils, but support for it lags behind scons:
+            * rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system:
+            * Run  ``python setup.py build_ext --inplace``.
+    2) Add the directory to your ``PYTHONPATH``.
        E.g. add the following line in your ``~/.bashrc`` file:
        ``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
+       
 
 
 INSTALLATION OF SPARSE SUPPORT:
@@ -89,10 +91,6 @@ INSTALLATION OF SPARSE SUPPORT:
     For convenience I have already improved the makefile of ColPack and uploaded it to
     http://github.com/b45ch1/colpack/tree/master
 
-    1) go to ``./colpack``
-    2) ``make``     to compile
-    3) ``make install`` to copy header files and shared library to ./colpack/build/include and ./colpack/build/lib
-    4) copy the contents of ``./colpack/build/include`` and ``./colpack/build/lib``  to ``./pyadolc/adolc-2.0.0/colpack``
-    5) run ``scons``
+
 
 
