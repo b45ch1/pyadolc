@@ -70,26 +70,19 @@ REQUIREMENTS:
     * scons build tool
 
 OPTIONAL REQUIREMENTS:
-    * Colpack from http://www.cscapes.org/coloringpage/software.htm  or alternatively http://github.com/b45ch1/colpack
-      Colpack is needed for sparse Jacobians and sparse Hessians
+    * Colpack from http://www.cscapes.org/coloringpage/software.htm  or alternatively http://github.com/b45ch1/colpack . Colpack is needed for sparse Jacobians and sparse Hessians
 
 
 INSTALLATION:
     1) Rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system and build with ``scons``.
-       Using ``scons`` is more convenient to work with when you often pull new versions.
+    2) If you don't have colpack installed calling scons will only compile _adolc.so but fail to compile _sparse.so 
+    3) Using ``scons`` is more convenient to work with when you often pull new versions.
        Alternatively you can try to use distutils, but support for it lags behind scons:
-            * rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system:
-            * Run  ``python setup.py build_ext --inplace``.
-    2) Add the directory to your ``PYTHONPATH``.
+        * rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system:
+        * Run  ``python setup.py build_ext --inplace``.
+    4) Add the directory to your ``PYTHONPATH``.
        E.g. add the following line in your ``~/.bashrc`` file:
        ``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
-       
-
-
-INSTALLATION OF SPARSE SUPPORT:
-    To use the functionality of sparse jacobians you will need Colpack (http://www.cs.odu.edu/~dnguyen/dox/colpack/html/).
-    For convenience I have already improved the makefile of ColPack and uploaded it to
-    http://github.com/b45ch1/colpack/tree/master
 
 
 
