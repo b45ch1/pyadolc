@@ -38,30 +38,30 @@ Licence (new BSD):
 EXAMPLE USAGE:
 --------------
 
->>> import numpy
->>> from adolc import *
->>> N = M = 10
->>> A = numpy.zeros((M,N))
->>> A[:] = [[ 1./N +(n==m) for n in range(N)] for m in range(M)]
->>> def f(x):
->>>     return numpy.dot(A,x)
->>>
->>> # tape a function evaluation
->>> ax = numpy.array([adouble(0) for n in range(N)])
->>> trace_on(1)
->>> independent(ax)
->>> ay = f(ax)
->>> dependent(ay)
->>> trace_off()
->>> 
->>> x = numpy.array([n+1 for n in range(N)])
->>> 
->>> # compute jacobian of f at x
->>> J = jacobian(1,x)
->>> 
->>> # compute gradient of f at x
->>> if M==1:
->>> 	g = gradient(1,x)
+import numpy
+from adolc import *
+N = M = 10
+A = numpy.zeros((M,N))
+A[:] = [[ 1./N +(n==m) for n in range(N)] for m in range(M)]
+def f(x):
+    return numpy.dot(A,x)
+
+# tape a function evaluation
+ax = numpy.array([adouble(0) for n in range(N)])
+trace_on(1)
+independent(ax)
+ay = f(ax)
+dependent(ay)
+trace_off()
+
+x = numpy.array([n+1 for n in range(N)])
+
+# compute jacobian of f at x
+J = jacobian(1,x)
+
+# compute gradient of f at x
+if M==1:
+    g = gradient(1,x)
 
 
 REQUIREMENTS:
