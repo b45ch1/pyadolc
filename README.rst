@@ -77,9 +77,7 @@ INSTALLATION:
     1) Rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system and build with ``scons``.
     2) If you don't have colpack installed calling scons will only compile _adolc.so but fail to compile _sparse.so 
     3) Using ``scons`` is more convenient to work with when you often pull new versions.
-       Alternatively you can try to use distutils, but support for it lags behind scons:
-        * rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system:
-        * Run  ``python setup.py build_ext --inplace``.
+       Alternatively you can try to use distutils, but support for it lags behind scons: i.e. 1) rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system, then 2) run  ``python setup.py build_ext --inplace``.
     4) Add the directory to your ``PYTHONPATH``.
        E.g. add the following line in your ``~/.bashrc`` file:
        ``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
