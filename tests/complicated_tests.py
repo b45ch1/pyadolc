@@ -411,10 +411,107 @@ def test_ipopt_optimization():
 	#print "Objective value"
 	#print "f(x*) =", obj
 
-try:
-	import nose
-except:
-	print 'Please install nose for unit testing'
+
+def Runge_Kutta_step_to_test_hov_forward():
+	# defining the butcher tableau
+	c =      numpy.array([0., 1./4., 3./8., 12./13., 1., 1./2. ], dtype=float)
+	b =      numpy.array([16./135., 0., 6656./12825., 28561./56430., -9./50., 2./55.], dtype=float)
+	A      = numpy.array([[0.,0.,0.,0.,0.,0.],
+						[1./4., 0., 0., 0., 0., 0.],
+						[3./32., 9./32., 0., 0., 0., 0.],
+						[1932./2197., -7200./2197., 7296./2197., 0., 0., 0.],
+						[439./216., -8., 3680./513., -845./4104., 0., 0.],
+						[-8./27., 2., -3544./2565., 1859./4104., -11./40., 0.]]
+						, dtype=float)
+		
+	# define the rhs of the ODE
+	def f(t,x,p):
+		return numpy.array([x[1], -2.*p[0]*x[1] - p[1]*p[1]*x[0]])
+
+	# set the initial values
+	t = 0.
+	h = 0.01
+	x = numpy.array([1.,0.], dtype=float)
+	p  = numpy.array([0.1, 1.]) # p=(r,omega)
+	V = numpy.zeros((4, 4, 1), dtype=float)
+	V[:,:,0] = numpy.eye(4, dtype=float)
+	N = numpy.size(x)
+	S = numpy.size(b)
+	
+
+	# tape Runge Kutta step
+	trace_on(1)
+	at = adouble(t)
+	ah = adouble(h)
+	ax = adouble(x)
+	ap = adouble(p)
+	ak = adouble(numpy.zeros((S, N)))
+	
+	independent(ax)
+	independent(ap)
+	
+	for s in range(S):
+		ak[s,:] = f(at + ah * c, ax + ah * numpy.dot(A[s,:], ak), ap)
+	ay = ax[:] +  ah * numpy.dot(b, ak)
+
+	dependent(ay)
+	trace_off()
+
+	z = numpy.concatenate([x,p])
+	(y,W) = hov_forward(1, z, V)
+
+	# compute analytical solution
+
+	import sympy
+
+	def phi(t,p,x0):
+		Omega = sympy.sqrt(p[1]**2 - p[0]**2)
+		return x0/Omega * sympy.exp(-p[0]*t) * (Omega * sympy.cos(Omega*t) + p[0]*sympy.sin(Omega*t))
+
+	sx,sr,sw,st = sympy.symbols('xrwt')
+	sp = (sr,sw)
+
+	sphi = phi(st,sp,sx)
+	dsphidr = sympy.diff(sphi,sr)
+
+	def dphidr(t,p,x0):
+		return dsphidr.subs([(sx,x[0]), (sr,p[0]), (sw,p[1]), (st,h)]).evalf()
+
+	def phi(t,p,x0):
+		return sphi.subs([(sx,x[0]), (sr,p[0]), (sw,p[1]), (st,h)]).evalf()
+
+	#yexact    = phi   (h,p,x[0])
+	#dydrexact = dphidr(h,p,x[0])
+
+
+	#print y[0] - yexact
+
+	#print W[0,2,0] - dydrexact
+	
+	
+	import pylab
+	pylab.figure()
+	ts = numpy.linspace(0,50,200)
+	dphidrs = numpy.zeros(numpy.shape(ts))
+	phis = numpy.zeros(numpy.shape(ts))
+	for n in range(numpy.size(ts)):
+		dphidrs[n] = dphidr(ts[n],p,x[0])
+		phis[n]    = phi(ts[n],p,x[0])
+
+	pylab.plot(ts, phis, 'b-')
+	pylab.plot(ts,dphidrs)
+	pylab.show()
+	#assert False
+
+		
+
+
 
 if __name__ == '__main__':
-    nose.runmodule()
+	#try:
+		#import nose
+	#except:
+		#print 'Please install nose for unit testing'	
+    #nose.runmodule()
+
+	Runge_Kutta_step_to_test_hov_forward()
