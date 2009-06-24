@@ -187,6 +187,10 @@ def hess_vec(tape_tag,x,v):
 	evaluate  f''(x)v, f:R^N -> R
 	"""
 	assert type(tape_tag) == int
+	assert numpy.ndim(x)  == 1
+	assert numpy.ndim(v)  == 1
+	assert numpy.size(x)  == numpy.size(v)
+	
 	x = numpy.asarray(x, dtype=float)
 	v = numpy.asarray(v, dtype=float)
 	return _adolc.hess_vec(tape_tag,x,v)
@@ -197,6 +201,11 @@ def lagra_hess_vec(tape_tag,x,u,v):
 	evaluate  u^T F''(x)v, F:R^N -> R^M
 	"""
 	assert type(tape_tag) == int
+	assert numpy.ndim(x)  == 1
+	assert numpy.ndim(u)  == 1
+	assert numpy.ndim(v)  == 1
+	assert numpy.size(x)  == numpy.size(v)
+	
 	x = numpy.asarray(x, dtype=float)
 	u = numpy.asarray(u, dtype=float)
 	v = numpy.asarray(v, dtype=float)
@@ -212,6 +221,8 @@ def zos_forward(tape_tag,x,keep):
 	"""
 	assert type(tape_tag) == int
 	assert type(keep) == int
+	assert numpy.ndim(x)  == 1
+	
 	x = numpy.asarray(x, dtype=float)
 	return _adolc.zos_forward(tape_tag, x, keep)
 
@@ -228,6 +239,10 @@ def fos_forward(tape_tag, x, v, keep):
 	"""
 	assert type(tape_tag) == int
 	assert type(keep) == int
+	assert numpy.ndim(x)  == 1
+	assert numpy.ndim(v)  == 1
+	assert numpy.size(x)  == numpy.size(v)
+	
 	x = numpy.asarray(x, dtype=float)
 	v = numpy.asarray(v, dtype=float)
 	return _adolc.fos_forward(tape_tag,x,v,keep)
@@ -243,6 +258,9 @@ def fov_forward(tape_tag,x,V):
 	"""
 	assert type(tape_tag) == int
 	assert numpy.ndim(V) == 2
+	assert numpy.ndim(x)  == 1
+	assert numpy.size(x)  == numpy.shape(V)[0]
+	
 	x = numpy.asarray(x, dtype=float)
 	V = numpy.asarray(V, dtype=float)
 	return _adolc.fov_forward(tape_tag,x,V)
@@ -260,8 +278,11 @@ def hos_forward(tape_tag, x, V, keep):
 	D+1 >= keep > 2 prepares for hos_reverse or hov_reverse
 	"""
 	assert type(tape_tag) == int
-	assert numpy.ndim(V) == 2
-	assert type(keep) == int
+	assert type(keep)     == int
+	assert numpy.ndim(V)  == 2
+	assert numpy.ndim(x)  == 1
+	assert numpy.size(x)  == numpy.shape(V)[0]
+	
 	x = numpy.asarray(x, dtype=float)
 	V = numpy.asarray(V, dtype=float)
 	return _adolc.hos_forward(tape_tag, x, V, keep)
@@ -280,6 +301,8 @@ def hov_forward(tape_tag, x, V):
 	"""
 	assert type(tape_tag) == int
 	assert numpy.ndim(V) == 3
+	assert numpy.ndim(x) == 1
+	assert numpy.size(x) == numpy.shape(V)[0]
 	x = numpy.asarray(x, dtype=float)
 	V = numpy.asarray(V, dtype=float)
 	return _adolc.hov_forward(tape_tag, x, V)
@@ -298,6 +321,8 @@ def hov_wk_forward(tape_tag, x, V, keep):
 	assert type(tape_tag) == int
 	assert type(keep) == int
 	assert numpy.ndim(V) == 3
+	assert numpy.ndim(x) == 1
+	assert numpy.size(x) == numpy.shape(V)[0]
 	x = numpy.asarray(x, dtype=float)
 	V = numpy.asarray(V, dtype=float)
 	return _adolc.hov_wk_forward(tape_tag, x, V, keep)

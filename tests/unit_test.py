@@ -154,7 +154,7 @@ def test_dependent():
 	# 0D
 	ax = adouble(1)
 	bx = dependent(ax)
-	assert ax == bx	
+	assert ax == bx
 	
 	# 1D
 	N = 10
@@ -260,7 +260,7 @@ def test_tape_to_latex():
 	independent(ax)
 	ay = scalar_f(ax)
 	dependent(ay)
-	trace_off()	
+	trace_off()
 	y = numpy.zeros(1)
 	tape_to_latex(123,x,y)
 	import os
@@ -411,14 +411,13 @@ def test_lagra_hess_vec():
 	ax = adouble(x)
 	
 	trace_on(1)
-	for n in range(N):
-		ax[n].is_independent(x[n])
+	independent(ax)
 	ay = vector_f(ax)
 	dependent(ay)
 	trace_off()
 	u = numpy.random.rand(M)
 	v = numpy.random.rand(N)
-	assert_array_almost_equal(numpy.zeros(N,dtype=float), lagra_hess_vec(1,x,v,u) )
+	assert_array_almost_equal(numpy.zeros(N,dtype=float), lagra_hess_vec(1,x,u,v) )
 
 def test_jac_pat():
 	N = 3 # dimension

@@ -432,11 +432,12 @@ def Runge_Kutta_step_to_test_hov_forward():
 	t = 0.
 	h = 0.01
 	x = numpy.array([1.,0.], dtype=float)
-	p  = numpy.array([0.1, 1.]) # p=(r,omega)
-	V = numpy.zeros((4, 4, 1), dtype=float)
-	V[:,:,0] = numpy.eye(4, dtype=float)
+	p  = numpy.array([0.1, 3.]) # p=(r,omega)
+	V = numpy.zeros((4, 2, 1), dtype=float)
+	V[2:,:,0] = numpy.eye(2, dtype=float)
 	N = numpy.size(x)
 	S = numpy.size(b)
+
 	
 
 	# tape Runge Kutta step
@@ -460,48 +461,46 @@ def Runge_Kutta_step_to_test_hov_forward():
 	z = numpy.concatenate([x,p])
 	(y,W) = hov_forward(1, z, V)
 
-	# compute analytical solution
+	def phi(t,r,w,x):
+		return x*(w**2 - r**2)**(-1./2)*(r*numpy.sin(t*(w**2 - r**2)**(1./2)) + (w**2 - r**2)**(1./2)*numpy.cos(t*(w**2 - r**2)**(1./2)))*numpy.exp(-r*t)
 
-	import sympy
+	def dphidr(t,r,w,x):
+		return x*(w**2 - r**2)**(-1./2.)*(r*t*numpy.sin(t*(w**2 - r**2)**(1./2.)) - r*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) - t*r**2*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) + numpy.sin(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) + r*x*(w**2 - r**2)**(-3./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) - t*x*(w**2 - r**2)**(-1./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t)
+		
 
-	def phi(t,p,x0):
-		Omega = sympy.sqrt(p[1]**2 - p[0]**2)
-		return x0/Omega * sympy.exp(-p[0]*t) * (Omega * sympy.cos(Omega*t) + p[0]*sympy.sin(Omega*t))
+	def dphidw(t,r,w,x):
+		return x*(w**2 - r**2)**(-1./2.)*(w*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) - t*w*numpy.sin(t*(w**2 - r**2)**(1./2.)) + r*t*w*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) - w*x*(w**2 - r**2)**(-3./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t)
 
-	sx,sr,sw,st = sympy.symbols('xrwt')
-	sp = (sr,sw)
+	y_exact = phi(h,p[0],p[1],x[0])
+	W_exact = numpy.array([  dphidr(h,p[0],p[1],x[0]),  dphidw(h,p[0],p[1],x[0]) ])
 
-	sphi = phi(st,sp,sx)
-	dsphidr = sympy.diff(sphi,sr)
-
-	def dphidr(t,p,x0):
-		return dsphidr.subs([(sx,x[0]), (sr,p[0]), (sw,p[1]), (st,h)]).evalf()
-
-	def phi(t,p,x0):
-		return sphi.subs([(sx,x[0]), (sr,p[0]), (sw,p[1]), (st,h)]).evalf()
-
-	#yexact    = phi   (h,p,x[0])
-	#dydrexact = dphidr(h,p,x[0])
+	assert_almost_equal(W[0,:,0], W_exact)
+	assert_almost_equal(y[0],y_exact)
 
 
-	#print y[0] - yexact
 
-	#print W[0,2,0] - dydrexact
-	
-	
-	import pylab
-	pylab.figure()
-	ts = numpy.linspace(0,50,200)
-	dphidrs = numpy.zeros(numpy.shape(ts))
-	phis = numpy.zeros(numpy.shape(ts))
-	for n in range(numpy.size(ts)):
-		dphidrs[n] = dphidr(ts[n],p,x[0])
-		phis[n]    = phi(ts[n],p,x[0])
 
-	pylab.plot(ts, phis, 'b-')
-	pylab.plot(ts,dphidrs)
-	pylab.show()
-	#assert False
+	# plot to check the analytical solution
+	#eps = 10**-16
+	#epsilon = numpy.sqrt(eps)
+
+	#import pylab
+	#pylab.figure()
+	#ts = numpy.linspace(0,50,1000)
+	#phis    = phi(ts,p[0],p[1],x[0])
+	#dphidrs = dphidr(ts,p[0],p[1],x[0])
+	#dphidws = dphidw(ts,p[0],p[1],x[0])
+	#dphidrsfd = (phi(ts,p[0] + epsilon,p[1],x[0]) - phi(ts,p[0],p[1],x[0]))/epsilon
+	#dphidwsfd = (phi(ts,p[0],p[1] + epsilon,x[0]) - phi(ts,p[0],p[1],x[0]))/epsilon
+	#pylab.plot(ts, phis, 'b-', label=r'$x(t)$')
+	#pylab.plot(ts,dphidrs,'r-', label = r' $\frac{d x}{d r}(t)$' )
+	#pylab.plot(ts,dphidws,'g-', label = r' $\frac{d x}{d w}(t)$' )
+	#pylab.plot(ts,dphidrsfd,'r.', label = r'FD: $\frac{d x}{d r}(t)$' )
+	#pylab.plot(ts,dphidwsfd,'g.', label = r'FD: $\frac{d x}{d w}(t)$' )
+
+	#pylab.legend()
+	#pylab.show()
+	##assert False
 
 		
 
