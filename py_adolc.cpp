@@ -420,11 +420,15 @@ bp::tuple wrapped_hov_reverse(short tape_tag, int D, bpn::array &bpn_U){
 
 
 	bpn::array ret_Z = nu::makeNum( Z[0][0], Z_shp);
-	bpn::array ret_nz = nu::makeNum( nz[0], nz_shp);
+
+
+// 	bpn::array ret_nz = nu::makeNum( nz[0], nz_shp);
 	bp::list retvals;
 	retvals.append(ret_Z);
-	retvals.append(ret_nz);
+// 	retvals.append(ret_nz);
 	return bp::tuple(retvals);
+
+
 	
 }
 
@@ -465,20 +469,20 @@ bp::tuple wrapped_hov_ti_reverse(short tape_tag, bpn::array &bpn_U){
 	vector<npy_intp> Z_shp(3); Z_shp[0] = Q; Z_shp[1] = N;  Z_shp[2]=D;
 	bpn::array ret_Z = nu::makeNum( Z[0][0], Z_shp);
 
-	/* prepare nz for returning to Python */
-	vector<npy_intp> nz_shp(2); nz_shp[0] = Q; nz_shp[1]=N;
-	bp::object nz_obj(bp::handle<>(PyArray_SimpleNew(2, &nz_shp[0], PyArray_INT)));
-	npy_intp *nz_ptr = static_cast<npy_intp*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( nz_obj.ptr() )));
-	for(npy_intp q=0; q != Q; ++q){
-		for(npy_intp n=0; n != N; ++n){
-			nz_ptr[n + q*N] = static_cast<npy_intp>(nz_data[n + q*N]);
-		}
-	}
-	bpn::array ret_nz = boost::python::extract<boost::python::numeric::array>(nz_obj);
+// 	/* prepare nz for returning to Python */
+// 	vector<npy_intp> nz_shp(2); nz_shp[0] = Q; nz_shp[1]=N;
+// 	bp::object nz_obj(bp::handle<>(PyArray_SimpleNew(2, &nz_shp[0], PyArray_INT)));
+// 	npy_intp *nz_ptr = static_cast<npy_intp*> ( PyArray_DATA (reinterpret_cast<PyArrayObject*> ( nz_obj.ptr() )));
+// 	for(npy_intp q=0; q != Q; ++q){
+// 		for(npy_intp n=0; n != N; ++n){
+// 			nz_ptr[n + q*N] = static_cast<npy_intp>(nz_data[n + q*N]);
+// 		}
+// 	}
+// 	bpn::array ret_nz = boost::python::extract<boost::python::numeric::array>(nz_obj);
 
 	bp::list retvals;
 	retvals.append(ret_Z);
-	retvals.append(ret_nz);
+// 	retvals.append(ret_nz);
 	return bp::tuple(retvals);
 	
 }

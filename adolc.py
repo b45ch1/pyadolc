@@ -395,6 +395,7 @@ def hov_reverse(tape_tag, D, U):
 	assert type(D) == int
 	assert numpy.ndim(U) == 2
 	U = numpy.asarray(U,dtype=float)
+
 	return _adolc.hov_reverse(tape_tag, D, U)
 
 
@@ -412,8 +413,14 @@ def hov_ti_reverse(tape_tag, U):
 	"""
 	assert type(tape_tag) == int
 	assert numpy.ndim(U) == 3
+	(Q,M,Dp1) = numpy.shape(U)
+	ts = tapestats(tape_tag)
+	
+	assert ts['NUM_DEPENDENTS'] == M
+	
 	U = numpy.asarray(U,dtype=float)
 	return _adolc.hov_ti_reverse(tape_tag, U)
+	
 
 def tape_to_latex(tape_tag,x,y):
 	"""

@@ -242,18 +242,18 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("lagra_hess_vec", 	&c_wrapped_lagra_hess_vec);
 // 	def("jac_solv",			&c_wrapped_jac_solv); /* buggy ! */
 
-	def("zos_forward",		&c_wrapped_zos_forward);
-	def("fos_forward",		&c_wrapped_fos_forward);
-	def("fov_forward",		&c_wrapped_fov_forward);
-	def("hos_forward",		&c_wrapped_hos_forward);
-	def("hov_forward",		&c_wrapped_hov_forward);
+// 	def("zos_forward",		&c_wrapped_zos_forward);
+// 	def("fos_forward",		&c_wrapped_fos_forward);
+// 	def("fov_forward",		&c_wrapped_fov_forward);
+// 	def("hos_forward",		&c_wrapped_hos_forward);
+// 	def("hov_forward",		&c_wrapped_hov_forward);
 // 	def("hov_wk_forward",	&c_wrapped_hov_wk_forward);
 
 
-	def("fos_reverse",		&c_wrapped_fos_reverse);
-	def("fov_reverse",		&c_wrapped_fov_reverse);
-	def("hos_reverse",		&c_wrapped_hos_reverse);
-	def("hov_reverse", 		&c_wrapped_hov_reverse);
+// 	def("fos_reverse",		&c_wrapped_fos_reverse);
+// 	def("fov_reverse",		&c_wrapped_fov_reverse);
+// 	def("hos_reverse",		&c_wrapped_hos_reverse);
+// 	def("hov_reverse", 		&c_wrapped_hov_reverse);
 		
 	def("depends_on", 		&depends_on);
 	def("tape_to_latex",	py_tape_doc);
