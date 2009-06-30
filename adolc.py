@@ -112,10 +112,11 @@ def dependent(ax):
 	else:
 		axr = numpy.ravel(ax)
 		N   = numpy.size(axr)
-
+		
 		for n in range(N):
+			if numpy.isscalar(axr[n]):
+				axr[n] = adouble(axr[n])
 			depends_on(axr[n])
-
 		return ax
 
 
