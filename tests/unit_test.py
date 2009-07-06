@@ -369,8 +369,7 @@ def test_vec_jac():
 	ax = adouble(x)
 	
 	trace_on(1)
-	for n in range(N):
-		ax[n].is_independent(x[n])
+	independent(ax)
 	ay = vector_f(ax)
 	dependent(ay)
 	trace_off()
@@ -390,8 +389,7 @@ def test_jac_vec():
 	ax = adouble(x)
 	
 	trace_on(1)
-	for n in range(N):
-		ax[n].is_independent(x[n])
+	independent(ax)
 	ay = vector_f(ax)
 	dependent(ay)
 	trace_off()
@@ -592,7 +590,68 @@ def test_sparse_hess_repeat():
 	assert_array_equal(result[2], corrent_cind)
 	assert_array_almost_equal(result[3], correct_values)
 
-
+def test_repeated_taping():
+	R = 20 # number of repetitions of the taping
+	
+	N = 3 # dimension
+	M = 2 # codimension
+	A = numpy.array([[ 1./N +(n==m) for n in range(N)] for m in range(M)])
+	def vector_f(x):
+		return numpy.dot(A,x)
+		
+	x = numpy.array([1.*n for n in range(N)])
+	ax = adouble(x)
+	
+	for r in range(R):
+		trace_on(1)
+		independent(ax)
+		ay = vector_f(ax)
+		dependent(ay)
+		trace_off()
+		u = numpy.random.rand(M)
+		uJ = numpy.dot(u,A)
+		assert_array_almost_equal( uJ, vec_jac(1,x,u, 0))
+		
+	for r in range(R):
+		trace_on(r)
+		independent(ax)
+		ay = vector_f(ax)
+		dependent(ay)
+		trace_off()
+		u = numpy.random.rand(M)
+		uJ = numpy.dot(u,A)
+		assert_array_almost_equal( uJ, vec_jac(r,x,u, 0))		
+		
+		
+def test_hov_forward():
+	""" checks only first order"""
+	N = 3
+	P = 1
+	D = 1
+	epsilon1 =  numpy.sqrt(10**-16)
+	
+	def f(x):
+		return numpy.array([x[0]*x[1] + x[0]*x[2], x[1]*x[2]])
+		
+	x = numpy.array([1.,2.,3.])
+	ax = adouble(x)
+	trace_on(1)
+	independent(ax)
+	ay = f(ax)
+	dependent(ay)
+	trace_off()
+	x = numpy.random.rand(N)
+	V = numpy.random.rand(N,P,D)
+	
+	(y,W) = hov_forward(1, x, V)
+	
+	W2 = (f(x+epsilon1*V[:,0,0]) - f(x))/epsilon1
+	W2 = W2.reshape((2,P,D))
+	
+	assert_array_almost_equal(y, f(x))
+	assert_array_almost_equal(W, W2)
+	
+	
 
 #def test_gradient_and_jacobian_and_hessian():
 	#N = 6 # dimension
