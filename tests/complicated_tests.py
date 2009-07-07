@@ -244,12 +244,27 @@ def test_chemical_reaction_equations():
 
 
 def test_ipopt_optimization():
+	"""
+	This test checks
+	  1. the sparse functionality of pyadolc
+	  2. the execution speed compared to the direct sparse computation
+	  3. run the optimization with the derivatives provided by pyadolc
+	
+	IPOPT is an interior point algorithm to solve
+	
+	   min     f(x)
+        x in R^n
+	   s.t.       g_L <= g(x) <= g_U
+	              x_L <=  x   <= x_U
+
+	"""
+	
 	try:
 		import pyipopt
 	except:
-		print '"pyipopt is not installed, skipping test'
-		return
-		#raise NotImplementedError("pyipopt is not installed, skipping test")
+		#print '"pyipopt is not installed, skipping test'
+		#return
+		raise NotImplementedError("pyipopt is not installed, skipping test")
 	import time
 
 	nvar = 4
@@ -335,7 +350,6 @@ def test_ipopt_optimization():
 	x0 = numpy.array([1.0, 5.0, 5.0, 1.0])
 	pi0 = numpy.array([1.0, 1.0])
 
-
 	# check that adolc gives the same answers as derivatives calculated by hand
 	trace_on(1)
 	ax = adouble(x0)
@@ -364,7 +378,7 @@ def test_ipopt_optimization():
 		options = numpy.array([1,1,0,0],dtype=int)
 		result = sparse.sparse_jac_no_repeat(2,x,options)
 		if flag:
-			return (result[1], result[2])
+			return (numpy.asarray(result[1],dtype=int), numpy.asarray(result[2],dtype=int))
 		else:
 			return result[3]
 
@@ -381,8 +395,7 @@ def test_ipopt_optimization():
 	assert_array_equal(eval_jac_g_adolc(x0,True)[0], eval_jac_g(x0,True)[0])
 	assert_array_equal(eval_jac_g_adolc(x0,True)[1], eval_jac_g(x0,True)[1])
 	assert_array_equal(eval_jac_g_adolc(x0,False),  eval_jac_g(x0,False))
-
-
+	
 	nlp = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f, eval_grad_f, eval_g, eval_jac_g)
 	start_time = time.time()
 	x, zl, zu, obj = nlp.solve(x0)
@@ -391,7 +404,7 @@ def test_ipopt_optimization():
 
 	pure_python_optimization_time = end_time - start_time
 
-	nlp_adolc = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f_adolc, eval_grad_f_adolc, eval_g_adolc, eval_jac_g_adolc, eval_h)
+	nlp_adolc = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f_adolc, eval_grad_f_adolc, eval_g_adolc, eval_jac_g_adolc)
 	start_time = time.time()
 	x, zl, zu, obj = nlp_adolc.solve(x0)
 	end_time = time.time()
@@ -402,14 +415,15 @@ def test_ipopt_optimization():
 	print 'optimization time with derivatives computed by hand = ',pure_python_optimization_time
 	assert adolc_optimization_time / pure_python_optimization_time < 10
 
-	#print "Solution of the primal variables, x"
-	#print x
+	print "Solution of the primal variables, x"
+	print x
 
-	#print "Solution of the bound multipliers, z_L and z_U"
-	#print zl, zu
+	print "Solution of the bound multipliers, z_L and z_U"
+	print zl, zu
 
-	#print "Objective value"
-	#print "f(x*) =", obj
+	print "Objective value"
+	print "f(x*) =", obj
+	#assert False
 
 
 def Runge_Kutta_step_to_test_hov_forward():
