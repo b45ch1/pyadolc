@@ -366,7 +366,7 @@ def test_ipopt_optimization():
 	trace_off()
 
 	def eval_f_adolc(x, user_data = None):
-		 return function(1,x)
+		 return function(1,x)[0]
 
 	def eval_grad_f_adolc(x, user_data = None):
 		 return gradient(1,x)
@@ -384,7 +384,7 @@ def test_ipopt_optimization():
 
 	# function of f
 	assert_almost_equal(eval_f(x0), eval_f_adolc(x0))
-
+	
 	# gradient of f
 	assert_array_almost_equal(eval_grad_f(x0), eval_grad_f_adolc(x0))
 
@@ -396,17 +396,17 @@ def test_ipopt_optimization():
 	assert_array_equal(eval_jac_g_adolc(x0,True)[1], eval_jac_g(x0,True)[1])
 	assert_array_equal(eval_jac_g_adolc(x0,False),  eval_jac_g(x0,False))
 	
-	nlp = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f, eval_grad_f, eval_g, eval_jac_g)
+	nlp = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f, eval_grad_f, eval_g, eval_jac_g, eval_h)
 	start_time = time.time()
-	x, zl, zu, obj = nlp.solve(x0)
+	result =  nlp.solve(x0)
 	end_time = time.time()
 	nlp.close()
 
 	pure_python_optimization_time = end_time - start_time
 
-	nlp_adolc = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f_adolc, eval_grad_f_adolc, eval_g_adolc, eval_jac_g_adolc)
+	nlp_adolc = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f_adolc, eval_grad_f_adolc, eval_g_adolc, eval_jac_g_adolc, eval_h)
 	start_time = time.time()
-	x, zl, zu, obj = nlp_adolc.solve(x0)
+	result_adolc = nlp_adolc.solve(x0)
 	end_time = time.time()
 	nlp_adolc.close()
 	
@@ -414,16 +414,12 @@ def test_ipopt_optimization():
 	print 'optimization time with derivatives computed by adolc = ', adolc_optimization_time
 	print 'optimization time with derivatives computed by hand = ',pure_python_optimization_time
 	assert adolc_optimization_time / pure_python_optimization_time < 10
+	assert_array_almost_equal(result['x'],result_adolc['x'])
+	assert_array_almost_equal(result['mult_xL'],result_adolc['mult_xL'])
+	assert_array_almost_equal(result['mult_xU'],result_adolc['mult_xU'])
+	assert_array_almost_equal(result['mult_g'],result_adolc['mult_g'])
+	assert_array_almost_equal(result['f'],result_adolc['f'])
 
-	print "Solution of the primal variables, x"
-	print x
-
-	print "Solution of the bound multipliers, z_L and z_U"
-	print zl, zu
-
-	print "Objective value"
-	print "f(x*) =", obj
-	#assert False
 
 
 def Runge_Kutta_step_to_test_hov_forward():
