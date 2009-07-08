@@ -30,15 +30,16 @@ bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_optio
 bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options){
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
-	npy_intp N = tape_stats[NUM_INDEPENDENTS];
-	npy_intp M = tape_stats[NUM_DEPENDENTS];
+	int N = tape_stats[NUM_INDEPENDENTS];
+	int M = tape_stats[NUM_DEPENDENTS];
 
 	double* x = (double*) nu::data(bpn_x);
 	int* options  = (int*) nu::data(bpn_options);
+
 	int nnz=-1;
-	unsigned int *rind;
-	unsigned int *cind;
-	double   *values;
+	unsigned int *rind = NULL;
+	unsigned int *cind = NULL;
+	double   *values   = NULL;
 	sparse_jac(tape_tag, M, N, 0, x, &nnz, &rind, &cind, &values, options);
 
 	npy_intp ret_nnz = static_cast<npy_intp>(nnz);
