@@ -1,13 +1,16 @@
-LIBS		= [
-				'adolc',
+adolc_include_path = '/home/basti/workspace/adolc-2.0.0'
+adolc_library_path = '/home/basti/workspace/adolc-2.0.0/adolc/.libs'
+
+LIBS		= ['adolc',
 			]
 LIBPATH		= [
-				'../../adolc-2.0.0/adolc/.libs',
-			]
+				adolc_library_path,
+			  ]
 INCLUDEPATH	= [
-				'../../adolc-2.0.0',
-				'/data/walter/opt_software/boost_1_34_1',
+			adolc_include_path,
+			'/usr/include/python2.5'
 			]
+
 
 env = Environment(
 	CPPPATH = INCLUDEPATH,

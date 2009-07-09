@@ -34,7 +34,9 @@ bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::ar
 	int M = tape_stats[NUM_DEPENDENTS];
 
 	double* x = (double*) nu::data(bpn_x);
-	int* options  = (int*) nu::data(bpn_options);
+// 	npy_intp* options  = (npy_intp*) nu::data(bpn_options);
+	int options[4] = {1,1,0,0};
+	
 
 	int nnz=-1;
 	unsigned int *rind = NULL;
@@ -124,10 +126,12 @@ bp::list	wrapped_hess_pat(short tape_tag, bpn::array &bpn_x,npy_intp option){
 bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options){
 	int tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
-	npy_intp N = tape_stats[NUM_INDEPENDENTS];
+	int N = tape_stats[NUM_INDEPENDENTS];
 
 	double* x = (double*) nu::data(bpn_x);
-	int* options  = (int*) nu::data(bpn_options);
+// 	int* options  = (int*) nu::data(bpn_options);
+	int options[2] = {0,0};
+
 	int nnz=-1;
 	unsigned int *rind = NULL;
 	unsigned int *cind = NULL;

@@ -4,6 +4,7 @@
 import numpy
 import numpy.linalg
 import numpy.random
+import scipy.sparse
 import unittest
 from numpy.testing import assert_almost_equal, assert_array_almost_equal, assert_array_equal, assert_equal
 
@@ -344,6 +345,8 @@ def test_ipopt_optimization():
 			values[9] += lagrange[1] * 2
 			return values
 
+
+
 	def apply_new(x):
 		return True
 
@@ -364,6 +367,21 @@ def test_ipopt_optimization():
 	ay = eval_g(ax)
 	dependent(ay)
 	trace_off()
+	
+	trace_on(3)
+	ax = adouble(x0)
+	independent(ax)
+	ay = eval_g(ax)
+	dependent(ay[0])
+	trace_off()
+	
+	trace_on(4)
+	ax = adouble(x0)
+	independent(ax)
+	ay = eval_g(ax)
+	dependent(ay[1])
+	trace_off()
+	
 
 	def eval_f_adolc(x, user_data = None):
 		 return function(1,x)[0]
@@ -378,17 +396,33 @@ def test_ipopt_optimization():
 		options = numpy.array([1,1,0,0],dtype=int)
 		result = sparse.sparse_jac_no_repeat(2,x,options)
 		if flag:
-			tmp = ( numpy.zeros(result[0],dtype=int),  numpy.zeros(result[0],dtype=int))
-			tmp[0][:] = result[1]
-			tmp[1][:] = result[2]
-			return tmp
+			return (numpy.asarray(result[1],dtype=int), numpy.asarray(result[2],dtype=int))
 		else:
 			return result[3]
+			
+	def eval_h_adolc(x, lagrange, obj_factor, flag, user_data = None):
+		options = numpy.array([0,0],dtype=int)
+		assert numpy.ndim(x) == 1
+		assert numpy.size(x) == 4
+		result_f = sparse.sparse_hess_no_repeat(1, x, options)
+		result_g0 = sparse.sparse_hess_no_repeat(3, x,options)
+		result_g1 = sparse.sparse_hess_no_repeat(4, x,options)
+		Hf  = scipy.sparse.coo_matrix( (result_f[3], (result_f[1], result_f[2])), shape=(4, 4))
+		Hg0 = scipy.sparse.coo_matrix( (result_g0[3], (result_g0[1], result_g0[2])), shape=(4, 4))
+		Hg1 = scipy.sparse.coo_matrix( (result_g1[3], (result_g1[1], result_g1[2])), shape=(4, 4))
+		
+		H = Hf + Hg0 + Hg1
+		H = H.tocoo()
+		
+		if flag:
+			hrow = H.row
+			hcol = H.col
+			return (numpy.array(hcol,dtype=int), numpy.array(hrow,dtype=int))
 
-
-	#print type(eval_jac_g_adolc(x0,True)[1][0])
-	#print type(eval_jac_g(x0,True)[1][0])
-	#exit()
+		else:
+			values = numpy.zeros((10), float)
+			values[:] = H.data
+			return values
 
 	# function of f
 	assert_almost_equal(eval_f(x0), eval_f_adolc(x0))
@@ -403,8 +437,21 @@ def test_ipopt_optimization():
 	assert_array_equal(eval_jac_g_adolc(x0,True)[0], eval_jac_g(x0,True)[0])
 	assert_array_equal(eval_jac_g_adolc(x0,True)[1], eval_jac_g(x0,True)[1])
 	assert_array_equal(eval_jac_g_adolc(x0,False),  eval_jac_g(x0,False))
-
 	
+	# sparse hessian of the lagrangian
+	lagrange = numpy.ones(2,dtype=float)
+	obj_factor = 1.
+	x0 = numpy.random.rand(4)
+	result       = (eval_h(x0, lagrange, obj_factor, False), eval_h(x0, lagrange, obj_factor, True))
+	result_adolc = (eval_h_adolc(x0, lagrange, obj_factor, False), eval_h_adolc(x0, lagrange, obj_factor, True))
+	H       = scipy.sparse.coo_matrix( result, shape=(4, 4))
+	H_adolc = scipy.sparse.coo_matrix( result_adolc, shape=(4, 4))
+	H = H.todense()
+	H_adolc = H_adolc.todense()
+	assert_array_almost_equal( H, H_adolc.T)
+
+
+	# test optimization with PYIPOPT
 	nlp = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f, eval_grad_f, eval_g, eval_jac_g, eval_h)
 	start_time = time.time()
 	result =  nlp.solve(x0)
@@ -413,8 +460,8 @@ def test_ipopt_optimization():
 	pure_python_optimization_time = end_time - start_time
 
 
-	nlp_adolc = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f_adolc, eval_grad_f_adolc, eval_g_adolc, eval_jac_g_adolc)
-	
+	nlp_adolc = pyipopt.create(nvar, x_L, x_U, ncon, g_L, g_U, nnzj, nnzh, eval_f_adolc, eval_grad_f_adolc, eval_g_adolc, eval_jac_g_adolc, eval_h_adolc)
+
 	start_time = time.time()
 	result_adolc = nlp_adolc.solve(x0)
 	end_time = time.time()
@@ -424,11 +471,19 @@ def test_ipopt_optimization():
 	print 'optimization time with derivatives computed by adolc = ', adolc_optimization_time
 	print 'optimization time with derivatives computed by hand = ',pure_python_optimization_time
 	assert adolc_optimization_time / pure_python_optimization_time < 10
-	assert_array_almost_equal(result['x'],result_adolc['x'])
-	assert_array_almost_equal(result['mult_xL'],result_adolc['mult_xL'])
-	assert_array_almost_equal(result['mult_xU'],result_adolc['mult_xU'])
-	assert_array_almost_equal(result['mult_g'],result_adolc['mult_g'])
-	assert_array_almost_equal(result['f'],result_adolc['f'])
+	
+	# this works with the pyipopt version from code.google.com
+	assert_array_almost_equal(result[0], result_adolc[0])
+	assert_array_almost_equal(result[1], result_adolc[1])
+	assert_array_almost_equal(result[2], result_adolc[2])
+	assert_array_almost_equal(result[3], result_adolc[3])
+	
+	##this works with the pyipopt version from github by alanfalloon
+	#assert_array_almost_equal(result['x'],result_adolc['x'])
+	#assert_array_almost_equal(result['mult_xL'],result_adolc['mult_xL'])
+	#assert_array_almost_equal(result['mult_xU'],result_adolc['mult_xU'])
+	#assert_array_almost_equal(result['mult_g'],result_adolc['mult_g'])
+	#assert_array_almost_equal(result['f'],result_adolc['f'])
 
 
 

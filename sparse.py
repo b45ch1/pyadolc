@@ -200,7 +200,6 @@ def sparse_hess_no_repeat(tape_tag, x, options):
 
 	assert numpy.ndim(x) == 1
 	x = numpy.asarray(x, dtype=float)
-
 	return _colpack.sparse_hess_no_repeat(tape_tag, x, options)
 
 
