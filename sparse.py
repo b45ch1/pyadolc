@@ -37,7 +37,7 @@ def jac_pat(tape_tag, x, options):
 	
 	assert type(tape_tag) == int
 
-	options = numpy.asarray(options,dtype=int)
+	options = numpy.asarray(options,dtype=numpy.int32)
 	assert numpy.ndim(options) == 1
 	assert numpy.size(options) == 4
 
@@ -85,8 +85,11 @@ def sparse_jac_no_repeat(tape_tag, x, options):
 	values are the corresponding Jacobian entries
 	"""
 	assert type(tape_tag) == int
+	
+	if options == None:
+		options = numpy.array([1,1,0,0], dtype=numpy.int32)
 
-	options = numpy.asarray(options,dtype=int)
+	options = numpy.asarray(options,dtype=numpy.int32)
 	assert numpy.ndim(options) == 1
 	assert numpy.size(options) == 4
 
@@ -128,8 +131,8 @@ def sparse_jac_repeat(tape_tag, x, nnz, rind, cind, values):
 	assert numpy.ndim(values) == 1
 
 	x = numpy.asarray(x, dtype=float)
-	rind= numpy.asarray(rind, dtype=int)
-	cind= numpy.asarray(cind, dtype=int)
+	rind= numpy.asarray(rind, dtype=numpy.uint32)
+	cind= numpy.asarray(cind, dtype=numpy.uint32)
 	values = numpy.asarray(values, dtype=float)
 
 	return _colpack.sparse_jac_repeat(tape_tag, x, nnz, rind, cind, values)
@@ -143,14 +146,10 @@ def hess_pat(tape_tag, x, option = 0):
 	F: R^N -> R^M
 	at the base point x, i.e. J = dF(x)/dx
 	
-	pat = jac_pat(tape_tag, x, options)
+	pat = hess_pat(tape_tag, x, options)
 	
 	pat is a nested list in compresses row format.
-	
-	E.g. the pattern of the function:
-	F(x,y,z) = [x*y, y*z] is
-	pat [[0,1],[1,2]] because the Jacobian has in the first row the 0'th and 1'st element nonzero
-	and in the second row the 1'st and the 2'nd
+
 	
 	option:  option = 0  normal mode (default)
 	         option = 1  tight mode
@@ -168,7 +167,7 @@ def hess_pat(tape_tag, x, option = 0):
 
 	return _colpack.hess_pat(tape_tag, x, option)
 
-def sparse_hess_no_repeat(tape_tag, x, options):
+def sparse_hess_no_repeat(tape_tag, x, options = None):
 	"""
 	computes sparse Hessian for a function F:R^N -> R without any prior information,
 
@@ -193,8 +192,11 @@ def sparse_hess_no_repeat(tape_tag, x, options):
 	values are the corresponding Jacobian entries
 	"""
 	assert type(tape_tag) == int
+	
+	if options == None:
+		options = numpy.array([0,0], dtype=numpy.int32)
 
-	options = numpy.asarray(options,dtype=int)
+	options = numpy.asarray(options,dtype=numpy.int32)
 	assert numpy.ndim(options) == 1
 	assert numpy.size(options) == 2
 
@@ -240,8 +242,8 @@ def sparse_hess_repeat(tape_tag, x, rind, cind, values):
 	assert nnz == numpy.size(values)
 
 	x      = numpy.asarray(x, dtype=float)
-	rind   = numpy.asarray(rind, dtype=int)
-	cind   = numpy.asarray(cind, dtype=int)
+	rind   = numpy.asarray(rind, dtype=numpy.uint32)
+	cind   = numpy.asarray(cind, dtype=numpy.uint32)
 	values = numpy.asarray(values, dtype=float)
 
 	return _colpack.sparse_hess_repeat(tape_tag, x, nnz, rind, cind, values)
