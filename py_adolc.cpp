@@ -679,6 +679,45 @@ void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::ar
 }
 
 
+void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz){
+
+	/* U is (Q, M, D+1) matrix */
+	double* U_data = (double*) nu::data(bpn_U);
+	double** U[Q];
+	double* U1[Q*M];
+	
+	for( int qn = 0; qn != Q*M; ++qn){
+		U1[qn] = &U_data[qn * (D+1)];
+	}	
+	
+	for(int q = 0; q != Q; ++q){
+		U[q] = &U1[ q * M];
+	}
+
+	/* Z is (Q, N, D+1) matrix */
+	double* Z_data = (double*) nu::data(bpn_Z);
+	double** Z[Q];
+	double* Z1[Q*N];
+	
+	for( int qn = 0; qn != Q*N; ++qn){
+		Z1[qn] = &Z_data[qn * (D+1)];
+	}	
+	
+	for(int q = 0; q != Q; ++q){
+		Z[q] = &Z1[ q * N];
+	}
+	
+	/* nz is (Q,N) matrix */
+	short* nz_data = (short*) nu::data(bpn_nz);
+	short* nz[Q];
+	for(int q = 0; q != Q; ++q){
+		nz[q] = &nz_data[ q * N];
+	}
+
+	hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz);
+
+}
+
 
 
 

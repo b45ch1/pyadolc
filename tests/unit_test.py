@@ -169,35 +169,6 @@ def test_dependent():
 	assert numpy.prod( ax == bx )
 	
 	
-def test_hov_wk_forward():
-	""" hov_wk_forward is necessary to propagate multiple directions of Taylor coefficients"""
-	def f(x):
-		return numpy.sum(x)
-	N = 10
-	P = N
-	D = 2
-	keep = N+1
-	
-	x  = numpy.ones(N)
-	ax = adouble(x)
-	
-	trace_on(17)
-	independent(ax)
-	ay = f(ax)
-	dependent(ay)
-	trace_off()
-
-	# directions V
-	V = numpy.ones((N,P,D))
-	(y,W) = hov_wk_forward(17, x, V, keep)
-	
-	print y
-	print W
-	
-	# need to improve this test!
-	true_W = 10.*numpy.ones((1,P,D))
-	assert_almost_equal(10.,y)
-	assert_array_almost_equal(true_W, W)
 
 def test_hov_ti_reverse():
 	"""compute the first columnt of the hessian of f = x_1 x_2 x_3"""

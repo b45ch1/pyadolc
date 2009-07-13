@@ -23,6 +23,7 @@ namespace nu = num_util;
 
 
 
+
 bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options);
 bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options);
 bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values);

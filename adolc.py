@@ -131,86 +131,152 @@ def trace_of(tape_tag):
 	"""turn off tracing"""
 	assert type(tape_tag) == int
 	return _adolc.trace_off()
+	
+
 
 def function(tape_tag,x):
 	"""
 	evaluate the function f(x) recorded on tape with index tape_tag
 	"""
 	assert type(tape_tag) == int
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	x = numpy.asarray(x, dtype=float)
-	return _adolc.function(tape_tag,x)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	y = numpy.zeros(M, dtype=float)
+	_adolc.function(tape_tag, M, N, x, y)
+	return y
 
 def gradient(tape_tag,x):
 	"""
 	evaluate the gradient g = f'(x), f:R^N -> R
 	"""
 	assert type(tape_tag) == int
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	x = numpy.asarray(x, dtype=float)
-	return _adolc.gradient(tape_tag,x)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	g = numpy.zeros(N, dtype=float)
+	_adolc.gradient(tape_tag, N, x, g)
+	return g
 
 def hessian(tape_tag,x):
 	"""
 	evaluate the hessian H = f\"(x), f:R^N -> R"
 	"""
 	assert type(tape_tag) == int
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	x = numpy.asarray(x, dtype=float)
-	return _adolc.hessian(tape_tag,x)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	H = numpy.zeros((N,N), dtype=float)
+	_adolc.hessian(tape_tag, N, x, H)
+	return H
 
 def jacobian(tape_tag,x):
 	"""
 	evaluate the jacobian J = F'(x), F:R^N -> R^M
 	"""
 	assert type(tape_tag) == int
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	x = numpy.asarray(x, dtype=float)
-	return _adolc.jacobian(tape_tag,x)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	J = numpy.zeros((M,N), dtype=float)
+	_adolc.jacobian(tape_tag, M, N, x, J)
+	return J
+	
 
-def vec_jac(tape_tag,x,u, repeat):
+def vec_jac(tape_tag, x, u, repeat = False):
 	"""
 	evaluate u^T F'(x), F:R^N -> R^M
 	"""
 	assert type(repeat) == bool or type(repeat) == int
 	assert type(tape_tag) == int
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	x = numpy.asarray(x, dtype=float)
-	u = numpy.asarray(u,dtype=float)
-	return _adolc.vec_jac(tape_tag,x,u, repeat)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	u = numpy.asarray(u, dtype=float)
+	assert numpy.size(u) == M
+	assert numpy.ndim(u) == 1
+	z = numpy.zeros(N, dtype=float)
+	_adolc.vec_jac(tape_tag, M, N, repeat, x, u, z)
+	return z
 
-def jac_vec(tape_tag,x,v):
+def jac_vec(tape_tag, x, v):
 	"""
 	evaluate  F'(x)v, F:R^N -> R^M
 	"""
-	assert type(tape_tag) == int
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	x = numpy.asarray(x, dtype=float)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
 	v = numpy.asarray(v, dtype=float)
-	return _adolc.jac_vec(tape_tag,x,v)
+	assert numpy.size(v) == N
+	assert numpy.ndim(v) == 1
+	z = numpy.zeros(M, dtype=float)
+	_adolc.jac_vec(tape_tag, M, N, x, v, z)
+	return z
 
-def hess_vec(tape_tag,x,v):
+def hess_vec(tape_tag, x, v):
 	"""
 	evaluate  f''(x)v, f:R^N -> R
 	"""
-	assert type(tape_tag) == int
-	assert numpy.ndim(x)  == 1
-	assert numpy.ndim(v)  == 1
-	assert numpy.size(x)  == numpy.size(v)
-	
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	x = numpy.asarray(x, dtype=float)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
 	v = numpy.asarray(v, dtype=float)
-	return _adolc.hess_vec(tape_tag,x,v)
+	assert numpy.size(v) == N
+	assert numpy.ndim(v) == 1
+	z = numpy.zeros(N, dtype=float)
+	_adolc.hess_vec(tape_tag, N, x, v, z)
+	return z
 
 
-def lagra_hess_vec(tape_tag,x,u,v):
+def lagra_hess_vec(tape_tag, x, u, v):
 	"""
-	evaluate  u^T F''(x)v, F:R^N -> R^M
+	evaluate z = u^T F''(x)v, F:R^N -> R^M
+	
+	v N-array
+	u M-array
+	z N-array
 	"""
-	assert type(tape_tag) == int
-	assert numpy.ndim(x)  == 1
-	assert numpy.ndim(u)  == 1
-	assert numpy.ndim(v)  == 1
-	assert numpy.size(x)  == numpy.size(v)
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	
 	x = numpy.asarray(x, dtype=float)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	
+	v = numpy.asarray(v, dtype=float)
+	assert numpy.size(v) == N
+	assert numpy.ndim(v) == 1
+	
 	u = numpy.asarray(u, dtype=float)
-	v = numpy.asarray(v, dtype=float)
-	return _adolc.lagra_hess_vec(tape_tag,x,u,v)
+	assert numpy.size(u) == M
+	assert numpy.ndim(u) == 1
+	
+	z = numpy.zeros(N, dtype=float)
+	
+	_adolc.lagra_hess_vec(tape_tag, M, N, x, v, u, z)
+	return z
 
 def zos_forward(tape_tag,x,keep):
 	"""
@@ -220,12 +286,19 @@ def zos_forward(tape_tag,x,keep):
 	x is N-vector, y is M-vector
 	keep = 1 prepares for fos_reverse or fov_reverse
 	"""
-	assert type(tape_tag) == int
 	assert type(keep) == int
-	assert numpy.ndim(x)  == 1
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	
 	x = numpy.asarray(x, dtype=float)
-	return _adolc.zos_forward(tape_tag, x, keep)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	
+	y = numpy.zeros(M, dtype=float)
+	_adolc.zos_forward(tape_tag, M, N, keep, x, y)
+	
+	return y
 
 def fos_forward(tape_tag, x, v, keep):
 	"""
@@ -240,31 +313,57 @@ def fos_forward(tape_tag, x, v, keep):
 	"""
 	assert type(tape_tag) == int
 	assert type(keep) == int
-	assert numpy.ndim(x)  == 1
-	assert numpy.ndim(v)  == 1
-	assert numpy.size(x)  == numpy.size(v)
+	ts = tapestats(tape_tag)
+	
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	
 	x = numpy.asarray(x, dtype=float)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	
 	v = numpy.asarray(v, dtype=float)
-	return _adolc.fos_forward(tape_tag,x,v,keep)
+	assert numpy.size(v) == N
+	assert numpy.ndim(v) == 1
 
-def fov_forward(tape_tag,x,V):
+	y = numpy.zeros(M, dtype=float)
+	w = numpy.zeros(M, dtype=float)
+	_adolc.fos_forward(tape_tag, M, N, keep, x, v, y, w)
+	
+	return (y,w)
+
+def fov_forward(tape_tag, x, V):
 	"""
 	first order vector forward:
 	(y,W) = fov_forward(tape_tag, x, V)
 	F:R^N -> R^M
 	x is N-vector, y is M-vector
 	V is (N x P)-matrix. P directions
-	W is (M x P)-matrix. P directiona derivatives	
+	W is (M x P)-matrix. P directiona derivatives
 	"""
+	
 	assert type(tape_tag) == int
-	assert numpy.ndim(V) == 2
-	assert numpy.ndim(x)  == 1
-	assert numpy.size(x)  == numpy.shape(V)[0]
+	assert type(keep) == int
+	ts = tapestats(tape_tag)
+	
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	
 	x = numpy.asarray(x, dtype=float)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	
 	V = numpy.asarray(V, dtype=float)
-	return _adolc.fov_forward(tape_tag,x,V)
+	assert numpy.shape(V)[0] == N
+	assert numpy.ndim(V) == 2
+	P = numpy.shape(V)[1]
+	
+	y = numpy.zeros(M, dtype=float)
+	W = numpy.zeros((M,P), dtype=float)
+	
+	_adolc.fov_forward(tape_tag, M, N, P, x, V, y, W)
+	
+	return (y,W)
 
 def hos_forward(tape_tag, x, V, keep):
 	"""
@@ -278,15 +377,29 @@ def hos_forward(tape_tag, x, V, keep):
 	keep = 1 prepares for fos_reverse or fov_reverse
 	D+1 >= keep > 2 prepares for hos_reverse or hov_reverse
 	"""
+
 	assert type(tape_tag) == int
-	assert type(keep)     == int
-	assert numpy.ndim(V)  == 2
-	assert numpy.ndim(x)  == 1
-	assert numpy.size(x)  == numpy.shape(V)[0]
+	assert type(keep) == int
+	ts = tapestats(tape_tag)
+	
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	
 	x = numpy.asarray(x, dtype=float)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	
 	V = numpy.asarray(V, dtype=float)
-	return _adolc.hos_forward(tape_tag, x, V, keep)
+	assert numpy.shape(V)[0] == N
+	assert numpy.ndim(V) == 2
+	D = numpy.shape(V)[1]
+	
+	y = numpy.zeros(M, dtype=float)
+	W = numpy.zeros((M,D), dtype=float)
+
+	_adolc.hos_forward(tape_tag, M, N, D, keep, x, V, y, W)
+	
+	return (y,W)
 
 def hov_forward(tape_tag, x, V):
 	"""
@@ -297,17 +410,30 @@ def hov_forward(tape_tag, x, V):
 	D is the order of the derivative
 	V is (N x P x D)-matrix, P directions
 	W is (M x P x D)-matrix, P directional derivatives
-	
-
 	"""
+	
 	assert type(tape_tag) == int
-	assert numpy.ndim(V) == 3
-	assert numpy.ndim(x) == 1
-	assert numpy.size(x) == numpy.shape(V)[0]
+	ts = tapestats(tape_tag)
+	
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
+	
 	x = numpy.asarray(x, dtype=float)
+	assert numpy.size(x) == N
+	assert numpy.ndim(x) == 1
+	
 	V = numpy.asarray(V, dtype=float)
-	return _adolc.hov_forward(tape_tag, x, V)
+	assert numpy.shape(V)[0] == N
+	assert numpy.ndim(V) == 3
+	P = numpy.shape(V)[1]
+	D = numpy.shape(V)[2]
+	
+	
+	y = numpy.zeros(M, dtype=float)
+	W = numpy.zeros((M,P,D), dtype=float)
 
+	_adolc.hov_forward(tape_tag, M, N, D, P, x, V, y, W)
+	return (y,W)
 
 def hov_wk_forward(tape_tag, x, V, keep):
 	"""
@@ -319,14 +445,30 @@ def hov_wk_forward(tape_tag, x, V, keep):
 	V is (N x P x D)-matrix, P directions
 	W is (M x P x D)-matrix, P directional derivatives
 	"""
-	assert type(tape_tag) == int
-	assert type(keep) == int
-	assert numpy.ndim(V) == 3
-	assert numpy.ndim(x) == 1
-	assert numpy.size(x) == numpy.shape(V)[0]
-	x = numpy.asarray(x, dtype=float)
-	V = numpy.asarray(V, dtype=float)
-	return _adolc.hov_wk_forward(tape_tag, x, V, keep)
+	#assert type(keep) == int
+	#assert type(tape_tag) == int
+	#ts = tapestats(tape_tag)
+	
+	#N = ts['NUM_INDEPENDENTS']
+	#M = ts['NUM_DEPENDENTS']
+	
+	#x = numpy.asarray(x, dtype=float)
+	#assert numpy.size(x) == N
+	#assert numpy.ndim(x) == 1
+	
+	#V = numpy.asarray(V, dtype=float)
+	#assert numpy.shape(V)[0] == N
+	#assert numpy.ndim(V) == 3
+	#P = numpy.shape(V)[1]
+	#D = numpy.shape(V)[2]
+	
+	
+	#y = numpy.zeros(M, dtype=float)
+	#W = numpy.zeros((M,P,D), dtype=float)
+	
+	#_adolc.hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W)
+	#return (y,W)
+	raise NotImplementedError
 
 
 def fos_reverse(tape_tag, u):
@@ -337,13 +479,20 @@ def fos_reverse(tape_tag, u):
 	u is M-vector, adjoint direction
 	z is N-vector, adjoint directional derivative z= u F'(x)
 	after calling zos_forward, fos_forward or hos_forward with keep = 1
-													
-
 	"""
 	assert type(tape_tag) == int
+	ts = tapestats(tape_tag)
+	
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
+	
+	u = numpy.asarray(u, dtype=float)
+	assert numpy.size(u) == M
 	assert numpy.ndim(u) == 1
-	u = numpy.asarray(u,dtype=float)
-	return _adolc.fos_reverse(tape_tag, u)
+	
+	z = numpy.zeros(N, dtype=float)
+	_adolc.fos_reverse(tape_tag, M, N, u, z)
+	return z
 
 
 def fov_reverse(tape_tag, U):
@@ -356,11 +505,21 @@ def fov_reverse(tape_tag, U):
 	after calling zos_forward, fos_forward or hos_forward with keep = 1
 	
 	"""
+	
 	assert type(tape_tag) == int
-	assert numpy.ndim(U) == 2
+	ts = tapestats(tape_tag)
+	
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
+	
 	U = numpy.asarray(U, dtype=float)
-	return _adolc.fov_reverse(tape_tag, U)
-
+	assert numpy.ndim(U) == 2
+	assert numpy.shape(U)[1] == M
+	Q = numpy.shape(U)[0]
+	
+	Z = numpy.zeros((Q,N), dtype=float)
+	_adolc.fov_reverse(tape_tag, M, N, Q, U, Z)
+	return Z
 
 def hos_reverse(tape_tag, D, u):
 	"""
@@ -375,9 +534,18 @@ def hos_reverse(tape_tag, D, u):
 	"""
 	assert type(tape_tag) == int
 	assert type(D) == int
-	assert numpy.ndim(u) == 1
+	
+	ts = tapestats(tape_tag)
+	
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
+	
 	u = numpy.asarray(u, dtype=float)
-	return _adolc.hos_reverse(tape_tag, D, u)
+	assert numpy.size(u) == M
+	assert numpy.ndim(u) == 1
+	Z = numpy.zeros((N, D+1), dtype=float)
+	_adolc.hos_reverse(tape_tag, M, N, D, u, Z)
+	return Z
 
 
 def hov_reverse(tape_tag, D, U):
@@ -394,10 +562,22 @@ def hov_reverse(tape_tag, D, U):
 	"""
 	assert type(tape_tag) == int
 	assert type(D) == int
+	
+	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
+	
+	U = numpy.asarray(U, dtype=float)
 	assert numpy.ndim(U) == 2
-	U = numpy.asarray(U,dtype=float)
+	assert numpy.shape(U)[1] == M
+	Q = numpy.shape(U)[0]
+	
+	Z = numpy.zeros((Q, N, D+1), dtype=float)
+	nz = numpy.zeros((Q,N), dtype=numpy.int16)
 
-	return _adolc.hov_reverse(tape_tag, D, U)
+	_adolc.hov_reverse(tape_tag, M, N, D, Q, U, Z, nz)
+	
+	return (Z, nz)
 
 
 def hov_ti_reverse(tape_tag, U):
@@ -413,14 +593,22 @@ def hov_ti_reverse(tape_tag, U):
 	after calling fos_forward or hos_forward with keep = D+1
 	"""
 	assert type(tape_tag) == int
-	assert numpy.ndim(U) == 3
-	(Q,M,Dp1) = numpy.shape(U)
+	
 	ts = tapestats(tape_tag)
+	N = ts['NUM_INDEPENDENTS']
+	M = ts['NUM_DEPENDENTS']
 	
-	assert ts['NUM_DEPENDENTS'] == M
+	U = numpy.asarray(U, dtype=float)
+	assert numpy.ndim(U) == 3
+	assert numpy.shape(U)[1] == M
+	Q = numpy.shape(U)[0]
+	Dp1 = numpy.shape(U)[2]
+	D = Dp1 - 1
 	
-	U = numpy.asarray(U,dtype=float)
-	return _adolc.hov_ti_reverse(tape_tag, U)
+	Z = numpy.zeros((Q, N, Dp1), dtype=float)
+	nz = numpy.zeros((Q,N), dtype=numpy.int16)
+	_adolc.hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz)
+	return (Z,nz)
 	
 
 def tape_to_latex(tape_tag,x,y):

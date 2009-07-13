@@ -11,6 +11,12 @@ namespace bp = boost::python;
 namespace bpn = boost::python::numeric;
 namespace nu = num_util;
 
+
+int get_size_of_short(){ return static_cast<int>(sizeof(short)); }
+int get_size_of_int(){ return static_cast<int>(sizeof(int)); }
+int get_size_of_long(){ return static_cast<int>(sizeof(long)); }
+
+
 extern adub exp		( const badouble& );
 extern adub log		( const badouble& );
 extern adub sqrt	( const badouble& );
@@ -199,36 +205,40 @@ BOOST_PYTHON_MODULE(_adolc)
 	bpn::array::set_module_and_type("numpy", "ndarray");	/* some kind of hack to get numpy working */
 	
 	scope().attr("__doc__") ="unused: moved docstring to adolc.py";
+	
+	def("get_size_of_short", get_size_of_short);
+	def("get_size_of_int", get_size_of_int);
+	def("get_size_of_long", get_size_of_long);
+	
 
 	def("trace_on",trace_on_default_argument);
 	def("trace_off",trace_off_default_argument);
 
-	def("function", 		&wrapped_function);
-	def("gradient", 		&wrapped_gradient);
-	def("hessian",			&wrapped_hessian);
-	def("jacobian", 		&wrapped_jacobian);
-	def("vec_jac",			&wrapped_vec_jac);
-	def("jac_vec",			&wrapped_jac_vec);
-	def("hess_vec",			&wrapped_hess_vec);
-	def("lagra_hess_vec", 	&wrapped_lagra_hess_vec);
-// 	def("jac_solv",			&wrapped_jac_solv,  "(void*)lagra_hess_vec(tape_tag,x,b,sparse=0,mode=2):\nsolve F'(x) b_new - b = 0  , F:R^N -> R^M\n"); /* buggy ! */
+// 	def("function", 		&wrapped_function);
+// 	def("gradient", 		&wrapped_gradient);
+// 	def("hessian",			&wrapped_hessian);
+// 	def("jacobian", 		&wrapped_jacobian);
+// 	def("vec_jac",			&wrapped_vec_jac);
+// 	def("jac_vec",			&wrapped_jac_vec);
+// 	def("hess_vec",			&wrapped_hess_vec);
+// 	def("lagra_hess_vec", 	&wrapped_lagra_hess_vec);
 
-	def("zos_forward",		&wrapped_zos_forward);
-	def("fos_forward",		&wrapped_fos_forward);
-	def("fov_forward",		&wrapped_fov_forward);
-	def("hos_forward",		&wrapped_hos_forward);
-	def("hov_forward",		&wrapped_hov_forward);
+// 	def("zos_forward",		&wrapped_zos_forward);
+// 	def("fos_forward",		&wrapped_fos_forward);
+// 	def("fov_forward",		&wrapped_fov_forward);
+// 	def("hos_forward",		&wrapped_hos_forward);
+// 	def("hov_forward",		&wrapped_hov_forward);
 
-	def("hov_wk_forward",	&wrapped_hov_wk_forward);
+// 	def("hov_wk_forward",	&wrapped_hov_wk_forward);
 													
-	def("fos_reverse",		&wrapped_fos_reverse);
+// 	def("fos_reverse",		&wrapped_fos_reverse);
      
-	def("fov_reverse",		&wrapped_fov_reverse);
+// 	def("fov_reverse",		&wrapped_fov_reverse);
 													
-	def("hos_reverse",		&wrapped_hos_reverse);
-	def("hov_reverse", 		&wrapped_hov_reverse);
+// 	def("hos_reverse",		&wrapped_hos_reverse);
+// 	def("hov_reverse", 		&wrapped_hov_reverse);
 
-	def("hov_ti_reverse", 	&wrapped_hov_ti_reverse);
+// 	def("hov_ti_reverse", 	&wrapped_hov_ti_reverse);
 													
 
 	/* c style functions */
@@ -242,19 +252,20 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("lagra_hess_vec", 	&c_wrapped_lagra_hess_vec);
 // 	def("jac_solv",			&c_wrapped_jac_solv); /* buggy ! */
 
-// 	def("zos_forward",		&c_wrapped_zos_forward);
-// 	def("fos_forward",		&c_wrapped_fos_forward);
-// 	def("fov_forward",		&c_wrapped_fov_forward);
-// 	def("hos_forward",		&c_wrapped_hos_forward);
-// 	def("hov_forward",		&c_wrapped_hov_forward);
+	def("zos_forward",		&c_wrapped_zos_forward);
+	def("fos_forward",		&c_wrapped_fos_forward);
+	def("fov_forward",		&c_wrapped_fov_forward);
+	def("hos_forward",		&c_wrapped_hos_forward);
+	def("hov_forward",		&c_wrapped_hov_forward);
 // 	def("hov_wk_forward",	&c_wrapped_hov_wk_forward);
 
 
-// 	def("fos_reverse",		&c_wrapped_fos_reverse);
-// 	def("fov_reverse",		&c_wrapped_fov_reverse);
-// 	def("hos_reverse",		&c_wrapped_hos_reverse);
-// 	def("hov_reverse", 		&c_wrapped_hov_reverse);
-		
+	def("fos_reverse",		&c_wrapped_fos_reverse);
+	def("fov_reverse",		&c_wrapped_fov_reverse);
+	def("hos_reverse",		&c_wrapped_hos_reverse);
+	def("hov_reverse", 		&c_wrapped_hov_reverse);
+	def("hov_ti_reverse", 	&c_wrapped_hov_ti_reverse);
+	
 	def("depends_on", 		&depends_on);
 	def("tape_to_latex",	py_tape_doc);
 
