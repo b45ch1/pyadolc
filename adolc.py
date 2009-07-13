@@ -432,7 +432,7 @@ def hov_forward(tape_tag, x, V):
 	
 	y = numpy.zeros(M, dtype=float)
 	W = numpy.zeros((M,P,D), dtype=float)
-
+	
 	_adolc.hov_forward(tape_tag, M, N, D, P, x, V, y, W)
 	return (y,W)
 
