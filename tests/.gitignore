@@ -1,2 +1,5 @@
 jac_pat.mtx 
 !*.png
+
+*.tap
+tape_0.tex

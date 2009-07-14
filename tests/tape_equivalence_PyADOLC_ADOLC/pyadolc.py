@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from adolc import *
 import numpy as npy
-
 N = 20
 
 ay = adouble(0.)
@@ -20,25 +19,19 @@ trace_off()
 
 
 # if necessary: call the garbage collector and therefore start with smaller locints
-del(ay)
 del(ax)
-ay = adouble(0.)
-ax = adouble(0.)
+del(ay)
 x = 1.
-tmpay = adouble(0.)
 
 
 trace_on(10)
-ax.is_independent(x)
+ax = adouble(1.)
+independent(ax)
 ay = ax
 for i in range(N):
-	ay = ay * ay
-	if i%1 == 0:
-		tmpay <<= ay
-		del(ay)
-		ay = tmpay
-		
-depends_on(ay)
+	ay <<= ay * ay
+
+dependent(ay)
 trace_off()
 
 tape_to_latex(9,npy.array([x]),npy.array([0]))

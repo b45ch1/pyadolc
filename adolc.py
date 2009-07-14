@@ -45,8 +45,9 @@ def adouble(x):
 	"""
 	if numpy.isscalar(x):
 		return _adolc.adouble(float(x))
-	elif isinstance(x,_adolc.adouble):
+	elif isinstance(x,_adolc.adouble) or isinstance(x,_adolc.adub):
 		return _adolc.adouble(x)
+	
 	else:
 		x = numpy.asarray(x, dtype=float)
 		shp = numpy.shape(x)

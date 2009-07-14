@@ -24,6 +24,9 @@ def benchmark(f,N,M,message):
 	dependent(ay)
 	trace_off()
 	#tape_to_latex(1,x,y)
+
+	print 'N=%d,M=%d'%(N,M)
+	
 	runtime_taping = time.time() - start_time
 	print 'PyADOLC\tfunction taping:\t........\telapsed time: %f'%runtime_taping
 

@@ -168,7 +168,7 @@ def test_dependent():
 	bx = dependent(ax)
 	assert numpy.prod( ax == bx )
 	
-	
+
 
 def test_hov_ti_reverse():
 	"""compute the first columnt of the hessian of f = x_1 x_2 x_3"""
@@ -817,6 +817,11 @@ def test_real_world_sparse_problem():
 	H = H.todense()
 	H_adolc = H_adolc.todense()
 	assert_array_almost_equal( H, H_adolc.T)
+
+
+	
+
+
 
 	
 	
