@@ -107,7 +107,7 @@ def dependent(ax):
 	
 	Mark ax as dependent.
 	"""
-	if isinstance(ax, _adolc.adouble):
+	if isinstance(ax, _adolc.adouble) or isinstance(ax, _adolc.adub):
 		depends_on(ax)
 		return ax
 	else:
@@ -116,8 +116,9 @@ def dependent(ax):
 		
 		for n in range(N):
 			if numpy.isscalar(axr[n]):
-				axr[n] = adouble(axr[n])
-			depends_on(axr[n])
+				depends_on(adouble(axr[n]))
+			else:
+				depends_on(axr[n])
 		return ax
 
 
@@ -432,7 +433,7 @@ def hov_forward(tape_tag, x, V):
 	
 	y = numpy.zeros(M, dtype=float)
 	W = numpy.zeros((M,P,D), dtype=float)
-
+	
 	_adolc.hov_forward(tape_tag, M, N, D, P, x, V, y, W)
 	return (y,W)
 

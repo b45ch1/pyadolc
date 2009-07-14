@@ -271,39 +271,39 @@ bp::tuple wrapped_hos_forward		(short tape_tag, bpn::array &bpn_x, bpn::array &b
 }
 
 
-bp::tuple wrapped_hov_forward	(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V){
-	int tape_stats[STAT_SIZE];
-	tapestats(tape_tag, tape_stats);
-	int N = tape_stats[NUM_INDEPENDENTS];
-	int M = tape_stats[NUM_DEPENDENTS];
-	int P = nu::shape(bpn_V)[1];
-	int D = nu::shape(bpn_V)[2];
-	
-
-	double* x = (double*) nu::data(bpn_x);
-	double* V_data = (double*) nu::data(bpn_V);
-	double** V[N];
-	double* V1[N*P];
-	for(int n = 0; n != N; ++n){
-		V[n] = &V1[ n * P];
-	}
-	for( int np = 0; np != N*P; ++np){
-		V1[np] = &V_data[np * D];
-	}
-	
-	double y[M];
-	double*** W = myalloc3(M,P,D);
-
-	hov_forward(tape_tag, M, N, D, P, x, V, y, W);
-	vector<intp> W_shp(3); W_shp[0] = M; W_shp[1]=P; W_shp[2] = D;
-	bpn::array ret_y 	=  nu::makeNum( y, M);
-	bpn::array ret_W 	=  nu::makeNum( W[0][0], W_shp);
-
-	bp::list retvals;
-	retvals.append(ret_y);
-	retvals.append(ret_W);
-	return bp::tuple(retvals);
-}
+// bp::tuple wrapped_hov_forward	(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V){
+// 	int tape_stats[STAT_SIZE];
+// 	tapestats(tape_tag, tape_stats);
+// 	int N = tape_stats[NUM_INDEPENDENTS];
+// 	int M = tape_stats[NUM_DEPENDENTS];
+// 	int P = nu::shape(bpn_V)[1];
+// 	int D = nu::shape(bpn_V)[2];
+// 	
+// 
+// 	double* x = (double*) nu::data(bpn_x);
+// 	double* V_data = (double*) nu::data(bpn_V);
+// 	double** V[N];
+// 	double* V1[N*P];
+// 	for(int n = 0; n != N; ++n){
+// 		V[n] = &V1[ n * P];
+// 	}
+// 	for( int np = 0; np != N*P; ++np){
+// 		V1[np] = &V_data[np * D];
+// 	}
+// 	
+// 	double y[M];
+// 	double*** W = myalloc3(M,P,D);
+// 
+// 	hov_forward(tape_tag, M, N, D, P, x, V, y, W);
+// 	vector<intp> W_shp(3); W_shp[0] = M; W_shp[1]=P; W_shp[2] = D;
+// 	bpn::array ret_y 	=  nu::makeNum( y, M);
+// 	bpn::array ret_W 	=  nu::makeNum( W[0][0], W_shp);
+// 
+// 	bp::list retvals;
+// 	retvals.append(ret_y);
+// 	retvals.append(ret_W);
+// 	return bp::tuple(retvals);
+// }
 
 
 bp::tuple	wrapped_hov_wk_forward		(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_V, int keep){
@@ -606,21 +606,24 @@ void c_wrapped_hov_forward		(short tape_tag, int M, int N, int D, int P, bpn::ar
 	double* V_data = (double*) nu::data(bpn_V);
 	double** V[N];
 	double* V1[N*P];
-	for(int n = 0; n != N; ++n){
-		V[n] = &V1[ n * P];
-	}
+
 	for( int np = 0; np != N*P; ++np){
 		V1[np] = &V_data[np * D];
 	}
+	for(int n = 0; n != N; ++n){
+		V[n] = &V1[ n * P];
+	}
+	
 	double* W_data = (double*) nu::data(bpn_W);
 	double** W[M];
 	double* W1[M*P];
+	for( int mp = 0; mp != M*P; ++mp){
+		W1[mp] = &W_data[mp * D];
+	}
 	for(int m = 0; m != M; ++m){
 		W[m] = &W1[ m * P];
 	}
-	for( int np = 0; np != N*P; ++np){
-		W1[np] = &W_data[np * D];
-	}
+
 	hov_forward(tape_tag, M, N, D, P, x, V, y, W);
 }
 
