@@ -129,9 +129,8 @@ def trace_on(tape_tag):
 	assert type(tape_tag) == int
 	return _adolc.trace_on(tape_tag)
 
-def trace_of(tape_tag):
+def trace_off():
 	"""turn off tracing"""
-	assert type(tape_tag) == int
 	return _adolc.trace_off()
 	
 
@@ -166,7 +165,7 @@ def gradient(tape_tag,x):
 	_adolc.gradient(tape_tag, N, x, g)
 	return g
 
-def hessian(tape_tag,x):
+def hessian(tape_tag, x, format='full' ):
 	"""
 	evaluate the hessian H = f\"(x), f:R^N -> R"
 	"""
@@ -177,9 +176,14 @@ def hessian(tape_tag,x):
 	x = numpy.asarray(x, dtype=float)
 	assert numpy.size(x) == N
 	assert numpy.ndim(x) == 1
-	H = numpy.zeros((N,N), dtype=float)
-	_adolc.hessian(tape_tag, N, x, H)
-	return H
+	
+	if format == 'full':
+		H = numpy.zeros((N,N), dtype=float)
+		ints = [i for i in range(N)]
+		_adolc.hessian(tape_tag, N, x, H)
+		H[:] = H[:] + H.T 
+		H[ints, ints] /= 2.
+		return H
 
 def jacobian(tape_tag,x):
 	"""
