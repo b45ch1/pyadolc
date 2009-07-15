@@ -184,6 +184,8 @@ def hessian(tape_tag, x, format='full' ):
 		H[:] = H[:] + H.T 
 		H[ints, ints] /= 2.
 		return H
+	else:
+		raise NotImplementedError('hessian can only return full matrices ATM')
 
 def jacobian(tape_tag,x):
 	"""
