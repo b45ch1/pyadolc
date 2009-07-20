@@ -131,6 +131,21 @@ def test_hyperbolic_functions():
 	#assert_almost_equal(aarcch.val, numpy.arccosh(x))
 	#assert_almost_equal(aarcth.val, numpy.arctanh(x))
 
+def test_abs():
+	x = 3.
+	xs = numpy.array([1.,2.,3.])
+	ax = adouble(x)
+	axs = adouble(xs)
+	
+	afabs = numpy.fabs(ax)
+	afabss = numpy.fabs(axs)
+	
+	
+	assert_almost_equal(afabs.val, numpy.fabs(x))
+	
+	#test_expression('fabs (a)     : ',		lambda x: numpy.fabs (x),  a,		a.val)
+
+
 
 def test_independent():
 	# 0D
@@ -643,7 +658,8 @@ def test_hov_forward():
 	assert_array_almost_equal(W, W2)
 	
 
-def test_real_world_sparse_problem():
+def test_sparse_problem():
+	return 0
 	import scipy.sparse
 	
 	nvar = 4

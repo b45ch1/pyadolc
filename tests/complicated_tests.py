@@ -243,6 +243,108 @@ def test_chemical_reaction_equations():
 	x = numpy.concatenate([k_ggw,sigma, nu, [lam]])
 	assert_array_almost_equal(g(k_ggw,sigma, nu, lam, q, c), function(1, x))
 
+def test_model_fit_example_from_scipy_mailing_list():
+	"""
+	provided by Ernest Adrogué <eadrogue@gmx.net>
+	modified to use numpy package instead of the math package
+
+	also: numpy.abs doesn't work correctly yet, using numpy.fabs
+	
+	"""
+
+	import random
+
+	class Observation(object):
+		def __init__(self, data):
+			self.ht = data[0]
+			self.at = data[1]
+			self.hg = data[2]
+			self.ag = data[3]
+		def __repr__(self):
+			return "[%s %s %s %s]"%(self.ht, self.at, self.hg, self.ag)
+
+	def random_obs():
+		names = 'abcdefghijklmnopqrstuvwxyz'
+		random_data = [(i,j,random.randint(0,5),random.randint(0,5))
+						for i in names for j in names if i != j]
+		return [Observation(i) for i in random_data]
+
+	class Model(object):
+		def __init__(self, observations):
+			self.observations = tuple(observations)
+			self.names = [i.ht for i in observations]
+			self.names.extend([i.at for i in observations])
+			self.names = tuple(set(self.names))
+			self.n = len(self.names)
+			
+		def guess(self):
+			a, b = [], []
+			total_hg = numpy.sum([i.hg for i in self.observations])
+			for j in self.names:
+				sh_j = numpy.sum([i.hg for i in self.observations if i.ht == j])
+				ca_j = numpy.sum([i.hg for i in self.observations if i.at == j])
+				a.append(sh_j/numpy.sqrt(total_hg))
+				b.append(ca_j/numpy.sqrt(total_hg))
+				
+			return a + b + [1.5, 0]
+			
+		def tau(self, mu1, mu2, rho, x, y):
+			if x == 0 and y == 0:
+				t = 1 - mu1 * mu2 * rho
+			elif x == 0 and y == 1:
+				t = 1 + mu1 * rho
+			elif x == 1 and y == 0:
+				t = 1 + mu2 * rho
+			elif x == 1 and y == 1:
+				t = 1 - rho
+			else:
+				t = 1
+			return t
+			
+		def fobj(self, x):
+			n = self.n
+			y = [numpy.fabs(i) for i in x[:-2]]
+			y.insert(0, numpy.fabs(n - sum(y[:n-1])))
+			a = dict(zip(self.names, y[:n]))
+			b = dict(zip(self.names, y[n:]))
+			g = numpy.fabs(x[-2])
+			r = x[-1]
+			pseudo_loglikelihood = 0
+			for m in self.observations:
+				x = m.hg
+				y = m.ag
+				mu1 = a[m.ht] * b[m.at] * g
+				mu2 = a[m.at] * b[m.ht]
+				tau = self.tau(mu1, mu2, r, m.hg, m.ag)
+				mu1 = mu1 > 0 and mu1 or 1e-10
+				mu2 = mu2 > 0 and mu2 or 1e-10
+				tau = tau > 0 and tau or 1e-10
+				pseudo_loglikelihood += numpy.log(tau)
+				pseudo_loglikelihood += m.hg * numpy.log(mu1) - mu1
+				pseudo_loglikelihood += m.ag * numpy.log(mu2) - mu2
+			return -pseudo_loglikelihood
+
+
+		def tape_fobj(self):
+			x = self.guess()
+			ax = adouble(x)
+			trace_on(1)
+			independent(ax)
+			ay = self.fobj(ax)
+			dependent(ay)
+			trace_off()
+
+		def fobj_adolc(self,x):
+			return function(1,x)
+
+		def gobj_adolc(self,x):
+			return gradient(1,x)
+
+	m = Model(random_obs())
+	x0 = m.guess()
+	m.tape_fobj()
+	assert_almost_equal(m.fobj(x0), m.fobj_adolc(x0)[0])
+
 
 def test_ipopt_optimization():
 	"""
@@ -587,5 +689,6 @@ if __name__ == '__main__':
 	#except:
 		#print 'Please install nose for unit testing'	
     #nose.runmodule()
-	test_ipopt_optimization()
+	#test_ipopt_optimization()
 	#Runge_Kutta_step_to_test_hov_forward()
+	test_model_fit_example_from_scipy_mailing_list()
