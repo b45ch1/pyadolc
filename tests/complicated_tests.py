@@ -340,10 +340,26 @@ def test_model_fit_example_from_scipy_mailing_list():
 		def gobj_adolc(self,x):
 			return gradient(1,x)
 
+		def gobj_finite_differences(self,x):
+			epsilon = 10**-8
+			N = numpy.size(x)
+			assert numpy.ndim(x) == 1
+
+			I = numpy.eye(N)
+
+			retval = numpy.zeros(N,dtype=float)
+
+			for n in range(N):
+				retval[n] = (self.fobj(x + epsilon*I[:,n])  - self.fobj(x))/epsilon
+
+			return retval
+			
+
 	m = Model(random_obs())
 	x0 = m.guess()
 	m.tape_fobj()
 	assert_almost_equal(m.fobj(x0), m.fobj_adolc(x0)[0])
+	assert_array_almost_equal(m.gobj_finite_differences(x0), m.gobj_adolc(x0), decimal = 3)
 
 
 def test_ipopt_optimization():
