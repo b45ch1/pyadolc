@@ -29,7 +29,10 @@ ax = adouble(1.)
 independent(ax)
 ay = ax
 for i in range(N):
-	ay <<= ay * ay
+	if i%3==0:
+		ay <<= ay * ay
+	else:
+		ay = ay * ay
 
 dependent(ay)
 trace_off()
