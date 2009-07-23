@@ -73,19 +73,27 @@ OPTIONAL REQUIREMENTS:
     * Colpack from http://www.cscapes.org/coloringpage/software.htm  or alternatively http://github.com/b45ch1/colpack . Colpack is needed for sparse Jacobians and sparse Hessians
 
 
-INSTALLATION (my recommendation):
+INSTALLATION:
+Warning 1:
+this version of PYADOLC only works with ADOL-C Version 2.0.0
+
+Warning 2:
 At the moment, the installation using setup.py is lagging behind. Below, the way I would install ``PYADOLC``. If you do it another way, send me an email or fork this project and I'll incorporate it. 
 Alternatively you can _try_ to use distutils, but support for it lags behind scons: i.e. 1) rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system, then 2) run  ``python setup.py build_ext --inplace``.
 
-    1) Install ADOL-C, to use PYADOLC with sparse support, you do _not_ have to do ./configure --with-sparse. A simple ./configure does the job
-    2) (OPTIONAL) Install ColPack
-    3) ``cd $HOME``
-    4) ``git clone git://github.com/b45ch1/pyadolc.git``
-    5) ``cd pyadolc``
-    6) Rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system 
-    7) Run ``scons``, this will create the shared libraries ``_adolc.so`` and ``_sparse.so``. If you don't have colpack installed calling scons will only compile ``_adolc.so`` but fail to compile ``_sparse.so``. 
-    8) Using ``scons`` is more convenient to work with when you often pull new versions.
-    9) Add the directory to your ``PYTHONPATH``.
+
+INSTALLATION WITH SPARSE HESSIAND/JACOBIAN SUPPORT:
+
+    1) Download colpack and run a make (and possibly make install). You should then have a folder ``~/colpack/build`` with subfolders ``lib`` and ``include``
+    2) Install ADOL-C, to use PYADOLC with sparse support, you do _not_ have to do ./configure --with-sparse. A simple ./configure does the job. It is not necessary to do a ``make install``. You should then have a folder ``~/adolc-2.0.0/adolc`` with  ``adolc.h`` in it.
+    3) Copy everything in ``~/colpack/build/include`` to ``~/adolc-2.0.0/colpack``
+    4) ``cd ~``
+    5) ``git clone git://github.com/b45ch1/pyadolc.git``
+    6) ``cd pyadolc``
+    7) Rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system. In your example, ``adolc_include_dir`` should be ``~/adolc-2.0.0``
+    8) Run ``scons``, this will create the shared libraries ``_adolc.so`` and ``_sparse.so``. If you don't have colpack installed calling scons will only compile ``_adolc.so`` but fail to compile ``_sparse.so``. 
+    9) Using ``scons`` is more convenient to work with when you often pull new versions.
+   10) Add the directory to your ``PYTHONPATH``.
        E.g. add the following line in your ``~/.bashrc`` file:
        ``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
 
