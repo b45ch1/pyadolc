@@ -97,6 +97,3 @@ INSTALLATION WITH SPARSE HESSIAND/JACOBIAN SUPPORT:
        E.g. add the following line in your ``~/.bashrc`` file:
        ``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
 
-
-
-
