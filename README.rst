@@ -93,7 +93,7 @@ INSTALLATION WITH SPARSE HESSIAND/JACOBIAN SUPPORT:
     7) Rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system. In your example, ``adolc_include_dir`` should be ``~/adolc-2.0.0``
     8) Run ``scons``, this will create the shared libraries ``_adolc.so`` and ``_sparse.so``. If you don't have colpack installed calling scons will only compile ``_adolc.so`` but fail to compile ``_sparse.so``. 
     9) Using ``scons`` is more convenient to work with when you often pull new versions.
-   10) Add the directory to your ``PYTHONPATH``.
+    10) Add the directory to your ``PYTHONPATH``.
        E.g. add the following line in your ``~/.bashrc`` file:
        ``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
 
