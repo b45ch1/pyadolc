@@ -5,11 +5,11 @@ import numpy
 # 1: BUILD ADOL-C FUNCTIONALITY WITHOUT SPARSE DRIVERS
 #-----------------------------------------------------
 
-adolc_include_path = '/u/walter/workspace/adolc-2.0.0'
-adolc_library_path = '/u/walter/workspace/adolc-2.0.0/adolc/.libs'
-
+adolc_include_path = '/home/basti/workspace/ADOL-C-2.1.0/ADOL-C/src'
+adolc_library_path = '/home/basti/workspace/ADOL-C-2.1.0/ADOL-C/src/.libs'
+                      
 LIBS		= ['adolc',
-				'boost_python',
+				'boost_python-mt',
 			]
 LIBPATH		= [
 				adolc_library_path,
@@ -19,12 +19,9 @@ INCLUDEPATH	= [
 			'/usr/include/python2.5'
 			]
 
-OPTIMIZATION_LEVEL  = "-O2"
-
-
 env = Environment(
 	CPPPATH=[distutils.sysconfig.get_python_inc(),numpy.get_include()] + INCLUDEPATH,
-	CXXFLAGS="-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB " +  OPTIMIZATION_LEVEL,
+	CXXFLAGS="-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB -O2 -Wall",
 	LIBPATH=["/usr/lib/python2.5/config"] + LIBPATH,
 	LIBS= LIBS,
 	RPATH = LIBPATH, #include information where shared libraries can be found to avoid errors like: "ImportError: libboost_python-gcc42-mt-1_34_1.so.1.34.1: cannot open shared object file: No such file or directory"
@@ -37,11 +34,11 @@ adolc = env.SharedLibrary(target='_adolc', source=['py_adolc.cpp', 'num_util.cpp
 
 #2: BUILD SPARSE SUPPORT
 #-----------------------
-colpack_include_path = '/u/walter/workspace/colpack/build/include'
-colpack_library_path = '/u/walter/workspace/colpack/build/lib'
+colpack_include_path = '/home/basti/workspace/colpack/build/include'
+colpack_library_path = '/home/basti/workspace/colpack/build/lib'
 
 LIBS		= ['adolc',
-				'boost_python',
+				'boost_python-mt',
 				'colpack',
 			]
 LIBPATH		= [
@@ -55,9 +52,9 @@ INCLUDEPATH	= [
 			'/usr/include/python2.5'
 			]
 
-env = Environment(
+env2 = Environment(
 	CPPPATH=[distutils.sysconfig.get_python_inc(),numpy.get_include()] + INCLUDEPATH,
-	CXXFLAGS="-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB "+ OPTIMIZATION_LEVEL,
+	CXXFLAGS="-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB -O2 -Wall",
 	LIBPATH=["/usr/lib/python2.5/config"] + LIBPATH,
 	LIBS= LIBS,
 	RPATH = LIBPATH, #include information where shared libraries can be found to avoid errors like: "ImportError: libboost_python-gcc42-mt-1_34_1.so.1.34.1: cannot open shared object file: No such file or directory"
@@ -66,18 +63,18 @@ env = Environment(
 Default('.')
 
 
-colpack = env.SharedLibrary(target='_colpack',
+colpack = env2.SharedLibrary(target='_colpack',
 	source=['py_colpack.cpp',
 	'num_util.cpp', 
-	adolc_include_path +'/adolc/sparse/sparsedrivers.cpp',
-	adolc_include_path +'/adolc/sparse/sparse_fo_rev.cpp',
-	adolc_include_path +'/adolc/int_forward_s.c',
-	adolc_include_path +'/adolc/int_forward_t.c',
-	adolc_include_path +'/adolc/int_reverse_s.c',
-	adolc_include_path +'/adolc/int_reverse_t.c',
-	adolc_include_path +'/adolc/nonl_ind_forward_s.c',
-	adolc_include_path +'/adolc/nonl_ind_forward_t.c',
-	adolc_include_path +'/adolc/indopro_forward_s.c',
-	adolc_include_path +'/adolc/indopro_forward_t.c',
+	adolc_include_path +'/sparse/sparsedrivers.cpp',
+	adolc_include_path +'/sparse/sparse_fo_rev.cpp',
+	adolc_include_path +'/int_forward_s.c',
+	adolc_include_path +'/int_forward_t.c',
+	adolc_include_path +'/int_reverse_s.c',
+	adolc_include_path +'/int_reverse_t.c',
+	adolc_include_path +'/nonl_ind_forward_s.c',
+	adolc_include_path +'/nonl_ind_forward_t.c',
+	adolc_include_path +'/indopro_forward_s.c',
+	adolc_include_path +'/indopro_forward_t.c',
    ])
 

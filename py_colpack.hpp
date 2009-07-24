@@ -4,8 +4,8 @@
 #define PY_ARRAY_UNIQUE_SYMBOL PyArrayHandle
 
 #include "num_util.h"
-#include "adolc/adolc.h"
-#include "adolc/sparse/sparsedrivers.h"
+#include "adolc.h"
+#include "sparse/sparsedrivers.h"
 
 using namespace std;
 namespace b = boost;

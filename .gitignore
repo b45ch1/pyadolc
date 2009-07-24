@@ -23,6 +23,7 @@ build
 *.log
 
 adolc-2.0.0
+jac_pat.mtx
 
 setup.py
 SConstruct
