@@ -3,7 +3,7 @@
 #define PY_ARRAY_UNIQUE_SYMBOL PyArrayHandle
 
 #include "num_util.h"
-#include "adolc.h"
+#include "adolc/adolc.h"
 
 using namespace std;
 namespace b = boost;
