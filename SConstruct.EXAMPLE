@@ -5,8 +5,8 @@ import numpy
 # 1: BUILD ADOL-C FUNCTIONALITY WITHOUT SPARSE DRIVERS
 #-----------------------------------------------------
 
-adolc_include_path = '/home/basti/workspace/ADOL-C-2.1.0/ADOL-C/src'
-adolc_library_path = '/home/basti/workspace/ADOL-C-2.1.0/ADOL-C/src/.libs'
+adolc_source_path = '/home/basti/workspace/adolc-2.0.0'
+adolc_library_path = '/home/basti/workspace/adolc-2.0.0/adolc/.libs'
                       
 LIBS		= ['adolc',
 				'boost_python-mt',
@@ -15,7 +15,7 @@ LIBPATH		= [
 				adolc_library_path,
 			  ]
 INCLUDEPATH	= [
-			adolc_include_path,
+			adolc_source_path,
 			'/usr/include/python2.5'
 			]
 
@@ -46,8 +46,8 @@ LIBPATH		= [
 				colpack_library_path,
 			  ]
 INCLUDEPATH	= [
-			adolc_include_path,
-			adolc_include_path + '/adolc/sparse',
+			adolc_source_path,
+			adolc_source_path + '/adolc/sparse',
 			colpack_include_path,
 			'/usr/include/python2.5'
 			]
@@ -66,15 +66,15 @@ Default('.')
 colpack = env2.SharedLibrary(target='_colpack',
 	source=['py_colpack.cpp',
 	'num_util.cpp', 
-	adolc_include_path +'/sparse/sparsedrivers.cpp',
-	adolc_include_path +'/sparse/sparse_fo_rev.cpp',
-	adolc_include_path +'/int_forward_s.c',
-	adolc_include_path +'/int_forward_t.c',
-	adolc_include_path +'/int_reverse_s.c',
-	adolc_include_path +'/int_reverse_t.c',
-	adolc_include_path +'/nonl_ind_forward_s.c',
-	adolc_include_path +'/nonl_ind_forward_t.c',
-	adolc_include_path +'/indopro_forward_s.c',
-	adolc_include_path +'/indopro_forward_t.c',
+	adolc_source_path +'/adolc/sparse/sparsedrivers.cpp',
+	adolc_source_path +'/adolc/sparse/sparse_fo_rev.cpp',
+	adolc_source_path +'/adolc/int_forward_s.c',
+	adolc_source_path +'/adolc/int_forward_t.c',
+	adolc_source_path +'/adolc/int_reverse_s.c',
+	adolc_source_path +'/adolc/int_reverse_t.c',
+	adolc_source_path +'/adolc/nonl_ind_forward_s.c',
+	adolc_source_path +'/adolc/nonl_ind_forward_t.c',
+	adolc_source_path +'/adolc/indopro_forward_s.c',
+	adolc_source_path +'/adolc/indopro_forward_t.c',
    ])
 
