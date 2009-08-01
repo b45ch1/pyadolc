@@ -141,6 +141,7 @@ adub	(*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 /* WRAPPED OPERATORS */
 /* unary */
 adub *adub_neg_badouble   (const badouble &rhs){	return new adub(operator*(-1.,rhs));}
+adub *adub_abs_badouble   (const badouble &rhs){	return new adub(fabs(rhs));}
 adub *adub_exp_badouble   (const badouble &rhs){	return new adub(exp(rhs));}
 adub *adub_log_badouble   (const badouble &rhs){	return new adub(log(rhs));}
 adub *adub_sin_badouble   (const badouble &rhs){	return new adub(sin(rhs));}
@@ -338,7 +339,8 @@ BOOST_PYTHON_MODULE(_adolc)
 // 			.def(-self)  using this unary operator somehow screws up LATER computations, i.e. the operator works correctly, but subsequent calculations screw up!!
 // 			.def(+self)
 
-			.def("__neg__", adub_neg_badouble, return_value_policy<manage_new_object>())		
+			.def("__neg__", adub_neg_badouble, return_value_policy<manage_new_object>())
+			.def("__abs__", adub_abs_badouble, return_value_policy<manage_new_object>())
 
 			.def("__add__", adub_add_badouble_badouble, return_value_policy<manage_new_object>())
 			.def("__sub__", adub_sub_badouble_badouble, return_value_policy<manage_new_object>())
@@ -378,7 +380,6 @@ BOOST_PYTHON_MODULE(_adolc)
 // 			.def("acosh", adub_acosh_badouble, return_value_policy<manage_new_object>()  )
 // 			.def("arctanh", adub_atanh_badouble, return_value_policy<manage_new_object>()  )
 			.def("fabs", adub_fabs_badouble, return_value_policy<manage_new_object>()  )
-			.def("abs", adub_fabs_badouble, return_value_policy<manage_new_object>()  )
 			.def("ceil", adub_ceil_badouble, return_value_policy<manage_new_object>()  )
 			.def("floor", adub_floor_badouble, return_value_policy<manage_new_object>()  )
 			.def("log10", adub_log10_badouble, return_value_policy<manage_new_object>()  )

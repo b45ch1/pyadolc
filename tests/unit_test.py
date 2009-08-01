@@ -147,18 +147,39 @@ def test_hyperbolic_functions():
 	#assert_almost_equal(aarcch.val, numpy.arccosh(x))
 	#assert_almost_equal(aarcth.val, numpy.arctanh(x))
 
+def test_fabs():
+	x = 3.
+	xs = numpy.array([1.,2.,3.])
+	ax = adouble(x)
+	axs = adouble(xs)
+
+	aabs = numpy.fabs(ax)
+	aabss = numpy.fabs(axs)
+
+	assert_almost_equal(aabs.val, numpy.fabs(x))
+
 def test_abs():
 	x = 3.
 	xs = numpy.array([1.,2.,3.])
 	ax = adouble(x)
 	axs = adouble(xs)
 	
-	afabs = numpy.fabs(ax)
-	afabss = numpy.fabs(axs)
+	afabs = abs(ax)
+	afabss = abs(axs)
 	
+	assert_almost_equal(afabs.val, abs(x))
 	
-	assert_almost_equal(afabs.val, numpy.fabs(x))
+def test_numpyabs():
+	x = 3.
+	xs = numpy.array([1.,2.,3.])
+	ax = adouble(x)
+	axs = adouble(xs)
 	
+	afabs = numpy.abs(ax)
+	afabss = numpy.abs(axs)
+	
+	assert_almost_equal(afabs.val, numpy.abs(x))
+
 	#test_expression('fabs (a)     : ',		lambda x: numpy.fabs (x),  a,		a.val)
 
 
