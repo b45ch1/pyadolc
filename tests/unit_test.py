@@ -93,16 +93,15 @@ def test_div():
 	assert c.val == 2./3.
 	
 def test_truediv():
-	from truediv import truediv
 	x=1
 	y=2
 	ax=adouble(x)
 	ay=adouble(y)
 
-	z=truediv(x,y)
-	az1=truediv(ax,y)
-	az2=truediv(x,ay)
-	az3=truediv(ax,ay)
+	z= x.__truediv__(y)
+	az1=ax.__truediv__(y)
+	az2=ay.__rtruediv__(x)
+	az3=ax.__truediv__(ay)
 
 	assert_almost_equal(az1.val, z)
 	assert_almost_equal(az2.val, z)
