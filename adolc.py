@@ -49,7 +49,7 @@ def adouble(x):
         return _adolc.adouble(x)
     
     else:
-        x = numpy.asarray(x, dtype=float)
+        x = numpy.ascontiguousarray(x, dtype=float)
         shp = numpy.shape(x)
         xr = numpy.ravel(x)
         axr = numpy.array([_adolc.adouble(xr[n]) for n in range(len(xr))])
@@ -143,7 +143,7 @@ def function(tape_tag,x):
     ts = tapestats(tape_tag)
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     y = numpy.zeros(M, dtype=float)
@@ -158,7 +158,7 @@ def gradient(tape_tag,x):
     ts = tapestats(tape_tag)
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     g = numpy.zeros(N, dtype=float)
@@ -173,7 +173,7 @@ def hessian(tape_tag, x, format='full' ):
     ts = tapestats(tape_tag)
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     
@@ -195,7 +195,7 @@ def jacobian(tape_tag,x):
     ts = tapestats(tape_tag)
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     J = numpy.zeros((M,N), dtype=float)
@@ -212,10 +212,10 @@ def vec_jac(tape_tag, x, u, repeat = False):
     ts = tapestats(tape_tag)
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
-    u = numpy.asarray(u, dtype=float)
+    u = numpy.ascontiguousarray(u, dtype=float)
     assert numpy.size(u) == M
     assert numpy.ndim(u) == 1
     z = numpy.zeros(N, dtype=float)
@@ -229,10 +229,10 @@ def jac_vec(tape_tag, x, v):
     ts = tapestats(tape_tag)
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
-    v = numpy.asarray(v, dtype=float)
+    v = numpy.ascontiguousarray(v, dtype=float)
     assert numpy.size(v) == N
     assert numpy.ndim(v) == 1
     z = numpy.zeros(M, dtype=float)
@@ -246,10 +246,10 @@ def hess_vec(tape_tag, x, v):
     ts = tapestats(tape_tag)
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
-    v = numpy.asarray(v, dtype=float)
+    v = numpy.ascontiguousarray(v, dtype=float)
     assert numpy.size(v) == N
     assert numpy.ndim(v) == 1
     z = numpy.zeros(N, dtype=float)
@@ -269,15 +269,15 @@ def lagra_hess_vec(tape_tag, x, u, v):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     
-    v = numpy.asarray(v, dtype=float)
+    v = numpy.ascontiguousarray(v, dtype=float)
     assert numpy.size(v) == N
     assert numpy.ndim(v) == 1
     
-    u = numpy.asarray(u, dtype=float)
+    u = numpy.ascontiguousarray(u, dtype=float)
     assert numpy.size(u) == M
     assert numpy.ndim(u) == 1
     
@@ -299,7 +299,7 @@ def zos_forward(tape_tag,x,keep):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     
@@ -326,11 +326,11 @@ def fos_forward(tape_tag, x, v, keep):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     
-    v = numpy.asarray(v, dtype=float)
+    v = numpy.ascontiguousarray(v, dtype=float)
     assert numpy.size(v) == N
     assert numpy.ndim(v) == 1
 
@@ -357,11 +357,11 @@ def fov_forward(tape_tag, x, V):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     
-    V = numpy.asarray(V, dtype=float)
+    V = numpy.ascontiguousarray(V, dtype=float)
     assert numpy.shape(V)[0] == N
     assert numpy.ndim(V) == 2
     P = numpy.shape(V)[1]
@@ -393,11 +393,11 @@ def hos_forward(tape_tag, x, V, keep):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     
-    V = numpy.asarray(V, dtype=float)
+    V = numpy.ascontiguousarray(V, dtype=float)
     assert numpy.shape(V)[0] == N
     assert numpy.ndim(V) == 2
     D = numpy.shape(V)[1]
@@ -426,11 +426,11 @@ def hov_forward(tape_tag, x, V):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    x = numpy.asarray(x, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     
-    V = numpy.asarray(V, dtype=float)
+    V = numpy.ascontiguousarray(V, dtype=float)
     assert numpy.shape(V)[0] == N
     assert numpy.ndim(V) == 3
     P = numpy.shape(V)[1]
@@ -460,11 +460,11 @@ def hov_wk_forward(tape_tag, x, V, keep):
     #N = ts['NUM_INDEPENDENTS']
     #M = ts['NUM_DEPENDENTS']
     
-    #x = numpy.asarray(x, dtype=float)
+    #x = numpy.ascontiguousarray(x, dtype=float)
     #assert numpy.size(x) == N
     #assert numpy.ndim(x) == 1
     
-    #V = numpy.asarray(V, dtype=float)
+    #V = numpy.ascontiguousarray(V, dtype=float)
     #assert numpy.shape(V)[0] == N
     #assert numpy.ndim(V) == 3
     #P = numpy.shape(V)[1]
@@ -494,7 +494,7 @@ def fos_reverse(tape_tag, u):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    u = numpy.asarray(u, dtype=float)
+    u = numpy.ascontiguousarray(u, dtype=float)
     assert numpy.size(u) == M
     assert numpy.ndim(u) == 1
     
@@ -520,7 +520,7 @@ def fov_reverse(tape_tag, U):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    U = numpy.asarray(U, dtype=float)
+    U = numpy.ascontiguousarray(U, dtype=float)
     assert numpy.ndim(U) == 2
     assert numpy.shape(U)[1] == M
     Q = numpy.shape(U)[0]
@@ -548,7 +548,7 @@ def hos_reverse(tape_tag, D, u):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    u = numpy.asarray(u, dtype=float)
+    u = numpy.ascontiguousarray(u, dtype=float)
     assert numpy.size(u) == M
     assert numpy.ndim(u) == 1
     Z = numpy.zeros((N, D+1), dtype=float)
@@ -575,7 +575,7 @@ def hov_reverse(tape_tag, D, U):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    U = numpy.asarray(U, dtype=float)
+    U = numpy.ascontiguousarray(U, dtype=float)
     assert numpy.ndim(U) == 2
     assert numpy.shape(U)[1] == M
     Q = numpy.shape(U)[0]
@@ -606,7 +606,7 @@ def hov_ti_reverse(tape_tag, U):
     N = ts['NUM_INDEPENDENTS']
     M = ts['NUM_DEPENDENTS']
     
-    U = numpy.asarray(U, dtype=float)
+    U = numpy.ascontiguousarray(U, dtype=float)
     assert numpy.ndim(U) == 3
     assert numpy.shape(U)[1] == M
     Q = numpy.shape(U)[0]
@@ -629,8 +629,8 @@ def tape_to_latex(tape_tag,x,y):
 
     """
     assert type(tape_tag) == int
-    x = numpy.asarray(x, dtype=float)
-    y = numpy.asarray(y, dtype=float)
+    x = numpy.ascontiguousarray(x, dtype=float)
+    y = numpy.ascontiguousarray(y, dtype=float)
 
     return _adolc.tape_to_latex(tape_tag, x, y)
 
