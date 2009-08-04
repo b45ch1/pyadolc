@@ -134,17 +134,7 @@ def test_hyperbolic_functions():
     assert_almost_equal(ach.val, numpy.cosh(x))
     assert_almost_equal(ath.val, numpy.tanh(x))
     
-#def test_arc_hyperbolic_functions():
-    #x = 3.
-    #ax = adouble(x)
-    
-    #aarcsh = numpy.arcsinh(ax)
-    #aarcch = numpy.arccosh(ax)
-    #aarcth = numpy.arctanh(ax)
-    
-    #assert_almost_equal(aarcsh.val, numpy.arcsinh(x))
-    #assert_almost_equal(aarcch.val, numpy.arccosh(x))
-    #assert_almost_equal(aarcth.val, numpy.arctanh(x))
+
 
 def test_fabs():
     x = 3.
@@ -1043,11 +1033,10 @@ def test_sparse_problem():
 
 
 
-try:
-    import nose
-except:
-    print 'Please install nose for unit testing'
-
 if __name__ == '__main__':
+    try:
+        import nose
+    except:
+        print 'Please install nose for unit testing'
     nose.runmodule()
 

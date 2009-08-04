@@ -699,12 +699,11 @@ def Runge_Kutta_step_to_test_hov_forward():
 
 
 
+
+
 if __name__ == '__main__':
-    #try:
-        #import nose
-    #except:
-        #print 'Please install nose for unit testing'	
-    #nose.runmodule()
-    #test_ipopt_optimization()
-    #Runge_Kutta_step_to_test_hov_forward()
-    test_model_fit_example_from_scipy_mailing_list()
+    try:
+        import nose
+    except:
+        print 'Please install nose for unit testing'
+    nose.runmodule()
