@@ -1,0 +1,2 @@
+Import('env')
+adolc = env.SharedLibrary(target='_adolc', source=['src/py_adolc.cpp', 'src/num_util.cpp'])
