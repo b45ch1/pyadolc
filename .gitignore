@@ -6,6 +6,7 @@
 trash/*
 adolc-1.11.0-trunk/
 adolc-1.11.0-trunk/*
+build
 release
 release/*
 report/*
