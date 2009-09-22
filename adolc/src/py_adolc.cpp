@@ -183,6 +183,34 @@ void c_wrapped_hov_forward		(short tape_tag, int M, int N, int D, int P, bpn::ar
 	hov_forward(tape_tag, M, N, D, P, x, V, y, W);
 }
 
+void c_wrapped_hov_wk_forward	(short tape_tag, int M, int N, int D, int keep, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
+	double* x = (double*) nu::data(bpn_x);
+	double* y = (double*) nu::data(bpn_y);
+	double* V_data = (double*) nu::data(bpn_V);
+	double** V[N];
+	double* V1[N*P];
+
+	for( int np = 0; np != N*P; ++np){
+		V1[np] = &V_data[np * D];
+	}
+	for(int n = 0; n != N; ++n){
+		V[n] = &V1[ n * P];
+	}
+	
+	double* W_data = (double*) nu::data(bpn_W);
+	double** W[M];
+	double* W1[M*P];
+	for( int mp = 0; mp != M*P; ++mp){
+		W1[mp] = &W_data[mp * D];
+	}
+	for(int m = 0; m != M; ++m){
+		W[m] = &W1[ m * P];
+	}
+
+	hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W);
+}
+
+
 void c_wrapped_fos_reverse		(short tape_tag, int M, int N, bpn::array &bpn_u, bpn::array &bpn_z){
 	double* u = (double*) nu::data(bpn_u);
 	double* z = (double*) nu::data(bpn_z);
@@ -291,6 +319,33 @@ void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::
 
 	hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz);
 
+}
+
+
+void c_wrapped_hos_ov_reverse	(short tape_tag, int M, int N, int D, int P, bpn::array &bpn_U, bpn::array &bpn_Z){
+	/* this function is experimental and likely not to work ... */
+	
+	/* U is (M,D+1) array */
+	double* U_data = (double*) nu::data(bpn_U);
+	double* U[M];
+	for(int m = 0; m != M; ++m){
+		U[m] = &U_data[ m * (D+1)];
+	}
+	
+	/* Z is (N, P, D+1) array???? */
+	double* Z_data = (double*) nu::data(bpn_Z);
+	double** Z[N];
+	double* Z1[N*P];
+	
+	for( int np = 0; np != N*P; ++np){
+		Z1[np] = &Z_data[np * (D+1)];
+	}
+	
+	for(int n = 0; n != N; ++n){
+		Z[n] = &Z1[ n * P];
+	}
+	
+	hos_ov_reverse(tape_tag, M, N, D, P, U, Z);
 }
 
 

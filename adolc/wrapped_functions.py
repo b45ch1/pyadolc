@@ -418,30 +418,30 @@ def hov_wk_forward(tape_tag, x, V, keep):
     V is (N x P x D)-matrix, P directions
     W is (M x P x D)-matrix, P directional derivatives
     """
-    #assert type(keep) == int
-    #assert type(tape_tag) == int
-    #ts = tapestats(tape_tag)
+    assert type(keep) == int
+    assert type(tape_tag) == int
+    ts = tapestats(tape_tag)
     
-    #N = ts['NUM_INDEPENDENTS']
-    #M = ts['NUM_DEPENDENTS']
+    N = ts['NUM_INDEPENDENTS']
+    M = ts['NUM_DEPENDENTS']
     
-    #x = numpy.ascontiguousarray(x, dtype=float)
-    #assert numpy.size(x) == N
-    #assert numpy.ndim(x) == 1
+    x = numpy.ascontiguousarray(x, dtype=float)
+    assert numpy.size(x) == N
+    assert numpy.ndim(x) == 1
     
-    #V = numpy.ascontiguousarray(V, dtype=float)
-    #assert numpy.shape(V)[0] == N
-    #assert numpy.ndim(V) == 3
-    #P = numpy.shape(V)[1]
-    #D = numpy.shape(V)[2]
+    V = numpy.ascontiguousarray(V, dtype=float)
+    assert numpy.shape(V)[0] == N
+    assert numpy.ndim(V) == 3
+    P = numpy.shape(V)[1]
+    D = numpy.shape(V)[2]
     
     
-    #y = numpy.zeros(M, dtype=float)
-    #W = numpy.zeros((M,P,D), dtype=float)
+    y = numpy.zeros(M, dtype=float)
+    W = numpy.zeros((M,P,D), dtype=float)
     
-    #_adolc.hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W)
-    #return (y,W)
-    raise NotImplementedError
+    _adolc.hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W)
+    return (y,W)
+    # raise NotImplementedError
 
 
 def fos_reverse(tape_tag, u):
@@ -610,7 +610,35 @@ def hov_ti_reverse(tape_tag, U):
     nz = numpy.zeros((Q,N), dtype=numpy.int16)
     _adolc.hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz)
     return (Z,nz)
+
+def hos_ov_reverse(tape_tag, P, U):
+    """
+    higher order scalar reverse on vector keep.
+    Z = hos_ov_reverse(tape_tag, U)
+    F:R^N -> R^M
+    U is (M x D+1)-matrix,
+    Z is (N x P x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0],  U F\" v[:,1] + 0.5 U F^(3) v[:,0],... ]
+    D is the highest order of the derivative
+    P is the number of directions saved in the forward run
+    after calling hov_wk_forward with keep = D+1
+    """
+    assert type(tape_tag) == int
+    assert type(P) == int
     
+    ts = tapestats(tape_tag)
+    
+    N = ts['NUM_INDEPENDENTS']
+    M = ts['NUM_DEPENDENTS']
+    
+    U = numpy.ascontiguousarray(U, dtype=float)
+    assert numpy.ndim(U) == 2
+    assert numpy.shape(U)[0] == M
+    Dp1 = numpy.shape(U)[1]
+    D = Dp1 - 1
+    
+    Z = numpy.zeros((N, P, D+1), dtype=float)
+    _adolc.hos_ov_reverse(tape_tag, M, N, D, P, U, Z)
+    return Z
 
 def tape_to_latex(tape_tag,x,y):
     """

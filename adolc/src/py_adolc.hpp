@@ -79,6 +79,7 @@ void c_wrapped_hos_ti_reverse   (short tape_tag, int M, int N, int D, bpn::array
 
 void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz);
 void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz);
+void c_wrapped_hos_ov_reverse	(short tape_tag, int M, int N, int D, int P, bpn::array &bpn_U, bpn::array &bpn_Z);
 
 
 void py_tape_doc(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_y );
@@ -212,7 +213,7 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("fov_forward",		&c_wrapped_fov_forward);
 	def("hos_forward",		&c_wrapped_hos_forward);
 	def("hov_forward",		&c_wrapped_hov_forward);
-// 	def("hov_wk_forward",	&c_wrapped_hov_wk_forward);
+	def("hov_wk_forward",	&c_wrapped_hov_wk_forward);
 
 
 	def("fos_reverse",		&c_wrapped_fos_reverse);
@@ -221,6 +222,7 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("hos_ti_reverse",	&c_wrapped_hos_ti_reverse);
 	def("hov_reverse", 		&c_wrapped_hov_reverse);
 	def("hov_ti_reverse", 	&c_wrapped_hov_ti_reverse);
+	def("hos_ov_reverse", 	&c_wrapped_hos_ov_reverse);
 	
 	def("depends_on", 		&depends_on);
 	def("tape_to_latex",	py_tape_doc);

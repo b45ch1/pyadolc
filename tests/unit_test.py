@@ -270,6 +270,41 @@ def test_hov_ti_reverse():
     assert numpy.prod( Z[0,:,0] == numpy.array([35., 21., 15.]))
     assert numpy.prod( Z[0,:,1] == numpy.array([0., 7., 5.]))
 
+
+def test_hov_wk_forward_with_keep_then_hos_ov_reverse():
+    """compute the full hessian of f = x_1 x_2 x_3"""
+    def f(x):
+        return x[0]*x[1]*x[2]
+    
+    #tape f
+    ax = numpy.array([adouble(0.) for i in range(3)])
+    trace_on(0)
+    for i in range(3):
+        independent(ax[i])
+    ay = f(ax)
+    dependent(ay)
+    trace_off()
+
+    x = numpy.array([3.,5.,7.])
+    P = 3
+    V = numpy.zeros((3,P,1))
+    V[0,0,0] = 1.
+    V[1,1,0] = 1.
+    V[2,2,0] = 1.
+    
+    (y,W) = hov_wk_forward(0,x,V,2)
+    assert_almost_equal(y[0],105.)
+
+    U = numpy.zeros((1,2), dtype=float)
+    U[0,0] = 1.
+
+    Z = hos_ov_reverse(0, P ,U)
+    
+    H = numpy.array([[0, x[2], x[1]],[x[2], 0, x[0]], [x[1], x[0],0]],dtype=float)
+    assert_array_almost_equal(Z[:,:,1],H)
+
+
+
 def test_simple_function():
     def f(x):
         y1 = 1./(numpy.fabs(x))
