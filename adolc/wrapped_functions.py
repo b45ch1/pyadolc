@@ -520,10 +520,38 @@ def hos_reverse(tape_tag, D, u):
     _adolc.hos_reverse(tape_tag, M, N, D, u, Z)
     return Z
 
+def hos_ti_reverse(tape_tag, U):
+    """
+    higher order scalar reverse:
+    Z = hos_ti_reverse(tape_tag, U)
+    F:R^N -> R^M
+    U is (M x D+1)-matrix,
+    Z is (N x D+1)-matrix, adjoint directional derivative Z = [U F'(x), U F\" v[:,0],  U F\" v[:,1] + 0.5 U F^(3) v[:,0],... ]
+    D is the highest order of the derivative
+    after calling fos_forward or hos_forward with keep = D+1
+    """
+    assert type(tape_tag) == int
+    
+    ts = tapestats(tape_tag)
+    
+    N = ts['NUM_INDEPENDENTS']
+    M = ts['NUM_DEPENDENTS']
+    
+    U = numpy.ascontiguousarray(U, dtype=float)
+    assert numpy.ndim(U) == 2
+    assert numpy.shape(U)[0] == M
+    Dp1 = numpy.shape(U)[1]
+    D = Dp1 - 1
+    Z = numpy.zeros((N, D+1), dtype=float)
+    _adolc.hos_ti_reverse(tape_tag, M, N, D, U, Z)
+    return Z
+
 
 def hov_reverse(tape_tag, D, U):
     """
-,	higher order vector reverse:
+    this function is deprecated, use hov_ti_reverse instead!
+    
+    higher order vector reverse:
     (Z,nz) = hov_reverse(tape_tag, D, U)
     F:R^N -> R^M
     D is the order of the derivative

@@ -212,6 +212,22 @@ void c_wrapped_hos_reverse		(short tape_tag, int M, int N, int D, bpn::array &bp
 	}
 	hos_reverse(tape_tag, M, N, D, u, Z);
 }
+
+void c_wrapped_hos_ti_reverse   (short tape_tag, int M, int N, int D, bpn::array &bpn_U, bpn::array &bpn_Z){
+	double* U_data = (double*) nu::data(bpn_U);
+	double* U[M];
+	for(int m = 0; m != M; ++m){
+		U[m] = &U_data[ m * (D+1)];
+	}
+	double* Z_data = (double*) nu::data(bpn_Z);
+	double* Z[N];
+	for(int n = 0; n != N; ++n){
+		Z[n] = &Z_data[ n * (D+1)];
+	}
+	hos_ti_reverse(tape_tag, M, N, D, U, Z);
+}
+	
+
 void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz){
 	double* U_data = (double*) nu::data(bpn_U);
 	double* U[Q];

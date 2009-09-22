@@ -74,6 +74,9 @@ void c_wrapped_hov_wk_forward	(short tape_tag, int M, int N, int D, int keep, in
 void c_wrapped_fos_reverse		(short tape_tag, int M, int N, bpn::array &bpn_u, bpn::array &bpn_z);
 void c_wrapped_fov_reverse		(short tape_tag, int M, int N, int Q, bpn::array &bpn_U, bpn::array &bpn_Z);
 void c_wrapped_hos_reverse		(short tape_tag, int M, int N, int D, bpn::array &bpn_u, bpn::array &bpn_Z);
+void c_wrapped_hos_ti_reverse   (short tape_tag, int M, int N, int D, bpn::array &bpn_U, bpn::array &bpn_Z);
+
+
 void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz);
 void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz);
 
@@ -215,6 +218,7 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("fos_reverse",		&c_wrapped_fos_reverse);
 	def("fov_reverse",		&c_wrapped_fov_reverse);
 	def("hos_reverse",		&c_wrapped_hos_reverse);
+	def("hos_ti_reverse",	&c_wrapped_hos_ti_reverse);
 	def("hov_reverse", 		&c_wrapped_hov_reverse);
 	def("hov_ti_reverse", 	&c_wrapped_hov_ti_reverse);
 	

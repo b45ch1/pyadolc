@@ -210,7 +210,36 @@ def test_dependent():
     assert numpy.prod( ax == bx )
     
 
+def test_hos_forward_with_keep_then_hos_ti_reverse():
+    """compute the first columnt of the hessian of f = x_1 x_2 x_3"""
+    def f(x):
+        return x[0]*x[1]*x[2]
+    
+    #tape f
+    ax = numpy.array([adouble(0.) for i in range(3)])
+    trace_on(0)
+    for i in range(3):
+        independent(ax[i])
+    ay = f(ax)
+    dependent(ay)
+    trace_off()
 
+    x = numpy.array([3.,5.,7.])
+    V = numpy.zeros((3,1))
+    V[0,0]=1
+
+    (y,W) = hos_forward(0,x,V,2)
+    assert y[0] == 105.
+    assert W[0] == 35.
+
+    U = numpy.zeros((1,2), dtype=float)
+    U[0,0] = 1.
+
+    Z = hos_ti_reverse(0,U)
+    assert numpy.prod( Z[:,0] == numpy.array([35., 21., 15.]))
+    assert numpy.prod( Z[:,1] == numpy.array([0., 7., 5.]))
+    
+    
 def test_hov_ti_reverse():
     """compute the first columnt of the hessian of f = x_1 x_2 x_3"""
     def f(x):
