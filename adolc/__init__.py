@@ -1,6 +1,7 @@
 import _adolc
 from _adolc import *
 from wrapped_functions import * 
+import cgraph
 
 try:
     import sparse

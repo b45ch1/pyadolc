@@ -1,0 +1,67 @@
+from numpy.testing import *
+import numpy
+import numpy.random
+
+from adolc import *
+from adolc.cgraph import *
+
+class TestAdolcProgram(TestCase):
+    def test_forward(self):
+        x = numpy.random.rand(*(2,3,4))
+        y = numpy.random.rand(*(4,3,2))
+        AP = AdolcProgram()
+        AP.trace_on(1)
+        ax = adouble(x)
+        ay = adouble(y)
+        AP.independent(ax)
+        AP.independent(ay)
+        az = ay.T * ax / ay.T
+        AP.dependent(az)
+        AP.trace_off()
+        
+        D,P = 3,4
+        Vx = numpy.ones( x.shape + (P,D))
+        Vy = numpy.ones( y.shape + (P,D))
+        
+        z = AP.forward([x,y])
+        assert_array_almost_equal(z[0],x)
+        
+        z,W = AP.forward([x,y],[Vx,Vy],keep=False)
+        assert_array_almost_equal(z[0],x)
+        assert_array_almost_equal(W[0],Vx)
+        
+        D,P = 3,1
+        Vx = numpy.ones( x.shape + (P,D))
+        Vy = numpy.ones( y.shape + (P,D))
+        z,W = AP.forward([x,y],[Vx,Vy],keep=D+1)
+        assert_array_almost_equal(z[0],x)
+        assert_array_almost_equal(W[0],Vx)
+        
+        
+    def test_reverse(self):
+        x = numpy.random.rand(*(2,3,4))
+        y = numpy.random.rand(*(4,3,2))
+        AP = AdolcProgram()
+        AP.trace_on(1)
+        ax = adouble(x)
+        ay = adouble(y)
+        AP.independent(ax)
+        AP.independent(ay)
+        az = ay.T * ax / ay.T
+        AP.dependent(az)
+        AP.trace_off()
+        
+        D,P = 3,1
+        Vx = numpy.ones( x.shape + (P,D))
+        Vy = numpy.ones( y.shape + (P,D))
+        z,W = AP.forward([x,y],[Vx,Vy],keep=D+1)
+        Q = 5
+        Wbar = numpy.random.rand( *( (Q,) + z[0].shape + (D+1,)))
+        Vbar_list = AP.reverse([Wbar])
+        
+        assert_array_almost_equal(Vbar_list[0],Wbar)
+        
+        
+if __name__ == "__main__":
+    run_module_suite()
+
