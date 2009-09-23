@@ -1,3 +1,4 @@
+import copy
 import numpy
 import numpy.testing
 import wrapped_functions
@@ -33,7 +34,16 @@ class AdolcProgram(object):
         and Vi the corresponding direction tensor of shape :  shp_xi + (P,D)
         
         also the outputs are in the same format as handed to the self.dependent function.
+        
+        forward stores the inputs in self.xs and self.Vs as well as self.ys, self.Ws
+        
         """
+        
+        # save inputs
+        xs = copy.deepcopy(xs)
+        Vs = copy.deepcopy(Vs)
+        self.xs = xs
+        self.Vs = Vs
         
         # prepare xs and Vs
         # -----------------
@@ -42,7 +52,7 @@ class AdolcProgram(object):
             numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nx], numpy.shape(x))
             rx = numpy.ravel(x)
             rx_list.append(rx)
-        x = numpy.ravel(rx_list)
+        self.x = numpy.ravel(rx_list)
         
         if Vs != None:
             rV_list = []        
@@ -50,23 +60,23 @@ class AdolcProgram(object):
                 V_shp = numpy.shape(V)
                 numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nV], V_shp[:-2])
                 rV_list.append(numpy.reshape(V, (numpy.prod(V_shp[:-2]),) + V_shp[-2:]))
-            V = numpy.ascontiguousarray(numpy.concatenate(rV_list,axis=0))
+            self.V = numpy.ascontiguousarray(numpy.concatenate(rV_list,axis=0))
             
         # run the ADOL-C functions
         # ------------------------
         if Vs == None:
-            y = wrapped_functions.zos_forward(self.tape_tag, x, keep=keep)
+            self.y = wrapped_functions.zos_forward(self.tape_tag, self.x, keep=keep)
         
         else:
-            N,P,D = V.shape
+            N,P,D = self.V.shape
             if P >= 1 and keep == 0:
-                y,W = wrapped_functions.hov_forward(self.tape_tag, x, V)
+                self.y,self.W = wrapped_functions.hov_forward(self.tape_tag, self.x, self.V)
                 
             elif P == 1 and keep > 0:
-                Vtmp = V.reshape((N,D))
-                y,Wtmp = wrapped_functions.hos_forward(self.tape_tag, x, Vtmp, keep)
+                Vtmp = self.V.reshape((N,D))
+                self.y,Wtmp = wrapped_functions.hos_forward(self.tape_tag, self.x, Vtmp, keep)
                 M = Wtmp.shape[0]
-                W = Wtmp.reshape((M,P,D))
+                self.W = Wtmp.reshape((M,P,D))
                 
             elif P > 1 and keep > 0:
                 raise NotImplementedError('ADOL-C doesn\'t support higher order vector forward with keep!\n \
@@ -74,27 +84,27 @@ class AdolcProgram(object):
                 
         # prepare outputs
         # ---------------
-        ry_list = []
+        self.ys = []
         count = 0
         for ns, s in enumerate(self.dependentVariableShapeList):
             M_ns = numpy.prod(s)
-            ry_list.append(y[count:count+M_ns].reshape(s))
+            self.ys.append(self.y[count:count+M_ns].reshape(s))
             count += M_ns
         
         if Vs != None:
-            rW_list = []
+            self.Ws = []
             count = 0
             for ns, s in enumerate(self.dependentVariableShapeList):
                 M_ns = numpy.prod(s)
-                rW_list.append(W[count:count+M_ns,:,:].reshape(s+(P,D)))
+                self.Ws.append(self.W[count:count+M_ns,:,:].reshape(s+(P,D)))
                 count += M_ns
                 
         # return outputs
         # --------------
         if Vs == None:
-            return ry_list
+            return self.ys
         else:
-            return (ry_list,rW_list)                
+            return (self.ys, self.Ws)                
 
 
     def reverse(self, Wbars):

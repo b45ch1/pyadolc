@@ -53,6 +53,6 @@ Export('adolc_include_path')
 SConscript('adolc/SConscript')
 SConscript('adolc/sparse/SConscript')
 
-env.Install( target='./build/adolc/', source = ['adolc/__init__.py','adolc/wrapped_functions.py','adolc/_adolc.so'])
+env.Install( target='./build/adolc/', source = ['adolc/__init__.py','adolc/wrapped_functions.py', 'adolc/cgraph.py','adolc/_adolc.so'])
 env.Install( target='./build/adolc/sparse/', source = ['adolc/sparse/__init__.py', 'adolc/sparse/_colpack.so', 'adolc/sparse/wrapped_functions.py'])
 
