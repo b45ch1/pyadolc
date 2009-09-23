@@ -2,6 +2,7 @@ import copy
 import numpy
 import numpy.testing
 import wrapped_functions
+
 class AdolcProgram(object):
     def __init__(self):
         self.tape_tag = None
@@ -16,10 +17,14 @@ class AdolcProgram(object):
         wrapped_functions.trace_off()
     
     def independent(self, x):
+        if numpy.ndim(x) == 0:
+            x = numpy.array([x])
         self.independentVariableShapeList.append(numpy.shape(x))
         wrapped_functions.independent(x)
         
     def dependent(self, x):
+        if numpy.ndim(x) == 0:
+            x = numpy.array([x])
         self.dependentVariableShapeList.append(numpy.shape(x))
         wrapped_functions.dependent(x)
         
@@ -49,10 +54,11 @@ class AdolcProgram(object):
         # -----------------
         rx_list = []
         for nx,x in enumerate(xs):
-            numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nx], numpy.shape(x))
+            
+            numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nx], numpy.shape(x), err_msg = '\ntaped xs[%d].shape != forward xs[%d]\n'%(nx,nx))
             rx = numpy.ravel(x)
             rx_list.append(rx)
-        self.x = numpy.ravel(rx_list)
+        self.x = numpy.concatenate(rx_list)
         
         if Vs != None:
             rV_list = []        

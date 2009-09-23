@@ -36,6 +36,29 @@ class TestAdolcProgram(TestCase):
         z,W = AP.forward([x,y],[Vx,Vy],keep=D+1)
         assert_array_almost_equal(z[0],x)
         assert_array_almost_equal(W[0],Vx)
+
+    def test_forward_scalar_independent_variables(self):
+        x = 1.
+        y = 2.
+        AP = AdolcProgram()
+        AP.trace_on(1)
+        ax = adouble(x)
+        ay = adouble(y)
+        AP.independent(ax)
+        AP.independent(ay)
+        az = ax * ay
+        AP.dependent(az)
+        AP.trace_off()
+        
+        P,D = 3,5
+        x = [1.]
+        y = [2.]        
+        Vx = numpy.ones((1,P,D))
+        Vy = numpy.ones((1,P,D))
+        
+        AP.forward([x,y],[Vx,Vy])
+        
+        
         
         
     def test_reverse(self):
