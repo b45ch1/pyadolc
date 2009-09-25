@@ -76,7 +76,7 @@ class TestAdolcProgram(TestCase):
         Vx = numpy.ones( x.shape + (P,D))
         Vy = numpy.ones( y.shape + (P,D))
         z,W = AP.forward([x,y],[Vx,Vy],keep=D+1)
-        Q = 5
+        Q = 7
         Wbar = numpy.random.rand( *( (Q,) + z[0].shape + (P,D+1,)))
         Vbar_list = AP.reverse([Wbar])
         

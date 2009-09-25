@@ -150,8 +150,6 @@ class AdolcProgram(object):
                 wrapped_functions.hos_forward(self.tape_tag, self.x, Vtmp, D+1)
             (Vbar[:,:,p,:],nz) = wrapped_functions.hov_ti_reverse(self.tape_tag, Wbar[:,:,p,:])
             
-        print Vbar.shape
-
         # prepare output
         rVbar_list = []
         count = 0
