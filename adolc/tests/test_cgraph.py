@@ -57,9 +57,7 @@ class TestAdolcProgram(TestCase):
         Vy = numpy.ones((1,P,D))
         
         AP.forward([x,y],[Vx,Vy])
-        
-        
-        
+
         
     def test_reverse(self):
         x = numpy.random.rand(*(2,3,4))
@@ -74,14 +72,15 @@ class TestAdolcProgram(TestCase):
         AP.dependent(az)
         AP.trace_off()
         
-        D,P = 3,1
+        D,P = 2,4
         Vx = numpy.ones( x.shape + (P,D))
         Vy = numpy.ones( y.shape + (P,D))
         z,W = AP.forward([x,y],[Vx,Vy],keep=D+1)
         Q = 5
-        Wbar = numpy.random.rand( *( (Q,) + z[0].shape + (D+1,)))
+        Wbar = numpy.random.rand( *( (Q,) + z[0].shape + (P,D+1,)))
         Vbar_list = AP.reverse([Wbar])
         
+        assert_array_equal(Vbar_list[0].shape,(Q,2,3,4,P,D+1))
         assert_array_almost_equal(Vbar_list[0],Wbar)
         
         

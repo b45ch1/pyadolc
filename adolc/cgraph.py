@@ -75,7 +75,7 @@ class AdolcProgram(object):
         
         else:
             N,P,D = self.V.shape
-            if P >= 1 and keep == 0:
+            if P > 1:
                 self.y,self.W = wrapped_functions.hov_forward(self.tape_tag, self.x, self.V)
                 
             elif P == 1 and keep > 0:
@@ -84,9 +84,9 @@ class AdolcProgram(object):
                 M = Wtmp.shape[0]
                 self.W = Wtmp.reshape((M,P,D))
                 
-            elif P > 1 and keep > 0:
-                raise NotImplementedError('ADOL-C doesn\'t support higher order vector forward with keep!\n \
-                    workaround: several runs forward with P=1')                      
+            # elif P > 1 and keep > 0:
+                # raise NotImplementedError('ADOL-C doesn\'t support higher order vector forward with keep!\n \
+                    # workaround: several runs forward with P=1')                      
                 
         # prepare outputs
         # ---------------
@@ -121,20 +121,36 @@ class AdolcProgram(object):
         generic call is:
         [Vbar1,Vbar2,...] = self.reverse([Wbar1,Wbar2,...])
         where
-        Wbari is an array of shape (Q, yi.shape, D+1)
-        Vbari is an array of shape (Q, xi.shape, D+1)
+        Wbari is an array of shape (Q, yi.shape, P, D+1)
+        Vbari is an array of shape (Q, xi.shape, P, D+1)
         """
         
-        # prepare Wbar
+        # prepare Wbar as (Q,M,P,D+1) array
         rWbar_list = []        
         for m,Wbar in enumerate(Wbars):
             Wbar_shp = numpy.shape(Wbar)
-            numpy.testing.assert_array_almost_equal(self.dependentVariableShapeList[m], Wbar_shp[1:-1])
-            rWbar_list.append(numpy.reshape(Wbar, (Wbar_shp[0],) + (numpy.prod(Wbar_shp[1:-1]),) + (Wbar_shp[-1],)))
+            numpy.testing.assert_equal(len(self.dependentVariableShapeList[m])+3, numpy.ndim(Wbar), err_msg='Wbar.shape must be (Q, yi.shape,P, D+1) but provided %s'%(str(Wbar_shp)))
+            numpy.testing.assert_array_almost_equal(self.dependentVariableShapeList[m], Wbar_shp[1:-2], \
+                err_msg = 'taped: Wbar.shape = %s but provided: Wbar.shape = %s '%(str(self.dependentVariableShapeList[m]),str(Wbar_shp[1:-2])))
+
+        rWbar_list.append(numpy.reshape(Wbar, (Wbar_shp[0],) + (numpy.prod(Wbar_shp[1:-2]),) + Wbar_shp[-2:]))
         Wbar = numpy.ascontiguousarray(numpy.concatenate(rWbar_list,axis=1))
         
-        # call ADOL-C function
-        (Vbar,nz) = wrapped_functions.hov_ti_reverse(self.tape_tag, Wbar)
+        N,PV,DV = self.V.shape
+        Q,M,P,Dp1 = Wbar.shape
+        D = Dp1 - 1
+        assert PV == P and DV == D
+        
+        # call ADOL-C function, if P>1 repeat hos_forwards with keep then hov_ti_reverse
+        # if P==1 then call direclty hov_ti_reverse
+        Vbar = numpy.zeros((Q,N,P,D+1))
+        for p in range(P):
+            if P>1:
+                Vtmp = self.V[:,p,:]
+                wrapped_functions.hos_forward(self.tape_tag, self.x, Vtmp, D+1)
+            (Vbar[:,:,p,:],nz) = wrapped_functions.hov_ti_reverse(self.tape_tag, Wbar[:,:,p,:])
+            
+        print Vbar.shape
 
         # prepare output
         rVbar_list = []
@@ -142,8 +158,7 @@ class AdolcProgram(object):
         for n, s in enumerate(self.independentVariableShapeList):
             Nx = numpy.prod(s)
             Q = Vbar.shape[0]
-            D = Vbar.shape[-1] - 1
-            rVbar_list.append(Vbar[:,count:count+Nx,:].reshape((Q,) + s+(D+1,)))
+            rVbar_list.append(Vbar[:,count:count+Nx,:].reshape((Q,) + s+(P,Dp1,)))
             count += Nx
             
         # return output
