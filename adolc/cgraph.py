@@ -129,7 +129,8 @@ class AdolcProgram(object):
         rWbar_list = []        
         for m,Wbar in enumerate(Wbars):
             Wbar_shp = numpy.shape(Wbar)
-            numpy.testing.assert_equal(len(self.dependentVariableShapeList[m])+3, numpy.ndim(Wbar), err_msg='Wbar.shape must be (Q, yi.shape,P, D+1) but provided %s'%(str(Wbar_shp)))
+            numpy.testing.assert_equal(len(self.dependentVariableShapeList[m])+3, numpy.ndim(Wbar), err_msg='Wbar.shape must be (Q, yi.shape,P, D+1)=%s but provided %s' \
+            %( '(Q,'+str(self.dependentVariableShapeList[m]) +',P,D+1)' ,str(Wbar_shp)))
             numpy.testing.assert_array_almost_equal(self.dependentVariableShapeList[m], Wbar_shp[1:-2], \
                 err_msg = 'taped: Wbar.shape = %s but provided: Wbar.shape = %s '%(str(self.dependentVariableShapeList[m]),str(Wbar_shp[1:-2])))
 
