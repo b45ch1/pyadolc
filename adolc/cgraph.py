@@ -28,6 +28,17 @@ class AdolcProgram(object):
         self.dependentVariableShapeList.append(numpy.shape(x))
         wrapped_functions.dependent(x)
         
+    def jacobian(self, xs):
+        rx_list = []
+        for nx,x in enumerate(xs):
+            
+            numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nx], numpy.shape(x), err_msg = '\ntaped xs[%d].shape != forward xs[%d]\n'%(nx,nx))
+            rx = numpy.ravel(x)
+            rx_list.append(rx)
+        self.x = numpy.concatenate(rx_list)
+        return wrapped_functions.jacobian(self.tape_tag, self.x)
+        
+        
     def forward(self, xs, Vs = None,  keep = 0):
         """
         convenience function that internall calls the appropriate adolc functions

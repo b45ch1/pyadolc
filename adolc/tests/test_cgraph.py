@@ -84,6 +84,27 @@ class TestAdolcProgram(TestCase):
         assert_array_almost_equal(Vbar_list[0],Wbar)
         
         
+    def test_jacobian(self):
+        A = numpy.random.rand(5,4)
+        x = numpy.random.rand(4)
+        y = numpy.random.rand(4)
+        
+        def f(x):
+            return numpy.dot(A,x)
+        
+        AP = AdolcProgram()
+        AP.trace_on(1)
+        ax = adouble(x)
+        AP.independent(ax)
+        af = f(ax) 
+        AP.dependent(af)
+        AP.trace_off()
+        
+        J = AP.jacobian([y])
+        assert_array_almost_equal(J, A)
+        
+        
+        
 if __name__ == "__main__":
     run_module_suite()
 
