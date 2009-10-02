@@ -249,17 +249,12 @@ class TestNonlinearRegression(TestCase):
     
     def test_nonlinear_regression(self):
         """
-        From the Scipy Mailing List, written by Sturla Molden and corrected by Pauli Virtanen:
-       
-       Sturla Molden:
-       I was trying to fit some Michaelis-Menten data from Bates and Watts
-        (1988) puromycin experiment to test non-linear regression in SciPy. I
-        get some very strange results that I don't understand.
-        
-        First the non-linear model to be fitted is:
-        
-        y = Vmax * x / (x + Km)
+        Original code from the Scipy Mailing List posted by Sturla Molden
 
+        Goal: Regression of a nonlinear model
+            y = Vmax * x / (x + Km)
+            
+        Check here that the leastsq function working with the  ADOLC computed jacobian gives the correct result.
         """
         
         import numpy as np
