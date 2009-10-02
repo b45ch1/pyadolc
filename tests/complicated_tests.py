@@ -451,97 +451,95 @@ class TestNonlinearRegression(TestCase):
         assert_array_almost_equal(m.gobj_finite_differences(x0), m.gobj_adolc(x0), decimal = 3)
 
 
+class TestDifferentiatedIntegrators(TestCase):
 
-
-def Runge_Kutta_step_to_test_hov_forward():
-    # defining the butcher tableau
-    c =      numpy.array([0., 1./4., 3./8., 12./13., 1., 1./2. ], dtype=float)
-    b =      numpy.array([16./135., 0., 6656./12825., 28561./56430., -9./50., 2./55.], dtype=float)
-    A      = numpy.array([[0.,0.,0.,0.,0.,0.],
-                        [1./4., 0., 0., 0., 0., 0.],
-                        [3./32., 9./32., 0., 0., 0., 0.],
-                        [1932./2197., -7200./2197., 7296./2197., 0., 0., 0.],
-                        [439./216., -8., 3680./513., -845./4104., 0., 0.],
-                        [-8./27., 2., -3544./2565., 1859./4104., -11./40., 0.]]
-                        , dtype=float)
+    def Runge_Kutta_step_to_test_hov_forward(self):
+        # defining the butcher tableau
+        c =      numpy.array([0., 1./4., 3./8., 12./13., 1., 1./2. ], dtype=float)
+        b =      numpy.array([16./135., 0., 6656./12825., 28561./56430., -9./50., 2./55.], dtype=float)
+        A      = numpy.array([[0.,0.,0.,0.,0.,0.],
+                            [1./4., 0., 0., 0., 0., 0.],
+                            [3./32., 9./32., 0., 0., 0., 0.],
+                            [1932./2197., -7200./2197., 7296./2197., 0., 0., 0.],
+                            [439./216., -8., 3680./513., -845./4104., 0., 0.],
+                            [-8./27., 2., -3544./2565., 1859./4104., -11./40., 0.]]
+                            , dtype=float)
+            
+        # define the rhs of the ODE
+        def f(t,x,p):
+            return numpy.array([x[1], -2.*p[0]*x[1] - p[1]*p[1]*x[0]])
+    
+        # set the initial values
+        t = 0.
+        h = 0.01
+        x = numpy.array([1.,0.], dtype=float)
+        p  = numpy.array([0.1, 3.]) # p=(r,omega)
+        V = numpy.zeros((4, 2, 1), dtype=float)
+        V[2:,:,0] = numpy.eye(2, dtype=float)
+        N = numpy.size(x)
+        S = numpy.size(b)
+    
         
-    # define the rhs of the ODE
-    def f(t,x,p):
-        return numpy.array([x[1], -2.*p[0]*x[1] - p[1]*p[1]*x[0]])
-
-    # set the initial values
-    t = 0.
-    h = 0.01
-    x = numpy.array([1.,0.], dtype=float)
-    p  = numpy.array([0.1, 3.]) # p=(r,omega)
-    V = numpy.zeros((4, 2, 1), dtype=float)
-    V[2:,:,0] = numpy.eye(2, dtype=float)
-    N = numpy.size(x)
-    S = numpy.size(b)
-
     
-
-    # tape Runge Kutta step
-    trace_on(1)
-    at = adouble(t)
-    ah = adouble(h)
-    ax = adouble(x)
-    ap = adouble(p)
-    ak = adouble(numpy.zeros((S, N)))
-    
-    independent(ax)
-    independent(ap)
-    
-    for s in range(S):
-        ak[s,:] = f(at + ah * c, ax + ah * numpy.dot(A[s,:], ak), ap)
-    ay = ax[:] +  ah * numpy.dot(b, ak)
-
-    dependent(ay)
-    trace_off()
-
-    z = numpy.concatenate([x,p])
-    (y,W) = hov_forward(1, z, V)
-
-    def phi(t,r,w,x):
-        return x*(w**2 - r**2)**(-1./2)*(r*numpy.sin(t*(w**2 - r**2)**(1./2)) + (w**2 - r**2)**(1./2)*numpy.cos(t*(w**2 - r**2)**(1./2)))*numpy.exp(-r*t)
-
-    def dphidr(t,r,w,x):
-        return x*(w**2 - r**2)**(-1./2.)*(r*t*numpy.sin(t*(w**2 - r**2)**(1./2.)) - r*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) - t*r**2*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) + numpy.sin(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) + r*x*(w**2 - r**2)**(-3./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) - t*x*(w**2 - r**2)**(-1./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t)
+        # tape Runge Kutta step
+        trace_on(1)
+        at = adouble(t)
+        ah = adouble(h)
+        ax = adouble(x)
+        ap = adouble(p)
+        ak = adouble(numpy.zeros((S, N)))
         
+        independent(ax)
+        independent(ap)
+        
+        for s in range(S):
+            ak[s,:] = f(at + ah * c, ax + ah * numpy.dot(A[s,:], ak), ap)
+        ay = ax[:] +  ah * numpy.dot(b, ak)
+    
+        dependent(ay)
+        trace_off()
+    
+        z = numpy.concatenate([x,p])
+        (y,W) = hov_forward(1, z, V)
+    
+        def phi(t,r,w,x):
+            return x*(w**2 - r**2)**(-1./2)*(r*numpy.sin(t*(w**2 - r**2)**(1./2)) + (w**2 - r**2)**(1./2)*numpy.cos(t*(w**2 - r**2)**(1./2)))*numpy.exp(-r*t)
+    
+        def dphidr(t,r,w,x):
+            return x*(w**2 - r**2)**(-1./2.)*(r*t*numpy.sin(t*(w**2 - r**2)**(1./2.)) - r*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) - t*r**2*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) + numpy.sin(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) + r*x*(w**2 - r**2)**(-3./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) - t*x*(w**2 - r**2)**(-1./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t)
+            
+    
+        def dphidw(t,r,w,x):
+            return x*(w**2 - r**2)**(-1./2.)*(w*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) - t*w*numpy.sin(t*(w**2 - r**2)**(1./2.)) + r*t*w*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) - w*x*(w**2 - r**2)**(-3./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t)
+    
+        y_exact = phi(h,p[0],p[1],x[0])
+        W_exact = numpy.array([  dphidr(h,p[0],p[1],x[0]),  dphidw(h,p[0],p[1],x[0]) ])
+    
+        assert_almost_equal(W[0,:,0], W_exact)
+        assert_almost_equal(y[0],y_exact)
 
-    def dphidw(t,r,w,x):
-        return x*(w**2 - r**2)**(-1./2.)*(w*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)) - t*w*numpy.sin(t*(w**2 - r**2)**(1./2.)) + r*t*w*(w**2 - r**2)**(-1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t) - w*x*(w**2 - r**2)**(-3./2.)*(r*numpy.sin(t*(w**2 - r**2)**(1./2.)) + (w**2 - r**2)**(1./2.)*numpy.cos(t*(w**2 - r**2)**(1./2.)))*numpy.exp(-r*t)
 
-    y_exact = phi(h,p[0],p[1],x[0])
-    W_exact = numpy.array([  dphidr(h,p[0],p[1],x[0]),  dphidw(h,p[0],p[1],x[0]) ])
-
-    assert_almost_equal(W[0,:,0], W_exact)
-    assert_almost_equal(y[0],y_exact)
-
-
-
-
-    # plot to check the analytical solution
-    #eps = 10**-16
-    #epsilon = numpy.sqrt(eps)
-
-    #import pylab
-    #pylab.figure()
-    #ts = numpy.linspace(0,50,1000)
-    #phis    = phi(ts,p[0],p[1],x[0])
-    #dphidrs = dphidr(ts,p[0],p[1],x[0])
-    #dphidws = dphidw(ts,p[0],p[1],x[0])
-    #dphidrsfd = (phi(ts,p[0] + epsilon,p[1],x[0]) - phi(ts,p[0],p[1],x[0]))/epsilon
-    #dphidwsfd = (phi(ts,p[0],p[1] + epsilon,x[0]) - phi(ts,p[0],p[1],x[0]))/epsilon
-    #pylab.plot(ts, phis, 'b-', label=r'$x(t)$')
-    #pylab.plot(ts,dphidrs,'r-', label = r' $\frac{d x}{d r}(t)$' )
-    #pylab.plot(ts,dphidws,'g-', label = r' $\frac{d x}{d w}(t)$' )
-    #pylab.plot(ts,dphidrsfd,'r.', label = r'FD: $\frac{d x}{d r}(t)$' )
-    #pylab.plot(ts,dphidwsfd,'g.', label = r'FD: $\frac{d x}{d w}(t)$' )
-
-    #pylab.legend()
-    #pylab.show()
-    ##assert False
+        # plot to check the analytical solution
+        #eps = 10**-16
+        #epsilon = numpy.sqrt(eps)
+    
+        #import pylab
+        #pylab.figure()
+        #ts = numpy.linspace(0,50,1000)
+        #phis    = phi(ts,p[0],p[1],x[0])
+        #dphidrs = dphidr(ts,p[0],p[1],x[0])
+        #dphidws = dphidw(ts,p[0],p[1],x[0])
+        #dphidrsfd = (phi(ts,p[0] + epsilon,p[1],x[0]) - phi(ts,p[0],p[1],x[0]))/epsilon
+        #dphidwsfd = (phi(ts,p[0],p[1] + epsilon,x[0]) - phi(ts,p[0],p[1],x[0]))/epsilon
+        #pylab.plot(ts, phis, 'b-', label=r'$x(t)$')
+        #pylab.plot(ts,dphidrs,'r-', label = r' $\frac{d x}{d r}(t)$' )
+        #pylab.plot(ts,dphidws,'g-', label = r' $\frac{d x}{d w}(t)$' )
+        #pylab.plot(ts,dphidrsfd,'r.', label = r'FD: $\frac{d x}{d r}(t)$' )
+        #pylab.plot(ts,dphidwsfd,'g.', label = r'FD: $\frac{d x}{d w}(t)$' )
+    
+        #pylab.legend()
+        #pylab.show()
+        ##assert False
 
 
 
