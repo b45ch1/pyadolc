@@ -89,7 +89,7 @@ class AdolcProgram(object):
             if P > 1:
                 self.y,self.W = wrapped_functions.hov_forward(self.tape_tag, self.x, self.V)
                 
-            elif P == 1 and keep > 0:
+            elif P == 1:
                 Vtmp = self.V.reshape((N,D))
                 self.y,Wtmp = wrapped_functions.hos_forward(self.tape_tag, self.x, Vtmp, keep)
                 M = Wtmp.shape[0]
