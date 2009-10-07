@@ -140,27 +140,65 @@ class AdolcProgram(object):
         rWbar_list = []        
         for m,Wbar in enumerate(Wbars):
             Wbar_shp = numpy.shape(Wbar)
-            numpy.testing.assert_equal(len(self.dependentVariableShapeList[m])+3, numpy.ndim(Wbar), err_msg='Wbar.shape must be (Q, yi.shape,P, D+1)=%s but provided %s' \
-            %( '(Q,'+str(self.dependentVariableShapeList[m]) +',P,D+1)' ,str(Wbar_shp)))
-            numpy.testing.assert_array_almost_equal(self.dependentVariableShapeList[m], Wbar_shp[1:-2], \
-                err_msg = 'taped: Wbar.shape = %s but provided: Wbar.shape = %s '%(str(self.dependentVariableShapeList[m]),str(Wbar_shp[1:-2])))
+            try:
+                assert len(self.dependentVariableShapeList[m])+3 == numpy.ndim(Wbar)
+            except:
+               raise ValueError('Wbar.shape must be (Q, yi.shape,P, D+1)=%s but provided %s'%( '(Q,'+str(self.dependentVariableShapeList[m]) +',P,D+1)' ,str(Wbar_shp)))
+            try:
+                assert self.dependentVariableShapeList[m] ==  Wbar_shp[1:-2]
+            except:                
+                raise ValueError('taped: Wbar.shape = %s but provided: Wbar.shape = %s '%(str(self.dependentVariableShapeList[m]),str(Wbar_shp[1:-2])))
 
         rWbar_list.append(numpy.reshape(Wbar, (Wbar_shp[0],) + (numpy.prod(Wbar_shp[1:-2]),) + Wbar_shp[-2:]))
         Wbar = numpy.ascontiguousarray(numpy.concatenate(rWbar_list,axis=1))
         
-        N,PV,DV = self.V.shape
-        Q,M,P,Dp1 = Wbar.shape
-        D = Dp1 - 1
-        assert PV == P and DV == D
-        
-        # call ADOL-C function, if P>1 repeat hos_forwards with keep then hov_ti_reverse
-        # if P==1 then call direclty hov_ti_reverse
-        Vbar = numpy.zeros((Q,N,P,D+1))
-        for p in range(P):
-            if P>1:
-                Vtmp = self.V[:,p,:]
-                wrapped_functions.hos_forward(self.tape_tag, self.x, Vtmp, D+1)
-            (Vbar[:,:,p,:],nz) = wrapped_functions.hov_ti_reverse(self.tape_tag, Wbar[:,:,p,:])
+        if self.Vs != None:
+            """ this branch is executed after a forward(xs, Vs!=None)"""
+            N,PV,DV = self.V.shape
+            Q,M,P,Dp1 = Wbar.shape
+            D = Dp1 - 1
+            try:
+                assert PV == P
+            except:
+                raise ValueError('The number of directions P=%d in the forward run does not match the number of directions P=%d for the reverse run'%(PV,P))
+            try:
+                assert DV == D
+            except:            
+                raise ValueError('The degree D=%d in the forward run does not match the degree D=%d for the reverse run'%(DV,D))
+            
+            # call ADOL-C function, if P>1 repeat hos_forwards with keep then hov_ti_reverse
+            # if P==1 then call direclty hov_ti_reverse
+            Vbar = numpy.zeros((Q,N,P,D+1))
+            for p in range(P):
+                if P>1:
+                    Vtmp = self.V[:,p,:]
+                    wrapped_functions.hos_forward(self.tape_tag, self.x, Vtmp, D+1)
+                (Vbar[:,:,p,:],nz) = wrapped_functions.hov_ti_reverse(self.tape_tag, Wbar[:,:,p,:])
+                
+            
+        else:
+            """ this branch is executed after a forward(xs, Vs==None)"""
+            Q,M,P,Dp1 = Wbar.shape
+            D = Dp1 - 1
+            N = self.x.size
+            
+            try:
+                assert Dp1 == 1
+            except:
+                raise ValueError('You ran a forward(xs, Vs=None) and therefore in Wbar.shape =(Q,M,P,D+1) D should be 0. You provided D=%d.'%D)
+                
+            try:
+                assert P == 1
+            except:
+                raise ValueError('You ran a forward(xs, Vs=None) and therefore in Wbar.shape =(Q,M,P,D+1) P should be 1. You provided P=%d.'%P)
+            
+            
+            Vbar = numpy.zeros((Q,N,P,D+1))
+            # print 'Vbar.shape',Vbar.shape
+            # print 'Wbar.shape',Wbar.shape
+            wrapped_functions.zos_forward(self.tape_tag, self.x, keep=1)
+            Vbar[:,:,0,:] = wrapped_functions.hov_ti_reverse(self.tape_tag, Wbar[:,:,0,:])[0]
+            
             
         # prepare output
         rVbar_list = []
@@ -172,8 +210,7 @@ class AdolcProgram(object):
             count += Nx
             
         # return output
-        return rVbar_list
-        
+        return rVbar_list            
             
     def __str__(self):
         return 'AdolcProgram with tape_tag=%d \n and tapestats=%s'%(self.tape_tag, str(wrapped_functions.tapestats(self.tape_tag)))

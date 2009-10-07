@@ -642,12 +642,10 @@ def hos_ov_reverse(tape_tag, P, U):
 
 def tape_to_latex(tape_tag,x,y):
     """
-,	"\n\ntape_to_latex(tape_tag,x,y)
-                                            "F:R^N -> R^M
-                                            "x is N-vector  y is M-vector\n
-                                            "writes the tape to a file called tape_x.tex that can be compile with Latex\n
-                                            
-
+    tape_to_latex(tape_tag,x,y)
+    F:R^N -> R^M
+    x is N-vector  y is M-vector
+    writes the tape to a file called tape_x.tex that can be compile with Latex
     """
     assert type(tape_tag) == int
     x = numpy.ascontiguousarray(x, dtype=float)
