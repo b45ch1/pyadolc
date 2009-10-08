@@ -5,6 +5,17 @@ import wrapped_functions
 
 class AdolcProgram(object):
     def __init__(self):
+        """
+        This class provides a thin wrapper of the the wrapped ADOL-C functions as hov_forward, hos_forward, etc.
+        The rationale is to provide a workaround for all the quirks in ADOL-C.
+        
+        Using this class allows you:
+            * provide a list  of input arguments xs (and optionally their corresponding directions Vs)
+            * each input argument may be of arbitrary shape, e.g. xs[i].shape = (3,5,6)
+            * it is possible to call a vector forward with P directions and then call a vector reverse with Q directions
+            
+        For more information see the doc of `AdolcProgram.forward` and `AdolcProgram.reverse`.
+        """
         self.tape_tag = None
         self.independentVariableShapeList = []
         self.dependentVariableShapeList = []
