@@ -212,6 +212,7 @@ class AdolcProgram(object):
             
             
         # prepare output
+        self.Vbar = Vbar
         rVbar_list = []
         count = 0
         for n, s in enumerate(self.independentVariableShapeList):
