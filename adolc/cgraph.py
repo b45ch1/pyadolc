@@ -97,7 +97,7 @@ class AdolcProgram(object):
         
         else:
             N,P,D = self.V.shape
-            if P > 1:
+            if keep == 0:
                 self.y,self.W = wrapped_functions.hov_forward(self.tape_tag, self.x, self.V)
                 
             elif P == 1:
@@ -106,9 +106,9 @@ class AdolcProgram(object):
                 M = Wtmp.shape[0]
                 self.W = Wtmp.reshape((M,P,D))
                 
-            # elif P > 1 and keep > 0:
-                # raise NotImplementedError('ADOL-C doesn\'t support higher order vector forward with keep!\n \
-                    # workaround: several runs forward with P=1')                      
+            elif P > 1 and keep > 0:
+                raise NotImplementedError('ADOL-C doesn\'t support higher order vector forward with keep!\n \
+                    workaround: several runs forward with P=1')
                 
         # prepare outputs
         # ---------------
