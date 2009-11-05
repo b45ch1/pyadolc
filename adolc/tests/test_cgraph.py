@@ -73,12 +73,11 @@ class TestAdolcProgram(TestCase):
         AP.trace_off()
         
         P,D = 3,5
-        x = [1.]
+        x = 1.
         y = [2.,3.]
         Vx = numpy.ones((1,P,D))
         Vy = numpy.ones((2,P,D))
-        
-        AP.forward([x,y],[Vx,Vy]) 
+        AP.forward([x,y],[Vx,Vy])
 
         
     def test_reverse(self):

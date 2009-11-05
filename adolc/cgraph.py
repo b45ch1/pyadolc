@@ -76,7 +76,8 @@ class AdolcProgram(object):
         # -----------------
         rx_list = []
         for nx,x in enumerate(xs):
-            
+            if numpy.isscalar(x):
+                x = numpy.asarray([x])
             numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nx], numpy.shape(x), err_msg = '\ntaped xs[%d].shape != forward xs[%d]\n'%(nx,nx))
             rx = numpy.ravel(x)
             rx_list.append(rx)
