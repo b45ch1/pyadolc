@@ -52,11 +52,33 @@ class TestAdolcProgram(TestCase):
         
         P,D = 3,5
         x = [1.]
-        y = [2.]        
+        y = [2.]
         Vx = numpy.ones((1,P,D))
         Vy = numpy.ones((1,P,D))
         
         AP.forward([x,y],[Vx,Vy])
+
+
+    def test_forward_mixed_vector_scalar_independent_variables(self):
+        x = 1.
+        y = numpy.array([2.,4.])
+        AP = AdolcProgram()
+        AP.trace_on(1)
+        ax = adouble(x)
+        ay = adouble(y)
+        AP.independent(ax)
+        AP.independent(ay)
+        az = ax * ay
+        AP.dependent(az)
+        AP.trace_off()
+        
+        P,D = 3,5
+        x = [1.]
+        y = [2.,3.]
+        Vx = numpy.ones((1,P,D))
+        Vy = numpy.ones((2,P,D))
+        
+        AP.forward([x,y],[Vx,Vy]) 
 
         
     def test_reverse(self):
