@@ -87,7 +87,10 @@ class AdolcProgram(object):
             rV_list = []        
             for nV,V in enumerate(Vs):
                 V_shp = numpy.shape(V)
-                numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nV], V_shp[:-2])
+                try:
+                    numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nV], V_shp[:-2])
+                except:
+                    raise ValueError('taped independentVariableShapeList = %s\n but supplied Vs = %s'%(str(self.independentVariableShapeList), str(map(numpy.shape, Vs))))
                 rV_list.append(numpy.reshape(V, (numpy.prod(V_shp[:-2]),) + V_shp[-2:]))
             self.V = numpy.ascontiguousarray(numpy.concatenate(rV_list,axis=0))
             
