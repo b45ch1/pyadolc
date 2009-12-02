@@ -125,7 +125,9 @@ class TestAdolcProgram(TestCase):
         assert_array_almost_equal(J, A)
         
         
-        
-if __name__ == "__main__":
-    run_module_suite()
-
+if __name__ == '__main__':
+    try:
+        import nose
+    except:
+        print 'Please install nose for unit testing'
+    nose.runmodule()
