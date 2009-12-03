@@ -185,7 +185,7 @@ class AdolcProgram(object):
             # if P==1 then call direclty hov_ti_reverse
             Vbar = numpy.zeros((Q,N,P,D+1))
             for p in range(P):
-                if P>1:
+                if P>=1:
                     Vtmp = self.V[:,p,:]
                     wrapped_functions.hos_forward(self.tape_tag, self.x, Vtmp, D+1)
                 (Vbar[:,:,p,:],nz) = wrapped_functions.hov_ti_reverse(self.tape_tag, Wbar[:,:,p,:])
