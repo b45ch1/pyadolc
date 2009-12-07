@@ -56,23 +56,41 @@ class Tangent:
         retval = self.clone()
         retval += rhs
         return retval
-    
-
+        
+    def __sub__(self, rhs):
+        retval = self.clone()
+        retval -= rhs
+        return retval        
 
     def __mul__(self, rhs):
         retval = self.clone()
         retval *= rhs
-        return retval        
+        return retval
+        
+    def __div__(self, rhs):
+        retval = self.clone()
+        retval /= rhs
+        return retval
 
     def __iadd__(self,rhs):
         if isinstance(rhs, Tangent):
-           self.x = self.x + rhs.x
+           self.x += rhs.x
            self.xdot += rhs.xdot
         
         else:
             self.x += rhs
             
         return self
+        
+    def __isub__(self,rhs):
+        if isinstance(rhs, Tangent):
+           self.x -= rhs.x
+           self.xdot -= rhs.xdot
+        
+        else:
+            self.x -= rhs
+            
+        return self        
         
     def __imul__(self,rhs):
         if isinstance(rhs, Tangent):
@@ -84,7 +102,19 @@ class Tangent:
             self.xdot *= rhs
             self.x *= rhs
             
-        return self        
+        return self
+        
+    def __idiv__(self,rhs):
+        if isinstance(rhs, Tangent):
+            self.x /= rhs.x
+            self.xdot -= self.x * rhs.xdot
+            self.xdot /= rhs.x
+        
+        else:
+            self.xdot /= rhs
+            self.x /= rhs
+            
+        return self
 
 
 
