@@ -1,4 +1,4 @@
-import copy
+import numpy
 import adolc._adolc
 
 class Tangent:
@@ -38,13 +38,32 @@ class Tangent:
         self.xdot = xdot
         
     def clone(self):
-        return Tangent(self.x.clone(), self.xdot.clone())
+        if numpy.isscalar(self.x):
+            x = self.x
+        
+        else:
+            x = self.x.clone()
+        
+        if numpy.isscalar(self.xdot):
+            xdot = self.xdot
+        
+        else:
+            xdot = self.xdot.clone()
+            
+        return Tangent(x,xdot)
         
     def __add__(self, rhs):
         retval = self.clone()
         retval += rhs
         return retval
     
+
+
+    def __mul__(self, rhs):
+        retval = self.clone()
+        retval *= rhs
+        return retval        
+
     def __iadd__(self,rhs):
         if isinstance(rhs, Tangent):
            self.x = self.x + rhs.x
@@ -52,14 +71,21 @@ class Tangent:
         
         else:
             self.x += rhs
-            self.xdot += rhs
-
-    def __mul__(self, rhs):
+            
+        return self
+        
+    def __imul__(self,rhs):
         if isinstance(rhs, Tangent):
-            return Tangent( self.x * rhs.x, self.x * rhs.xdot + self.xdot * rhs.x)
+            self.xdot *= rhs.x
+            self.xdot += self.x * rhs.xdot
+            self.x *= rhs.x
         
         else:
-            return Tangent( self.x * rhs,  self.xdot * rhs)
+            self.xdot *= rhs
+            self.x *= rhs
+            
+        return self        
+
 
 
     def __radd__(self, lhs):

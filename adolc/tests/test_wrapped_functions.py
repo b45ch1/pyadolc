@@ -522,7 +522,7 @@ class HighLevelFunctionsTests ( TestCase ):
             trace_off()
             u = numpy.random.rand(M)
             uJ = numpy.dot(u,A)
-            assert_array_almost_equal( uJ, vec_jac(r,x,u, 0))		
+            assert_array_almost_equal( uJ, vec_jac(r,x,u, 0))
             
             
     def test_hov_forward(self):

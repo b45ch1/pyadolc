@@ -11,20 +11,25 @@ class TangentOperationsTests(TestCase):
         t1 = Tangent(1,2)
         t2 = Tangent(adouble(1),2)
 
-    def test_float_tangent_float_tangent_multiplication(self):
+    def test_float_tangent_float_tangent(self):
         tx = Tangent(2,3)
         ty = Tangent(5,7)
         
         tz = tx * ty
-        
         assert_array_almost_equal([tz.x,tz.xdot], [2*5, 3*5 + 2*7])
         
-    def test_double_tangent_adouble_multiplication(self):
+        tz = tx + ty
+        assert_array_almost_equal([tz.x,tz.xdot], [2+5, 3+7])
+        
+    def test_double_tangent_adouble(self):
         tx = Tangent(2,3)
         ay = adouble(5)
         
         tz = tx * ay
         assert_array_almost_equal([tz.x.val,tz.xdot.val], [2*5, 3*5])
+        
+        tz = tx + ay
+        assert_array_almost_equal([tz.x.val,tz.xdot], [2+5, 3])        
         
         
     def test_adouble_tangent_adouble_addition(self):
