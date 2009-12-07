@@ -16,6 +16,13 @@ int get_size_of_short(){ return static_cast<int>(sizeof(short)); }
 int get_size_of_int(){ return static_cast<int>(sizeof(int)); }
 int get_size_of_long(){ return static_cast<int>(sizeof(long)); }
 
+adouble clone_adouble(const adouble &rhs){
+	return adouble(rhs);
+}
+
+adub clone_adub(const adub &rhs){
+	return adub(rhs);
+}
 
 extern adub exp		( const badouble& );
 extern adub log		( const badouble& );
@@ -349,6 +356,8 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("fmin", fmin_adub_badouble_badouble)
 			.def("fmin", fmin_adub_double_badouble)
 			.def("fmin", fmin_adub_badouble_double)
+			.def("clone", clone_adouble)
+			.def("clone", clone_adub)
 	;
 
 	class_<adub, bases<badouble> >("adub", no_init)
