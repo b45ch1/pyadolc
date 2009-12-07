@@ -31,11 +31,11 @@ class TangentOperationsTests(TestCase):
         tx = Tangent(2,3)
         ay = adouble(5)
         
+        tz = tx + ay
+        assert_array_almost_equal([tz.x.val,tz.xdot], [2+5, 3])           
+        
         tz = tx * ay
         assert_array_almost_equal([tz.x.val,tz.xdot.val], [2*5, 3*5])
-        
-        tz = tx + ay
-        assert_array_almost_equal([tz.x.val,tz.xdot], [2+5, 3])        
         
     def test_adouble_tangent_adouble_addition(self):
         tx = Tangent(adouble(2), 1)
