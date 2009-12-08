@@ -44,6 +44,53 @@ class TangentOperationsTests(TestCase):
         assert_array_almost_equal([tz.x.val,tz.xdot], [5, 1])
 
 
+class SemiImplicitOdeLhsTest(TestCase):
+    """
+    This is a test example taken from PYSOLVIND
+    
+    In chemical engineering, semi-implicit ODEs of the type::
+    
+        d/dt g(t,y(t)) = f(t,y(t))
+        y(0) = y_0
+    
+    have to be solved. PYSOLVIND requires a function afcn that computes::
+    
+        d/dy g(t,y) d/dt y
+        
+        where d/dt y = xdd
+                   y = xd
+    """
+    
+    def test_differentiation_of_gfcn(self):
+        def gfcn(a):
+            print 'called gfcn'
+            ty = [Tangent(a.xd[0], a.xdd[0]),Tangent(a.xd[1], a.xdd[1]), Tangent(a.xd[2], a.xdd[2])]
+            tlhs = [ty[0] * ty[2], ty[1] * ty[2], ty[2]]
+            
+            a.lhs[0] = tlhs[0].xdot
+            a.lhs[1] = tlhs[1].xdot
+            a.lhs[2] = tlhs[2].xdot
+        
+        def afcn(a):
+            a.lhs[0] = a.xd[2] * a.xdd[0] + a.xd[0] * a.xdd[2]
+            a.lhs[1] = a.xd[2] * a.xdd[1] + a.xd[1] * a.xdd[2]
+            a.lhs[2] = a.xdd[2]        
+
+        class Args:
+            def __init__(self):
+                self.xd  = numpy.random.rand(3)
+                self.xdd = numpy.random.rand(3)
+                self.lhs = numpy.zeros(3)
+                
+        args = Args()
+        
+        gfcn(args)
+        result1 = args.lhs.copy()
+        
+        afcn(args)
+        result2 = args.lhs.copy()
+        
+        assert_array_almost_equal(result1, result2)
 
 # class FunctionExampleTests(TestCase):
     # def test_utps_on_jacobian(self):
