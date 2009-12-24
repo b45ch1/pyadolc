@@ -1,6 +1,5 @@
 from adolc.tests.test_wrapped_functions import *
 from adolc.tests.test_cgraph import *
-from adolc.sparse.tests.test_wrapped_functions import *
 
 
 if __name__ == '__main__':
