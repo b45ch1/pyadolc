@@ -4,7 +4,6 @@ import numpy
 
 
 # -1: CUSTOMIZE THIS TO FIT YOUR SYSTEM !!!
-python_include_path= '/usr/include/python2.5'
 
 adolc_include_path = '/u/walter/workspace/ADOL-C-2.1.0/ADOL-C/src'
 adolc_library_path = '/u/walter/workspace/ADOL-C-2.1.0/ADOL-C/src/.libs'
@@ -22,7 +21,6 @@ LIBPATH		= [
             ]
 INCLUDEPATH	= [
             adolc_include_path,
-            python_include_path,
             colpack_include_path,
             ]
 
