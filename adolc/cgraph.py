@@ -141,8 +141,13 @@ class AdolcProgram(object):
 
     def reverse(self, Wbars):
         """
-        convenience function that internall calls the appropriate adolc functions
-        this function can only be called after self.forward has been called with keep > 0
+        This is a convenience function that internally calls the appropriate adolc functions.
+        
+        Since ADOL-C does not support hov_forward with keep = D+1 this function
+        simply stores the input arguments of the AdolcProgram.forward and performs
+        hos_forward sweeps followed by hov_ti_reverse calls.
+
+        This adds significant overhead.
         
         generic call is:
         [Vbar1,Vbar2,...] = self.reverse([Wbar1,Wbar2,...])
