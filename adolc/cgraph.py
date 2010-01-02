@@ -164,7 +164,9 @@ class AdolcProgram(object):
             except:                
                 raise ValueError('taped: Wbar.shape = %s but provided: Wbar.shape = %s '%(str(self.dependentVariableShapeList[m]),str(Wbar_shp[1:-2])))
 
-        rWbar_list.append(numpy.reshape(Wbar, (Wbar_shp[0],) + (numpy.prod(Wbar_shp[1:-2]),) + Wbar_shp[-2:]))
+            rWbar_list.append(numpy.reshape(Wbar, (Wbar_shp[0],) + (numpy.prod(Wbar_shp[1:-2]),) + Wbar_shp[-2:]))
+
+        
         Wbar = numpy.ascontiguousarray(numpy.concatenate(rWbar_list,axis=1))
         
         if self.Vs != None:
