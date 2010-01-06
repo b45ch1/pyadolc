@@ -10,6 +10,31 @@ Pitfalls
 
         One has to be caerful with the operations `+=` , `*=`, ... of numpy arrays.
         The problem is best explained at an example::
+            
+            In [1]: import numpy
+
+            In [2]: import adolc
+
+            In [3]: x = adolc.adouble(numpy.array([1,2,3],dtype=float))
+
+            In [4]: y = numpy.array([4,5,6],dtype=float)
+
+            In [5]: x
+            Out[5]: array([1(a), 2(a), 3(a)], dtype=object)
+
+            In [6]: y
+            Out[6]: array([ 4.,  5.,  6.])
+
+            In [7]: x * y
+            Out[7]: array([4(a), 10(a), 18(a)], dtype=object)
+
+            In [8]: y *= x
+
+            In [9]: y
+
+            Out[9]: array([ 4.,  5.,  6.])
+
+        This is not a bug of PYADOLC but the way `*=` is implemented in numpy. One can see similar behaviour for the dtype int and float::
 
             In [1]: import numpy
 
@@ -31,6 +56,10 @@ Pitfalls
             Out[8]: dtype('int32')
 
         that means that the inplace operation `x *= y ` is *not* the same as `x = x * y`.
+        This also means that::
+
+            x = adouble(numpy.array([1,2,3],dtype=float))
+            
         It is inconsistent to the Python behaviour and therefore a little surprising::
 
             In [9]: a = 1
