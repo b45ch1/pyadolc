@@ -56,6 +56,20 @@ extern adub ldexp ( const badouble&, int );
 // extern adub frexp ( const badouble&, int* );
 // extern adub erf   ( const badouble& );
 
+// extern condassign( double &res, const double &cond, const double &arg1 );
+// extern condassign( double &res, const double &cond, const double &arg1, const double &arg2 );
+// extern condassign( adouble &res, const adouble &cond, const adouble &arg1, const adouble &arg2 );
+// extern condassign( adouble &res, const adouble &cond, const adouble &arg );
+
+double wrapped_condassign_double_if(double res, const double cond, const double arg1);
+double wrapped_condassign_double_if_else(double res, const double cond, const double arg1, const double arg2);
+
+adouble wrapped_condassign_adouble_if(adouble &res, const adouble &cond, const adouble &arg1);
+adouble wrapped_condassign_adouble_if_else(adouble &res, const adouble &cond, const adouble &arg1,  const adouble &arg2);
+
+
+
+
 /* THIN WRAPPER FOR OVERLOADED FUNCTIONS */
 void trace_on_default_argument(short tape_tag){ trace_on(tape_tag,0);}
 void trace_off_default_argument(){ trace_off(0);}
@@ -151,6 +165,7 @@ adub *adub_fabs_badouble  (const badouble &rhs){	return new adub(fabs(rhs));}
 adub *adub_ceil_badouble  (const badouble &rhs){	return new adub(ceil(rhs));}
 adub *adub_floor_badouble (const badouble &rhs){	return new adub(floor(rhs));}
 adub *adub_log10_badouble (const badouble &rhs){	return new adub(log10(rhs));}
+
 
 /* binary */
 adub *adub_add_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator+(lhs,rhs));}
@@ -251,6 +266,8 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("ceil", adub_ceil_badouble, return_value_policy<manage_new_object>()  );
 	def("floor", adub_floor_badouble, return_value_policy<manage_new_object>()  );
 	def("log10", adub_log10_badouble, return_value_policy<manage_new_object>()  );
+	
+	def("condassign", &wrapped_condassign_double_if);
 
 
 	class_<badouble>("badouble", init<const badouble &>())

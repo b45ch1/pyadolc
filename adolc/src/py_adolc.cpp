@@ -45,6 +45,13 @@ bp::dict wrapped_tapestats(short tape_tag){
 	return retval;
 }
 
+double wrapped_condassign_double_if(double res, const double cond, const double arg1){
+	printf("cond = %f\n",cond);
+	condassign(res,cond,arg1);
+	return res;
+}
+
+
 /* C STYLE CALLS OF FUNCTIONS */
 /* easy to use drivers */
 void c_wrapped_function			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_y ){

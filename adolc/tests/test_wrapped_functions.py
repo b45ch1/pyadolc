@@ -169,6 +169,24 @@ class OperationsTests ( TestCase ):
         assert_almost_equal(afabs.val, numpy.abs(x))
     
         #test_expression('fabs (a)     : ',		lambda x: numpy.fabs (x),  a,		a.val)
+        
+        
+    def test_condassign(self):
+        x = 3.
+        y = 4.
+        cond = 1.
+        
+        x = condassign(x,cond,y)
+        assert x == 4.
+        
+        x = 3.
+        y = 4.
+        cond = 0
+        x = condassign(x,cond,y)
+        print x
+        assert x == 3.
+        
+        
     
 class LowLevelFunctionsTests ( TestCase ):
     
