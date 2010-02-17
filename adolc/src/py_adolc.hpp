@@ -268,7 +268,9 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("log10", adub_log10_badouble, return_value_policy<manage_new_object>()  );
 	
 	def("condassign", &wrapped_condassign_double_if);
-
+	def("condassign", &wrapped_condassign_double_if_else);
+	def("condassign", &wrapped_condassign_adouble_if);
+	def("condassign", &wrapped_condassign_adouble_if_else);
 
 	class_<badouble>("badouble", init<const badouble &>())
 			.def(boost::python::self_ns::str(self))

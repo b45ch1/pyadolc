@@ -45,11 +45,30 @@ bp::dict wrapped_tapestats(short tape_tag){
 	return retval;
 }
 
+
 double wrapped_condassign_double_if(double res, const double cond, const double arg1){
-	printf("cond = %f\n",cond);
+	// printf("res = %f\ncond = %f\narg1=%f",res,cond,arg1);
+	condassign(res,cond,arg1);
+	// printf("after assign res= %f\n",res);
+	return res;
+}
+
+double wrapped_condassign_double_if_else(double res, const double cond, const double arg1, const double arg2){
+	// printf("res = %f\ncond = %f\narg1=%f\narg2=%f\n",res,cond,arg1,arg2);
+	condassign(res,cond,arg1,arg2);
+	// printf("after assign res= %f\n",res);
+	return res;
+}
+
+adouble wrapped_condassign_adouble_if(adouble &res, const adouble &cond, const adouble &arg1){
 	condassign(res,cond,arg1);
 	return res;
 }
+adouble wrapped_condassign_adouble_if_else(adouble &res, const adouble &cond, const adouble &arg1,  const adouble &arg2){
+	condassign(res,cond,arg1,arg2);
+	return res;
+}
+
 
 
 /* C STYLE CALLS OF FUNCTIONS */

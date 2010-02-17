@@ -171,7 +171,7 @@ class OperationsTests ( TestCase ):
         #test_expression('fabs (a)     : ',		lambda x: numpy.fabs (x),  a,		a.val)
         
         
-    def test_condassign(self):
+    def test_double_condassign_if(self):
         x = 3.
         y = 4.
         cond = 1.
@@ -186,7 +186,55 @@ class OperationsTests ( TestCase ):
         print x
         assert x == 3.
         
+    def test_double_condassign_if_else(self):
+        x = 3.
+        y = 4.
+        z = 5.
+        cond = 1.
         
+        x = condassign(x,cond,y,z)
+        assert x == 4.
+        
+        x = 3.
+        y = 4.
+        z = 5.
+        cond = 0
+        
+        x = condassign(x,cond,y,z)
+        assert x == 5
+        
+        
+    def test_adouble_condassign_if(self):
+        x = adouble(3.)
+        y = adouble(4.)
+        cond = adouble(1.)
+        
+        x = condassign(x,cond,y)
+        assert x.val == 4.
+        
+        x = adouble(3.)
+        y = adouble(4.)
+        cond = adouble(0)
+        x = condassign(x,cond,y)
+        assert x.val == 3.
+
+
+    def test_adouble_condassign_if_else(self):
+        x = adouble(3.)
+        y = adouble(4.)
+        z = adouble(5.)
+        cond = adouble(1.)
+        
+        x = condassign(x,cond,y,z)
+        assert x.val == 4.
+        
+        x = adouble(3.)
+        y = adouble(4.)
+        z = adouble(5.)
+        cond = adouble(0.)
+        
+        x = condassign(x,cond,y,z)
+        assert x.val == 5        
     
 class LowLevelFunctionsTests ( TestCase ):
     
