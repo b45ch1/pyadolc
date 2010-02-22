@@ -181,7 +181,7 @@ class OperationsTests ( TestCase ):
         
         x = 3.
         y = 4.
-        cond = 0
+        cond = -1.
         x = condassign(x,cond,y)
         print x
         assert x == 3.
@@ -198,7 +198,7 @@ class OperationsTests ( TestCase ):
         x = 3.
         y = 4.
         z = 5.
-        cond = 0
+        cond = -1.
         
         x = condassign(x,cond,y,z)
         assert x == 5
@@ -214,7 +214,7 @@ class OperationsTests ( TestCase ):
         
         x = adouble(3.)
         y = adouble(4.)
-        cond = adouble(0)
+        cond = adouble(-3.)
         x = condassign(x,cond,y)
         assert x.val == 3.
 
@@ -231,10 +231,10 @@ class OperationsTests ( TestCase ):
         x = adouble(3.)
         y = adouble(4.)
         z = adouble(5.)
-        cond = adouble(0.)
+        cond = adouble(-3.)
         
         x = condassign(x,cond,y,z)
-        assert x.val == 5        
+        assert x.val == 5
     
 class LowLevelFunctionsTests ( TestCase ):
     

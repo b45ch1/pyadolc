@@ -1,12 +1,21 @@
-LIBS		= [
-				'adolc',
-			]
+
+adolc_include_path = '/home/b45ch1/workspace/SOLVINDSUITE/Packages/ADOL-C/Src/ADOL-C-2.1.0/ADOL-C/src'
+adolc_library_path = '/home/b45ch1/workspace/SOLVINDSUITE/Packages/ADOL-C/adolc_base/lib'
+
+colpack_include_path = '/home/b45ch1/workspace/SOLVINDSUITE/Packages/ADOL-C/adolc_base/include'
+colpack_library_path = '/home/b45ch1/workspace/SOLVINDSUITE/Packages/ADOL-C/adolc_base/lib'
+
+LIBS		= ['adolc',
+                'ColPack',
+            ]
 LIBPATH		= [
-				'../../../adolc-2.0.0/lib',
-			]
+                adolc_library_path,
+                colpack_library_path,
+            ]
 INCLUDEPATH	= [
-				'../../../adolc-2.0.0/include',
-			]
+            adolc_include_path,
+            colpack_include_path,
+            ]
 
 env = Environment(
 	CPPPATH = INCLUDEPATH,
@@ -17,5 +26,5 @@ env = Environment(
 	SHLIBPREFIX="", #gets rid of lib prefix, i.e. get mylib.so instead of libmylib.so
 )
 Default('.')
-my_executable = env.Program(target='adolc.exe', source=['adolc.cpp'])
+my_executable = env.Program(target='test_adolc.exe', source=['test_adolc.cpp'])
 
