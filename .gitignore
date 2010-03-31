@@ -22,6 +22,7 @@ report/*
 Doxyfile
 build
 *.log
+*.exe
 
 adolc-2.0.0
 jac_pat.mtx
