@@ -16,7 +16,9 @@ def qr(in_A):
     """
     QR decomposition of A
    
-    Q,R = qr(A)
+    Q.T,R = qr(A)
+    
+    I.e. returns the Q.T instead of Q!
     
     """
     # input checks
