@@ -40,6 +40,11 @@ class AdolcProgram(object):
         wrapped_functions.dependent(x)
         
     def jacobian(self, xs):
+        """
+        Computes the Jacobian of the taped function for the argument list xs,
+        
+        where xs is a list of numpy.arrays.
+        """
         rx_list = []
         for nx,x in enumerate(xs):
             
@@ -48,7 +53,6 @@ class AdolcProgram(object):
             rx_list.append(rx)
         self.x = numpy.concatenate(rx_list)
         return wrapped_functions.jacobian(self.tape_tag, self.x)
-        
         
     def forward(self, xs, Vs = None,  keep = 0):
         """
