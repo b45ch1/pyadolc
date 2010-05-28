@@ -16,9 +16,7 @@ def qr(in_A):
     """
     QR decomposition of A
    
-    Q.T,R = qr(A)
-    
-    I.e. returns the Q.T instead of Q!
+    Q,R = qr(A)
     
     """
     # input checks
@@ -27,11 +25,14 @@ def qr(in_A):
     N,M = numpy.shape(in_A)
     assert N==M
     
-    assert isinstance(in_A[0,0], adolc._adolc.adouble)
 
     # prepare R and QT
     R  = in_A.copy()
-    QT = numpy.array([[adolc.adouble(0) for c in range(N)] for r in range(N) ])
+    
+    if isinstance(in_A[0,0], adolc._adolc.adouble):
+        QT = numpy.array([[adolc.adouble(0) for c in range(N)] for r in range(N) ])
+    else:
+        QT = numpy.zeros((N,N))
     
     for n in range(N):
         QT[n,n]  += 1

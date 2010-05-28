@@ -3,27 +3,41 @@ import adolc
 import adolc.linalg
 from numpy import *
 
-N = 4
-A = array([[ r*N + c for c in range(N) ] for r in range(N)],dtype=float)
+N = 3
+
+A    = numpy.array([[1,2,3],[0,4,5],[0,0,6]],dtype=float)
+Adot = numpy.array([[3,7,5],[1,7,2],[7,3,5]],dtype=float)
+# print numpy.linalg.svd(A)[1]
 
 aA = adouble(A)
 trace_on(1)
 independent(aA)
-(aQT, aR) = adolc.linalg.qr(aA)
-dependent(aQT)
+(aQ, aR) = adolc.linalg.qr(aA)
+dependent(aQ)
 dependent(aR)
 trace_off()
 
 V = zeros((N**2,1,1),dtype=float)
-V[:,0,0] = 1.
+V[:,0,0] = Adot.ravel()
+
 (result,Z) = hov_forward(1, ravel(A), V)
-QT = result[:N**2].reshape((N,N))
+Q = result[:N**2].reshape((N,N))
 R  = result[N**2:].reshape((N,N))
 
-#(QT,R) = myqr(A)
-#print dot(QT.T,R) - A
-
-QTdot = Z[:N**2,0,0].reshape((N,N))
+Adot = V.reshape((N,N))
+Qdot = Z[:N**2,0,0].reshape((N,N))
 Rdot  = Z[N**2:,0,0].reshape((N,N))
 
-print QTdot.T + dot(dot(QT.T,QTdot), QT.T)
+print dot(Qdot, R) + dot(Q, Rdot)
+
+print 'd=0: QR - A :\n', dot(Q, R) - A
+print 'd=1: QR - A :\n', dot(Qdot, R) + dot(Q, Rdot) - Adot
+
+print 'd=0: Q.T Q - I :\n', dot(Q.T, Q) - numpy.eye(N)
+print 'd=1: Q.T Q - I :\n', dot(Qdot.T, Q) + dot(Q.T,Qdot)
+
+print 'd=0: R - triu(R) :\n', R - numpy.triu(R)
+print 'd=1: R - triu(R) :\n', Rdot - numpy.triu(Rdot)
+
+
+
