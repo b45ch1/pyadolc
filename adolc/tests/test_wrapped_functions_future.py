@@ -4,7 +4,9 @@ will break pyadolc.
 """
 
 from __future__ import division
-from unit_test import *
+from numpy.testing import *
+
+from adolc import *
 
 
 def test_truediv2():

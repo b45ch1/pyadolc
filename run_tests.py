@@ -1,4 +1,7 @@
 from adolc.tests.test_wrapped_functions import *
+from adolc.tests.test_wrapped_functions_complicated import *
+from adolc.tests.test_wrapped_functions_future import *
+
 from adolc.tests.test_cgraph import *
 
 
