@@ -185,9 +185,11 @@ class TestMinimalSurfaceProblem(TestCase):
             ax.set_zlabel('Z')
             pylab.title('Minimal Surface')
             pylab.savefig('./3D_plot.png')
+            pylab.savefig('./3D_plot.eps')
     
             #pylab.show()
         except:
+            print '3d plotting with matplotlib failed'
             pass
     
         # Plot with MAYAVI

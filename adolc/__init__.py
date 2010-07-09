@@ -6,9 +6,11 @@ import cgraph
 try:
     import sparse
 except:
-    print 'Notice: sparse drivers not available'
-    
+    print 'adolc Notice: sparse drivers not available'
 
+# testing
+from numpy.testing import Tester
+test = Tester().test
 
 __doc__ = """
 Adolc: Algorithmic Differentiation Software 

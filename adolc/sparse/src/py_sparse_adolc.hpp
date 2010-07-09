@@ -21,34 +21,31 @@ namespace nu = num_util;
 // extern int sparse_hess(short, int , int, double*, int *, unsigned int **, unsigned int **, double **,int*);
 // extern int bit_vector_propagation(short, int, int, double*, unsigned int**, int*);
 
-
-
-
 bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options);
-bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options);
-bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values);
+// bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options);
+// bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values);
 
 bp::list	wrapped_hess_pat(short tape_tag, bpn::array &bpn_x, npy_intp option);
-bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options);
-bp::list	wrapped_sparse_hess_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values);
+// bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options);
+// bp::list	wrapped_sparse_hess_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values);
 
 
 
 
 
 
-BOOST_PYTHON_MODULE(_colpack)
+BOOST_PYTHON_MODULE(_sparse)
 {
 	using namespace boost::python;
 	import_array(); 										/* some kind of hack to get numpy working */
 	bpn::array::set_module_and_type("numpy", "ndarray");	/* some kind of hack to get numpy working */
 	def("jac_pat", 	             &wrapped_jac_pat);
-	def("sparse_jac_no_repeat",  &wrapped_sparse_jac_no_repeat);
-	def("sparse_jac_repeat",  &wrapped_sparse_jac_repeat);
+	// def("sparse_jac_no_repeat",  &wrapped_sparse_jac_no_repeat);
+	// def("sparse_jac_repeat",  &wrapped_sparse_jac_repeat);
 
 	def("hess_pat", 	                     &wrapped_hess_pat);
-	def("sparse_hess_no_repeat", 	         &wrapped_sparse_hess_no_repeat);
-	def("sparse_hess_repeat", 	             &wrapped_sparse_hess_repeat);
+	// def("sparse_hess_no_repeat", 	         &wrapped_sparse_hess_no_repeat);
+	// def("sparse_hess_repeat", 	             &wrapped_sparse_hess_repeat);
 	
 }
 
