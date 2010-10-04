@@ -70,26 +70,17 @@ REQUIREMENTS:
     * scons build tool
 
 OPTIONAL REQUIREMENTS:
-    * Fork of Colpack http://github.com/b45ch1/colpack . Colpack is needed for sparse Jacobians and sparse Hessians. The original version does not work for me...
-
-
-INSTALLATION:
-Warning 1:
-this version of PYADOLC only works with ADOL-C Version 2.1.0
-
-Warning 2:
-At the moment, the installation using setup.py is lagging behind. Below, the way I would install ``PYADOLC``. If you do it another way, send me an email or fork this project and I'll incorporate it. 
-Alternatively you can _try_ to use distutils, but support for it lags behind scons: i.e. 1) rename ``setup.py.EXAMPLE`` to ``setup.py`` to fit your system, then 2) run  ``python setup.py build_ext --inplace``.
-
+    * Fork of Colpack http://github.com/b45ch1/colpack . Colpack is needed for sparse Jacobians and sparse Hessians. The original version does not work for me.
 
 INSTALLATION:
 
-    * Build ADOL-C: run ``./configure && make``. To use PYADOLC with sparse support, you do _not_ have to do ``./configure --with-sparse``. You should then have a folder ``~/workspace/ADOL-C-2.1.0/ADOL-C/src`` with  ``adolc.h`` in it.
-    * ``cd ~`` and then ``git clone git://github.com/b45ch1/pyadolc.git``
-    *  Rename ``SConstruct.EXAMPLE`` to ``SConstruct`` and modify it to fit your system. In your example, ``adolc_source_dir`` in the SConstruct file should be ``~/workspace/ADOL-C-2.1.0/ADOL-C/src``
-    *  Run ``~/pyadolc/scons``, this will create the shared libraries ``_adolc.so`` and ``_sparse.so``. If you didn't do the (OPTIONAL) steps below, it will only compile ``_adolc.so`` but fail to compile ``_sparse.so``, i.e. you will get some compiler errors. However, everything but the sparse functionality will work!
-    * (OPTIONAL) Download colpack with ``git clone git://github.com/b45ch1/colpack.git  `` and run ``make``. You should then have a folder ``~/colpack/build`` with subfolders ``lib`` and ``include``
-    * (OPTIONAL) Copy everything in ``~/colpack/build/include`` to ``~/workspace/ADOL-C-2.1.0/ThirdParty/ColPack``
-    * (OPTIONAL) Run ``~/pyadolc/scons`` and check that ``_sparse.so`` has compiled.
-    * Add the directory to your ``PYTHONPATH``. E.g. add the following line in your ``~/.bashrc`` file: ``export PYTHONPATH=$PYTHONPATH:/home/walter/workspace/pyadolc``
-    * (OPTIONAL) Unit test: To check everything works you can run ``~/pyadolc/py.test tests/unit_test.py``.  In Debian it is in the python-codespeak-lib package and can be installed with ``apt-get install python-codespeak-libs``.
+    * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.1 and above), the boost libraries and numpy installed. All with header files.
+    * BUILD ADOL-C: run ``./configure && make``. To use PYADOLC with sparse support, you do _not_ have to do ``./configure --with-sparse``. You should then have a folder ``~/workspace/ADOL-C-2.1.0/ADOL-C/src`` with  ``adolc.h`` in it.
+    * DOWNLAD PYADOLC: ``cd ~`` and then ``git clone git://github.com/b45ch1/pyadolc.git``
+    * BUILD PYADOL:
+        * change to the  folder ``~/pyadolc`` and rename the file ``setup.py.EXAMPLE`` to ``setup.py``.
+        * Adapt ``setup.py`` to fit your system. In particular, you have to set the paths to your ADOL-C installation and boost python.
+        * Run ``python setup.py build``. A new folder with a name similar to ``~/pyadolc/build/lib.linux-x86_64-2.6`` should be generated.
+    * TEST YOUR INSTALLATION: Change directory to ``~/pyadolc/build/lib.linux-x86_64-2.6`` and run ``python -c "import adolc; adolc.test()"``. All tests should pass.
+    * You can also use scons (if you have it) instead of using setup.py
+    
