@@ -16,10 +16,10 @@ from distutils.core import Command
 from numpy.distutils.misc_util import get_numpy_include_dirs
 
 # ADAPT THIS TO FIT YOUR SYSTEM
-include_dirs = [get_numpy_include_dirs(),'/home/b45ch1/workspace/SOLVINDSUITE/Packages/ADOL-C/Src/ADOL-C-2.1.0/ADOL-C/src']
 extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
-library_dirs = ['/home/b45ch1/workspace/SOLVINDSUITE/Packages/ADOL-C/adolc_base/lib']
-libraries = ['boost_python','adolc', 'ColPack']
+include_dirs = [get_numpy_include_dirs(),'/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C/src']
+library_dirs = ['/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C/src/.libs']
+libraries = ['boost_python','adolc']
 
 
 
@@ -28,7 +28,7 @@ CLASSIFIERS = """\
 Intended Audience :: Science/Research
 Intended Audience :: Developers
 License :: OSI Approved
-Programming Language :: C++
+Programming Language :: C
 Programming Language :: Python
 Topic :: Software Development
 Topic :: Scientific/Engineering
@@ -138,7 +138,14 @@ options_dict.update({
                 include_dirs = ['adolc/src'] + include_dirs,
                 library_dirs = library_dirs,
                 runtime_library_dirs = library_dirs,
-                libraries = libraries)],
+                libraries = libraries),
+                Extension('sparse/_sparse', ['adolc/sparse/src/py_sparse_adolc.cpp', 'adolc/sparse/src/num_util.cpp'],
+                                include_dirs = ['adolc/sparse/src'] + include_dirs,
+                                library_dirs = library_dirs,
+                                runtime_library_dirs = library_dirs,
+                                libraries = libraries)
+],
+
 'cmdclass' : {'clean':clean}
 })
 
