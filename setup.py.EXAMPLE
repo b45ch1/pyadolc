@@ -17,11 +17,14 @@ from numpy.distutils.misc_util import get_numpy_include_dirs
 
 # ADAPT THIS TO FIT YOUR SYSTEM
 extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
-include_dirs = [get_numpy_include_dirs(),'/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C/src']
-library_dirs = ['/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C/src/.libs']
-libraries = ['boost_python','adolc']
+include_dirs = [get_numpy_include_dirs()[0],'/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C','/home/b45ch1/workspace/ColPack/build/include']
+library_dirs = ['/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C/src/.libs','/home/b45ch1/workspace/ColPack/build/lib']
+libraries = ['boost_python','adolc', 'ColPack']
 
-
+print ''
+print 'please check that the following settings are correct for your system'
+print 'include_dirs = %s\n'%str(include_dirs)
+print 'library_dirs = %s\n'%str(library_dirs)
 
 # PACKAGE INFORMATION
 CLASSIFIERS = """\
@@ -135,10 +138,15 @@ options_dict.update({
 'packages' :packages,
 'ext_package' : 'adolc',
 'ext_modules': [Extension('_adolc', ['adolc/src/py_adolc.cpp', 'adolc/src/num_util.cpp'],
-                include_dirs = ['adolc/src'] + include_dirs,
-                library_dirs = library_dirs,
-                runtime_library_dirs = library_dirs,
-                libraries = libraries),
+                                include_dirs = ['adolc/src'] + include_dirs,
+                                library_dirs = library_dirs,
+                                runtime_library_dirs = library_dirs,
+                                libraries = libraries),
+                Extension('sparse/_sparse', ['adolc/sparse/src/py_sparse_adolc.cpp', 'adolc/sparse/src/num_util.cpp'],
+                                include_dirs = ['adolc/sparse/src'] + include_dirs,
+                                library_dirs = library_dirs,
+                                runtime_library_dirs = library_dirs,
+                                libraries = libraries),
                 Extension('sparse/_sparse', ['adolc/sparse/src/py_sparse_adolc.cpp', 'adolc/sparse/src/num_util.cpp'],
                                 include_dirs = ['adolc/sparse/src'] + include_dirs,
                                 library_dirs = library_dirs,

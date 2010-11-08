@@ -64,25 +64,32 @@ EXAMPLE USAGE::
 
 
 REQUIREMENTS:
+    * Known to work for Ubuntu Linux, Python 2.6, NumPy 1.3.0, Boost:Python 1.40.0
     * Python and Numpy, both with header files
     * ADOL-C version 2.1.0 http://www.coin-or.org/projects/ADOL-C.xml
     * boost::python from http://www.boost.org/
     * scons build tool
 
 OPTIONAL REQUIREMENTS:
-    * For sparse Jacobians and Hessians: http://www.cscapes.org/coloringpage/software.htm
+    * For sparse Jacobians and Hessians: ColPack 1.0.0 http://www.cscapes.org/coloringpage/software.htm
 
 INSTALLATION:
 
     * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.1 and above), ColPack (version 1.0.0 and above) the boost libraries and numpy installed. All with header files.
-    * BUILD ADOL-C: run e.g. ``/configure --enable-sparse --with-colpack=/home/b45ch1/workspace/ColPack/build
- && make``. You should then have a folder ``~/workspace/ADOL-C-2.1.0/ADOL-C/src`` with  ``adolc.h`` in it. You don't have to run ``make install``.
+    * BUILD ADOL-C: 
+        * run ``./configure --enable-sparse --with-colpack=/home/b45ch1/workspace/ColPack/build``
+        * run ``make``
+        * You don't have to run ``make install``.
+        * You should then have a folder ``~/workspace/ADOL-C-2.1.0/ADOL-C`` with  ``adolc/adolc.h`` in it.
     * DOWNLAD PYADOLC: ``cd ~`` and then ``git clone git://github.com/b45ch1/pyadolc.git``
     * BUILD PYADOL:
         * change to the  folder ``~/pyadolc`` and rename the file ``setup.py.EXAMPLE`` to ``setup.py``.
         * Adapt ``setup.py`` to fit your system. In particular, you have to set the paths to your ADOL-C installation and boost python.
-        * Run ``python setup.py build``. A new folder with a name similar to ``~/pyadolc/build/lib.linux-x86_64-2.6`` should be generated.
-    * TEST YOUR INSTALLATION: Change directory to ``~/pyadolc/build/lib.linux-x86_64-2.6`` and run ``python -c "import adolc; adolc.test()"``. All tests should pass.
+        * run ``python setup.py build``. A new folder with a name similar to ``~/pyadolc/build/lib.linux-x86_64-2.6`` should be generated.
+        * run ``python setup.py install`` to install pyadolc to your system.
+    * TEST YOUR INSTALLATION:
+        * Change directory to ``~/pyadolc/build/lib.linux-x86_64-2.6`` 
+        * run ``python -c "import adolc; adolc.test()"``. All tests should pass.
     * You can also use scons (if you have it) instead of using setup.py
     * If anything goes wrong, please file a bug report.
     

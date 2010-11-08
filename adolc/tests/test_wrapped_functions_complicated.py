@@ -162,47 +162,6 @@ class TestMinimalSurfaceProblem(TestCase):
         U = 100*numpy.ones((M,M),dtype=float)
     
         Z,s = projected_gradients(u,O_tilde,dO_tilde,[L,U])
-    
-    
-        # THIS CODE BELOW ONLY WORKS FOR MATPLOTLIB 0.91X
-        try:
-            import pylab
-            import matplotlib.axes3d as p3
-    
-            x = y = range(numpy.shape(Z)[0])
-            X,Y = numpy.meshgrid(x_grid,y_grid)
-    
-            fig=pylab.figure()
-            ax = p3.Axes3D(fig)
-            ax.plot_wireframe(X,Y,Z)
-    
-            xs = Z + s
-            for n in range(M):
-                for m in range(M):
-                    ax.plot3d([x_grid[m],x_grid[m]], [ y_grid[n], y_grid[n]], [Z[n,m], xs[n,m]], 'r')
-            ax.set_xlabel('X')
-            ax.set_ylabel('Y')
-            ax.set_zlabel('Z')
-            pylab.title('Minimal Surface')
-            pylab.savefig('./3D_plot.png')
-            pylab.savefig('./3D_plot.eps')
-    
-            #pylab.show()
-        except:
-            print '3d plotting with matplotlib failed'
-            pass
-    
-        # Plot with MAYAVI
-        try:
-            import enthought.mayavi.mlab as mlab
-            mlab.figure()
-            mlab.view(azimuth=130)
-            s = mlab.surf(x, y, Z, representation='wireframe', warp_scale='auto', line_width=1.)
-            mlab.savefig('./mayavi_3D_plot.png')
-            #mlab.show()
-    
-        except:
-            pass
 
 
 class TestChemicalReaction(TestCase):
