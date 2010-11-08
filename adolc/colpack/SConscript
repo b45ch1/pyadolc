@@ -1,8 +1,8 @@
 Import('env')
 Import('adolc_include_path')
 
-colpack = env.SharedLibrary(target='_sparse',
-    source=['src/py_sparse_adolc.cpp',
+colpack = env.SharedLibrary(target='_colpack',
+    source=['src/py_colpack_adolc.cpp',
     'src/num_util.cpp',
     # adolc_include_path +'/sparse/sparsedrivers.cpp',
     # adolc_include_path +'/sparse/sparse_fo_rev.cpp',

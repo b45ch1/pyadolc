@@ -7,6 +7,12 @@ try:
     import sparse
 except:
     print 'adolc Notice: sparse drivers not available'
+    
+try:
+    import colpack
+
+except:
+    print 'adolc Notice: colpack drivers not available'
 
 # testing
 from numpy.testing import Tester

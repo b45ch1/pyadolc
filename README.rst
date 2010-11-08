@@ -70,12 +70,13 @@ REQUIREMENTS:
     * scons build tool
 
 OPTIONAL REQUIREMENTS:
-    * Fork of Colpack http://github.com/b45ch1/colpack . Colpack is needed for sparse Jacobians and sparse Hessians. The original version does not work for me.
+    * For sparse Jacobians and Hessians: http://www.cscapes.org/coloringpage/software.htm
 
 INSTALLATION:
 
-    * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.1 and above), the boost libraries and numpy installed. All with header files.
-    * BUILD ADOL-C: run ``./configure && make``. To use PYADOLC with sparse support, you do _not_ have to do ``./configure --with-sparse``. You should then have a folder ``~/workspace/ADOL-C-2.1.0/ADOL-C/src`` with  ``adolc.h`` in it.
+    * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.1 and above), ColPack (version 1.0.0 and above) the boost libraries and numpy installed. All with header files.
+    * BUILD ADOL-C: run e.g. ``/configure --enable-sparse --with-colpack=/home/b45ch1/workspace/ColPack/build
+ && make``. You should then have a folder ``~/workspace/ADOL-C-2.1.0/ADOL-C/src`` with  ``adolc.h`` in it. You don't have to run ``make install``.
     * DOWNLAD PYADOLC: ``cd ~`` and then ``git clone git://github.com/b45ch1/pyadolc.git``
     * BUILD PYADOL:
         * change to the  folder ``~/pyadolc`` and rename the file ``setup.py.EXAMPLE`` to ``setup.py``.
@@ -83,4 +84,5 @@ INSTALLATION:
         * Run ``python setup.py build``. A new folder with a name similar to ``~/pyadolc/build/lib.linux-x86_64-2.6`` should be generated.
     * TEST YOUR INSTALLATION: Change directory to ``~/pyadolc/build/lib.linux-x86_64-2.6`` and run ``python -c "import adolc; adolc.test()"``. All tests should pass.
     * You can also use scons (if you have it) instead of using setup.py
+    * If anything goes wrong, please file a bug report.
     

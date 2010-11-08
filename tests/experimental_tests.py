@@ -6,6 +6,8 @@ unit_tests.py
 or complicated_tests.py
 """
 import numpy
+import scipy
+from numpy.testing import *
 from adolc import *
 
 def test_big_tape():
@@ -200,7 +202,7 @@ def test_ipopt_optimization():
 
     def eval_jac_g_adolc(x, flag, user_data = None):
         options = numpy.array([1,1,0,0],dtype=int)
-        result = sparse.sparse_jac_no_repeat(2,x,options)
+        result = colpack.sparse_jac_no_repeat(2,x,options)
         if flag:
             return (numpy.asarray(result[1],dtype=int), numpy.asarray(result[2],dtype=int))
         else:
@@ -210,12 +212,12 @@ def test_ipopt_optimization():
         options = numpy.array([0,0],dtype=int)
         assert numpy.ndim(x) == 1
         assert numpy.size(x) == 4
-        result_f = sparse.sparse_hess_no_repeat(1, x, options)
-        result_g0 = sparse.sparse_hess_no_repeat(3, x,options)
-        result_g1 = sparse.sparse_hess_no_repeat(4, x,options)
-        Hf  = scipy.sparse.coo_matrix( (result_f[3], (result_f[1], result_f[2])), shape=(4, 4))
-        Hg0 = scipy.sparse.coo_matrix( (result_g0[3], (result_g0[1], result_g0[2])), shape=(4, 4))
-        Hg1 = scipy.sparse.coo_matrix( (result_g1[3], (result_g1[1], result_g1[2])), shape=(4, 4))
+        result_f = colpack.sparse_hess_no_repeat(1, x, options)
+        result_g0 = colpack.sparse_hess_no_repeat(3, x,options)
+        result_g1 = colpack.sparse_hess_no_repeat(4, x,options)
+        Hf  = scipy.linalg.sparse.coo_matrix( (result_f[3], (result_f[1], result_f[2])), shape=(4, 4))
+        Hg0 = scipy.linalg.sparse.coo_matrix( (result_g0[3], (result_g0[1], result_g0[2])), shape=(4, 4))
+        Hg1 = scipy.linalg.sparse.coo_matrix( (result_g1[3], (result_g1[1], result_g1[2])), shape=(4, 4))
         
         H = Hf + Hg0 + Hg1
         H = H.tocoo()
@@ -250,8 +252,8 @@ def test_ipopt_optimization():
     x0 = numpy.random.rand(4)
     result       = (eval_h(x0, lagrange, obj_factor, False), eval_h(x0, lagrange, obj_factor, True))
     result_adolc = (eval_h_adolc(x0, lagrange, obj_factor, False), eval_h_adolc(x0, lagrange, obj_factor, True))
-    H       = scipy.sparse.coo_matrix( result, shape=(4, 4))
-    H_adolc = scipy.sparse.coo_matrix( result_adolc, shape=(4, 4))
+    H       = scipy.linalg.sparse.coo_matrix( result, shape=(4, 4))
+    H_adolc = scipy.linalg.sparse.coo_matrix( result_adolc, shape=(4, 4))
     H = H.todense()
     H_adolc = H_adolc.todense()
     assert_array_almost_equal( H, H_adolc.T)
