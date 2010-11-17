@@ -1,5 +1,5 @@
-adolc_include_path = '/home/basti/workspace/adolc-2.0.0'
-adolc_library_path = '/home/basti/workspace/adolc-2.0.0/adolc/.libs'
+adolc_include_path = '/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C'
+adolc_library_path = '/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C/adolc/.libs'
 
 LIBS		= ['adolc',
 			]
@@ -8,7 +8,7 @@ LIBPATH		= [
 			  ]
 INCLUDEPATH	= [
 			adolc_include_path,
-			'/usr/include/python2.5'
+			# '/usr/include/python2.5'
 			]
 
 

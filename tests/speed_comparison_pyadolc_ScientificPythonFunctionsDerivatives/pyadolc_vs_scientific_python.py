@@ -2,7 +2,7 @@ from numpy import *
 from Scientific.Functions.Derivatives import DerivVar
 from  adolc import *
 from time import time
-N = 10
+N = 40
 A = diag([i+1 for i in range(N)])
 
 def f(x):
