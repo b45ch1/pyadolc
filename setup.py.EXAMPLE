@@ -14,6 +14,7 @@ import os
 from distutils.core import setup, Extension
 from distutils.core import Command
 from numpy.distutils.misc_util import get_numpy_include_dirs
+from time import sleep
 
 # ADAPT THIS TO FIT YOUR SYSTEM
 extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
@@ -22,16 +23,18 @@ library_dirs = ['/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C/src/.libs','/home/b4
 libraries = ['boost_python','adolc', 'ColPack']
 
 print ''
-print 'please check that the following settings are correct for your system'
+print '\033[1;31mplease check that the following settings are correct for your system\033[1;m'
 print 'include_dirs = %s\n'%str(include_dirs)
 print 'library_dirs = %s\n'%str(library_dirs)
+sleep(1)
+
 
 # PACKAGE INFORMATION
 CLASSIFIERS = """\
 Intended Audience :: Science/Research
 Intended Audience :: Developers
 License :: OSI Approved
-Programming Language :: C
+Programming Language :: C++
 Programming Language :: Python
 Topic :: Software Development
 Topic :: Scientific/Engineering
@@ -147,8 +150,8 @@ options_dict.update({
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
                                 libraries = libraries),
-                Extension('sparse/_sparse', ['adolc/sparse/src/py_sparse_adolc.cpp', 'adolc/sparse/src/num_util.cpp'],
-                                include_dirs = ['adolc/sparse/src'] + include_dirs,
+                Extension('colpack/_colpack', ['adolc/colpack/src/py_colpack_adolc.cpp', 'adolc/colpack/src/num_util.cpp'],
+                                include_dirs = ['adolc/colpack/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
                                 libraries = libraries)
