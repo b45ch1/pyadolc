@@ -187,7 +187,6 @@ class Eval_h_adolc:
             return result[3][self.mask]
 
 
-
 # create callable instance of the classes
 eval_jac_g_adolc = Eval_jac_g_adolc(x0)
 eval_h_adolc = Eval_h_adolc(x0)
@@ -244,7 +243,6 @@ nlp_adolc.close()
 adolc_optimization_time = end_time - start_time
 print 'optimization time with derivatives computed by adolc = ', adolc_optimization_time
 print 'optimization time with derivatives computed by hand = ',pure_python_optimization_time
-# assert adolc_optimization_time / pure_python_optimization_time < 10
 
 # # this works with the pyipopt version from code.google.com
 # assert_array_almost_equal(result[0], result_adolc[0])
@@ -252,10 +250,10 @@ print 'optimization time with derivatives computed by hand = ',pure_python_optim
 # assert_array_almost_equal(result[2], result_adolc[2])
 # assert_array_almost_equal(result[3], result_adolc[3])
 
-# ##this works with the pyipopt version from github by alanfalloon
-# #assert_array_almost_equal(result['x'],result_adolc['x'])
-# #assert_array_almost_equal(result['mult_xL'],result_adolc['mult_xL'])
-# #assert_array_almost_equal(result['mult_xU'],result_adolc['mult_xU'])
-# #assert_array_almost_equal(result['mult_g'],result_adolc['mult_g'])
-# #assert_array_almost_equal(result['f'],result_adolc['f'])
+#this works with the pyipopt version from github by alanfalloon
+assert_array_almost_equal(result['x'],result_adolc['x'])
+assert_array_almost_equal(result['mult_xL'],result_adolc['mult_xL'])
+assert_array_almost_equal(result['mult_xU'],result_adolc['mult_xU'])
+assert_array_almost_equal(result['mult_g'],result_adolc['mult_g'])
+assert_array_almost_equal(result['f'],result_adolc['f'])
 
