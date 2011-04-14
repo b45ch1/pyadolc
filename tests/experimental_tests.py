@@ -6,7 +6,7 @@ unit_tests.py
 or complicated_tests.py
 """
 import numpy
-import scipy
+import scipy;
 from numpy.testing import *
 from adolc import *
 
@@ -35,17 +35,17 @@ def test_big_tape():
     #tape_to_latex(0,numpy.array([1.]),numpy.array([0.]))
 
 
-def test_arc_hyperbolic_functions():
-    x = 3.
-    ax = adouble(x)
+# def test_arc_hyperbolic_functions():
+#     x = 3.
+#     ax = adouble(x)
     
-    aarcsh = numpy.arcsinh(ax)
-    aarcch = numpy.arccosh(ax)
-    aarcth = numpy.arctanh(ax)
+#     aarcsh = numpy.arcsinh(ax)
+#     aarcch = numpy.arccosh(ax)
+#     aarcth = numpy.arctanh(ax)
     
-    assert_almost_equal(aarcsh.val, numpy.arcsinh(x))
-    assert_almost_equal(aarcch.val, numpy.arccosh(x))
-    assert_almost_equal(aarcth.val, numpy.arctanh(x))
+#     assert_almost_equal(aarcsh.val, numpy.arcsinh(x))
+#     assert_almost_equal(aarcch.val, numpy.arccosh(x))
+#     assert_almost_equal(aarcth.val, numpy.arctanh(x))
     
 
 
@@ -74,6 +74,14 @@ def test_ipopt_optimization():
         #print '"pyipopt is not installed, skipping test'
         #return
         raise NotImplementedError("pyipopt is not installed, skipping test")
+        
+    try:
+        import scipy.sparse as sparse
+    except:
+        #print '"pyipopt is not installed, skipping test'
+        #return
+        raise NotImplementedError("scipy is not installed, skipping test")        
+        
     import time
 
     nvar = 4
@@ -120,7 +128,9 @@ def test_ipopt_optimization():
                         2.0*x[1], 
                         2.0*x[2], 
                         2.0*x[3] ])
-            
+    
+    
+    
     nnzh = 10
     def eval_h(x, lagrange, obj_factor, flag, user_data = None):
         if flag:
@@ -207,30 +217,59 @@ def test_ipopt_optimization():
             return (numpy.asarray(result[1],dtype=int), numpy.asarray(result[2],dtype=int))
         else:
             return result[3]
-            
+    
     def eval_h_adolc(x, lagrange, obj_factor, flag, user_data = None):
-        options = numpy.array([0,0],dtype=int)
-        assert numpy.ndim(x) == 1
-        assert numpy.size(x) == 4
-        result_f = colpack.sparse_hess_no_repeat(1, x, options)
-        result_g0 = colpack.sparse_hess_no_repeat(3, x,options)
-        result_g1 = colpack.sparse_hess_no_repeat(4, x,options)
-        Hf  = scipy.linalg.sparse.coo_matrix( (result_f[3], (result_f[1], result_f[2])), shape=(4, 4))
-        Hg0 = scipy.linalg.sparse.coo_matrix( (result_g0[3], (result_g0[1], result_g0[2])), shape=(4, 4))
-        Hg1 = scipy.linalg.sparse.coo_matrix( (result_g1[3], (result_g1[1], result_g1[2])), shape=(4, 4))
-        
-        H = Hf + Hg0 + Hg1
-        H = H.tocoo()
+
         
         if flag:
-            hrow = H.row
-            hcol = H.col
-            return (numpy.array(hcol,dtype=int), numpy.array(hrow,dtype=int))
+            # return sparsity pattern of the hessian
+            
+            if eval_h_adolc.firstrun == True:
+                
+                # this can be done more elegantly based directly on 
+                # the sparsity pattern returned by adolc.sparse.hess_pat
+                options = numpy.array([0,0],dtype=int)
+                result_f = colpack.sparse_hess_no_repeat(1, x, options)
+                result_g0 = colpack.sparse_hess_no_repeat(3, x,options)
+                result_g1 = colpack.sparse_hess_no_repeat(4, x,options)
+                Hf  = sparse.coo_matrix( (result_f[3], (result_f[1], result_f[2])), shape=(4, 4))
+                Hg0 = sparse.coo_matrix( (result_g0[3], (result_g0[1], result_g0[2])), shape=(4, 4))
+                Hg1 = sparse.coo_matrix( (result_g1[3], (result_g1[1], result_g1[2])), shape=(4, 4))
+                
+                H = Hf + Hg0 + Hg1
+                H = H.tocoo()
+                hrow = H.row
+                hcol = H.col
+                hpat = (numpy.array(hcol,dtype=int), numpy.array(hrow,dtype=int))
+                
+                eval_h_adolc.hpat = hpat
+                eval_h_adolc.firstrun = False
+                
+            return eval_h_adolc.hpat
 
         else:
+            # compute sparse hessian
+            assert numpy.ndim(x) == 1
+            assert numpy.size(x) == 4    
+            
+            options = numpy.array([0,0],dtype=int)
+            result_f = colpack.sparse_hess_no_repeat(1, x, options)
+            result_g0 = colpack.sparse_hess_no_repeat(3, x,options)
+            result_g1 = colpack.sparse_hess_no_repeat(4, x,options)
+            Hf  = sparse.coo_matrix( (result_f[3], (result_f[1], result_f[2])), shape=(4, 4))
+            Hg0 = sparse.coo_matrix( (result_g0[3], (result_g0[1], result_g0[2])), shape=(4, 4))
+            Hg1 = sparse.coo_matrix( (result_g1[3], (result_g1[1], result_g1[2])), shape=(4, 4))
+            
+            H = Hf + Hg0 + Hg1
+            H = H.tocoo()            
+            
             values = numpy.zeros((10), float)
             values[:] = H.data
             return values
+    eval_h_adolc.firstrun = True
+
+
+
 
     # function of f
     assert_almost_equal(eval_f(x0), eval_f_adolc(x0))
@@ -252,8 +291,8 @@ def test_ipopt_optimization():
     x0 = numpy.random.rand(4)
     result       = (eval_h(x0, lagrange, obj_factor, False), eval_h(x0, lagrange, obj_factor, True))
     result_adolc = (eval_h_adolc(x0, lagrange, obj_factor, False), eval_h_adolc(x0, lagrange, obj_factor, True))
-    H       = scipy.linalg.sparse.coo_matrix( result, shape=(4, 4))
-    H_adolc = scipy.linalg.sparse.coo_matrix( result_adolc, shape=(4, 4))
+    H       = sparse.coo_matrix( result, shape=(4, 4))
+    H_adolc = sparse.coo_matrix( result_adolc, shape=(4, 4))
     H = H.todense()
     H_adolc = H_adolc.todense()
     assert_array_almost_equal( H, H_adolc.T)
