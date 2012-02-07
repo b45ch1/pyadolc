@@ -115,6 +115,48 @@ class SparseFunctionalityTests(TestCase):
         for i in range(10):
             result = colpack.sparse_hess_no_repeat(2, x2, options)
 
+
+
+    def test_sparse_hess_2(self):
+        """ This example was reported to raise a seg fault (see https://github.com/b45ch1/pyadolc/issues/10) """
+
+        N = 3
+
+        def F(x):
+            y = numpy.sum(x**2)
+            return y
+
+        x = numpy.random.rand(N)
+
+        # Trace F
+        trace_on(0)
+        x = adouble(x)
+        independent(x)
+        y = F(x)
+        dependent(y)
+        trace_off()
+
+        x = numpy.random.rand(N)
+        options = numpy.array([0,1],dtype=int)
+        result = colpack.sparse_hess_no_repeat(0,x,options)
+
+        nnz     = numpy.asarray(result[0],dtype=int)
+        rind    = numpy.asarray(result[1],dtype=int)
+        cind    = numpy.asarray(result[2],dtype=int)
+        values  = numpy.asarray(result[3],dtype=float)
+
+
+        print "Sparse hessian:"
+        print "nnz:", nnz
+        print "rind:", rind
+        print "cind:", cind
+        print "values:", values
+
+        assert_array_almost_equal(nnz, N)
+        assert_array_almost_equal(rind, numpy.arange(N))
+        assert_array_almost_equal(cind, numpy.arange(N))
+        assert_array_almost_equal(values, [2]*N)
+
     def test_sparse_hess_repeat(self):
         N = 3 # dimension
 
@@ -325,6 +367,7 @@ class SparseFunctionalityTests(TestCase):
         H = H.todense()
         H_adolc = H_adolc.todense()
         assert_array_almost_equal( H, H_adolc.T)
+
 
 
 if __name__ == '__main__':
