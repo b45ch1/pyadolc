@@ -7,7 +7,7 @@ Short Description:
     It wraps the functionality of the library ADOL-C (C++).
 
 Author:
-    Sebastian F. Walter 
+    Sebastian F. Walter
 
 Licence (new BSD):
     Copyright (c) 2008, Sebastian F. Walter
@@ -36,7 +36,7 @@ Licence (new BSD):
 
 
 EXAMPLE USAGE::
-    
+
     import numpy
     from adolc import *
     N = M = 10
@@ -68,15 +68,18 @@ REQUIREMENTS:
     * Python and Numpy, both with header files
     * ADOL-C version 2.1.0 http://www.coin-or.org/projects/ADOL-C.xml
     * boost::python from http://www.boost.org/
-    * scons build tool
 
 OPTIONAL REQUIREMENTS:
     * For sparse Jacobians and Hessians: ColPack 1.0.0 http://www.cscapes.org/coloringpage/software.htm
+    * scons build tool (makes things easier if you need to recompile pyadolc)
 
 INSTALLATION:
 
     * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.1 and above), ColPack (version 1.0.0 and above) the boost libraries and numpy installed. All with header files.
-    * BUILD ADOL-C: 
+    * BUILD COLPACK
+        * run ``make``
+        * this should generate ``~workspace/ColPack/build/lib/libColPack.so``.
+    * BUILD ADOL-C:
         * run ``./configure --enable-sparse --with-colpack=/home/b45ch1/workspace/ColPack/build``
         * run ``make``
         * You don't have to run ``make install``.
@@ -88,8 +91,8 @@ INSTALLATION:
         * run ``python setup.py build``. A new folder with a name similar to ``~/pyadolc/build/lib.linux-x86_64-2.6`` should be generated.
         * run ``python setup.py install`` to install pyadolc to your system.
     * TEST YOUR INSTALLATION:
-        * Change directory to ``~/pyadolc/build/lib.linux-x86_64-2.6`` 
+        * Change directory to ``~/pyadolc/build/lib.linux-x86_64-2.6``
         * run ``python -c "import adolc; adolc.test()"``. All tests should pass.
     * You can also use scons (if you have it) instead of using setup.py
     * If anything goes wrong, please file a bug report.
-    
+

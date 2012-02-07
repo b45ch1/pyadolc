@@ -9,7 +9,7 @@ bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::ar
 	double* x = (double*) nu::data(bpn_x);
 	int* options  = (int*) nu::data(bpn_options);
 // 	int options[4] = {1,1,0,0};
-	
+
 
 	int nnz=-1;
 	unsigned int *rind = NULL;
@@ -51,19 +51,11 @@ bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp n
 
 	sparse_jac(tape_tag, M, N, 1, x, &tmp_nnz, &rind, &cind, &values, options);
 
-	bp::object bp_rind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &nnz, PyArray_INT, (char*) rind )));
-	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &nnz, PyArray_INT, (char*) cind )));
-	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &nnz, PyArray_DOUBLE, (char*) values )));
-
-	bpn::array ret_rind   = boost::python::extract<boost::python::numeric::array>(bp_rind);
-	bpn::array ret_cind   = boost::python::extract<boost::python::numeric::array>(bp_cind);
-	bpn::array ret_values = boost::python::extract<boost::python::numeric::array>(bp_values);
-
 	bp::list retvals;
 	retvals.append(nnz);
-	retvals.append(ret_rind);
-	retvals.append(ret_cind);
-	retvals.append(ret_values);
+	retvals.append(bpn_rind);
+	retvals.append(bpn_cind);
+	retvals.append(bpn_values);
 
 	return retvals;
 
@@ -118,19 +110,11 @@ bp::list	wrapped_sparse_hess_repeat(short tape_tag, bpn::array &bpn_x, npy_intp 
 
 	sparse_hess(tape_tag, N, 1, x, &tmp_nnz, &rind, &cind, &values, options);
 
-	bp::object bp_rind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &nnz, PyArray_INT, (char*) rind )));
-	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &nnz, PyArray_INT, (char*) cind )));
-	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &nnz, PyArray_DOUBLE, (char*) values )));
-
-	bpn::array ret_rind   = boost::python::extract<boost::python::numeric::array>(bp_rind);
-	bpn::array ret_cind   = boost::python::extract<boost::python::numeric::array>(bp_cind);
-	bpn::array ret_values = boost::python::extract<boost::python::numeric::array>(bp_values);
-
 	bp::list retvals;
 	retvals.append(nnz);
-	retvals.append(ret_rind);
-	retvals.append(ret_cind);
-	retvals.append(ret_values);
+	retvals.append(bpn_rind);
+	retvals.append(bpn_cind);
+	retvals.append(bpn_values);
 
 	return retvals;
 
