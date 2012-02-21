@@ -117,8 +117,8 @@ class SparseFunctionalityTests(TestCase):
 
 
 
-    def test_sparse_hess_2(self):
-        """ This example was reported to raise a seg fault (see https://github.com/b45ch1/pyadolc/issues/10) """
+    def test_sparse_hess_no_repeat2(self):
+        """ This example has been reported to raise a seg fault (see https://github.com/b45ch1/pyadolc/issues/10) """
 
         N = 3
 
@@ -146,11 +146,11 @@ class SparseFunctionalityTests(TestCase):
         values  = numpy.asarray(result[3],dtype=float)
 
 
-        print "Sparse hessian:"
-        print "nnz:", nnz
-        print "rind:", rind
-        print "cind:", cind
-        print "values:", values
+        # print "Sparse hessian:"
+        # print "nnz:", nnz
+        # print "rind:", rind
+        # print "cind:", cind
+        # print "values:", values
 
         assert_array_almost_equal(nnz, N)
         assert_array_almost_equal(rind, numpy.arange(N))
@@ -172,7 +172,7 @@ class SparseFunctionalityTests(TestCase):
         dependent(ay)
         trace_off()
 
-        options = numpy.array([1,1],dtype=int)
+        options = numpy.array([0,1],dtype=int)
 
         # first call
         result = colpack.sparse_hess_no_repeat(1,x,options)
