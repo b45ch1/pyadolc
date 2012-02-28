@@ -81,11 +81,12 @@ INSTALLATION:
         * this should generate ``~workspace/ColPack/build/lib/libColPack.so``.
     * BUILD ADOL-C:
         * run ``./configure --enable-sparse --with-colpack=/home/b45ch1/workspace/ColPack/build``
+        * REMARK: the option ``--enable-sparse`` is used in ADOLC-2.2.1. In ADOLC-2.1.0 it is called ``--with-sparse``.
         * run ``make``
         * You don't have to run ``make install``.
         * You should then have a folder ``~/workspace/ADOL-C-2.1.0/ADOL-C`` with  ``adolc/adolc.h`` in it.
     * DOWNLAD PYADOLC: ``cd ~`` and then ``git clone git://github.com/b45ch1/pyadolc.git``
-    * BUILD PYADOL:
+    * BUILD PYADOLC:
         * change to the  folder ``~/pyadolc`` and rename the file ``setup.py.EXAMPLE`` to ``setup.py``.
         * Adapt ``setup.py`` to fit your system. In particular, you have to set the paths to your ADOL-C installation and boost python.
         * run ``python setup.py build``. A new folder with a name similar to ``~/pyadolc/build/lib.linux-x86_64-2.6`` should be generated.
