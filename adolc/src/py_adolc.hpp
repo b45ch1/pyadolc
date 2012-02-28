@@ -207,13 +207,13 @@ BOOST_PYTHON_MODULE(_adolc)
 	using namespace boost::python;
 	import_array(); 										/* some kind of hack to get numpy working */
 	bpn::array::set_module_and_type("numpy", "ndarray");	/* some kind of hack to get numpy working */
-	
+
 	scope().attr("__doc__") ="unused: moved docstring to adolc.py";
-	
+
 	def("get_size_of_short", get_size_of_short);
 	def("get_size_of_int", get_size_of_int);
 	def("get_size_of_long", get_size_of_long);
-	
+
 
 	def("trace_on",trace_on_default_argument);
 	def("trace_off",trace_off_default_argument);
@@ -245,7 +245,7 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("hov_reverse", 		&c_wrapped_hov_reverse);
 	def("hov_ti_reverse", 	&c_wrapped_hov_ti_reverse);
 	def("hos_ov_reverse", 	&c_wrapped_hos_ov_reverse);
-	
+
 	def("depends_on", 		&depends_on);
 	def("tape_to_latex",	py_tape_doc);
 
@@ -254,7 +254,7 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("exp",  adub_exp_badouble, return_value_policy<manage_new_object>()  );
 	def("log",  adub_log_badouble, return_value_policy<manage_new_object>()  );
 	def("sin", adub_sin_badouble, return_value_policy<manage_new_object>()  );
-	def("cos", adub_cos_badouble, return_value_policy<manage_new_object>()  );	
+	def("cos", adub_cos_badouble, return_value_policy<manage_new_object>()  );
 	def("tan",  adub_tan_badouble, return_value_policy<manage_new_object>()  );
 	def("asin", adub_asin_badouble, return_value_policy<manage_new_object>()  );
 	def("acos", adub_acos_badouble, return_value_policy<manage_new_object>()  );
@@ -266,7 +266,7 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("ceil", adub_ceil_badouble, return_value_policy<manage_new_object>()  );
 	def("floor", adub_floor_badouble, return_value_policy<manage_new_object>()  );
 	def("log10", adub_log10_badouble, return_value_policy<manage_new_object>()  );
-	
+
 	def("condassign", &wrapped_condassign_double_if);
 	def("condassign", &wrapped_condassign_double_if_else);
 	def("condassign", &wrapped_condassign_adouble_if);
@@ -277,7 +277,7 @@ BOOST_PYTHON_MODULE(_adolc)
 
 			.add_property("val", &badouble::value)
 			.add_property("loc", &badouble::loc)
-			
+
 			.def("is_independent", &badouble::operator<<=, return_internal_reference<>())
 			.def("__ilshift__", operator_eq_double, return_internal_reference<>())
 			.def("__ilshift__", operator_eq_badouble, return_internal_reference<>())
@@ -290,34 +290,34 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def(self -= double() )
 			.def(self *= double() )
 			.def(self /= double() )
-            
+
 		    .def(self += int() )
 		    .def(self -= int() )
 		    .def(self *= int() )
-		    .def(self /= int() )            
+		    .def(self /= int() )
 
 			.def(self += self )
 			.def(self -= self )
 			.def(self *= self )
 			.def(self /= self )
 
-		
+
 			.def(self < double() )
 			.def(self <= double() )
 			.def(self > double() )
 			.def(self >= double() )
-            
+
             .def(self < int() )
             .def(self <= int() )
             .def(self > int() )
-            .def(self >= int() )            
-            
-		
+            .def(self >= int() )
+
+
 			.def(self <  self  )
 			.def(self <= self  )
 			.def(self >  self  )
 			.def(self >= self  )
-			
+
 
 // 			.def(-self)  using this unary operator somehow screws up LATER computations, i.e. the operator works correctly, but subsequent calculations screw up!!
 // 			.def(+self)
@@ -342,7 +342,7 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("__mul__", adub_mul_badouble_double, return_value_policy<manage_new_object>())
 			.def("__div__", adub_div_badouble_double, return_value_policy<manage_new_object>())
 			.def("__truediv__", adub_div_badouble_double, return_value_policy<manage_new_object>())
-                        
+
 			.def("__pow__", adub_pow_badouble_double,   return_value_policy<manage_new_object>())
 			.def("__pow__", adouble_pow_badouble_badouble, return_value_policy<manage_new_object>())
 			.def("__rpow__",adouble_pow_double_badouble, return_value_policy<manage_new_object>())

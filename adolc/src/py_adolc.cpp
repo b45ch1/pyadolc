@@ -195,7 +195,7 @@ void c_wrapped_hov_forward		(short tape_tag, int M, int N, int D, int P, bpn::ar
 	for(int n = 0; n != N; ++n){
 		V[n] = &V1[ n * P];
 	}
-	
+
 	double* W_data = (double*) nu::data(bpn_W);
 	double** W[M];
 	double* W1[M*P];
@@ -222,7 +222,7 @@ void c_wrapped_hov_wk_forward	(short tape_tag, int M, int N, int D, int keep, in
 	for(int n = 0; n != N; ++n){
 		V[n] = &V1[ n * P];
 	}
-	
+
 	double* W_data = (double*) nu::data(bpn_W);
 	double** W[M];
 	double* W1[M*P];
@@ -249,7 +249,7 @@ void c_wrapped_fov_reverse		(short tape_tag, int M, int N, int Q, bpn::array &bp
 	for(int q = 0; q != Q; ++q){
 		U[q] = &U_data[M * q];
 	}
-	
+
 	double* Z_data = (double*) nu::data(bpn_Z);
 	double* Z[Q];
 	for(int q = 0; q != Q; ++q){
@@ -280,7 +280,7 @@ void c_wrapped_hos_ti_reverse   (short tape_tag, int M, int N, int D, bpn::array
 	}
 	hos_ti_reverse(tape_tag, M, N, D, U, Z);
 }
-	
+
 
 void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz){
 	double* U_data = (double*) nu::data(bpn_U);
@@ -314,11 +314,11 @@ void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::
 	double* U_data = (double*) nu::data(bpn_U);
 	double** U[Q];
 	double* U1[Q*M];
-	
+
 	for( int qn = 0; qn != Q*M; ++qn){
 		U1[qn] = &U_data[qn * (D+1)];
-	}	
-	
+	}
+
 	for(int q = 0; q != Q; ++q){
 		U[q] = &U1[ q * M];
 	}
@@ -327,15 +327,15 @@ void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::
 	double* Z_data = (double*) nu::data(bpn_Z);
 	double** Z[Q];
 	double* Z1[Q*N];
-	
+
 	for( int qn = 0; qn != Q*N; ++qn){
 		Z1[qn] = &Z_data[qn * (D+1)];
-	}	
-	
+	}
+
 	for(int q = 0; q != Q; ++q){
 		Z[q] = &Z1[ q * N];
 	}
-	
+
 	/* nz is (Q,N) matrix */
 	short* nz_data = (short*) nu::data(bpn_nz);
 	short* nz[Q];
@@ -350,27 +350,27 @@ void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::
 
 void c_wrapped_hos_ov_reverse	(short tape_tag, int M, int N, int D, int P, bpn::array &bpn_U, bpn::array &bpn_Z){
 	/* this function is experimental and likely not to work ... */
-	
+
 	/* U is (M,D+1) array */
 	double* U_data = (double*) nu::data(bpn_U);
 	double* U[M];
 	for(int m = 0; m != M; ++m){
 		U[m] = &U_data[ m * (D+1)];
 	}
-	
+
 	/* Z is (N, P, D+1) array???? */
 	double* Z_data = (double*) nu::data(bpn_Z);
 	double** Z[N];
 	double* Z1[N*P];
-	
+
 	for( int np = 0; np != N*P; ++np){
 		Z1[np] = &Z_data[np * (D+1)];
 	}
-	
+
 	for(int n = 0; n != N; ++n){
 		Z[n] = &Z1[ n * P];
 	}
-	
+
 	hos_ov_reverse(tape_tag, M, N, D, P, U, Z);
 }
 
