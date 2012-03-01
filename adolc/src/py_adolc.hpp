@@ -43,6 +43,7 @@ extern adub tanh  ( const badouble& );
 extern adub asinh ( const badouble& );
 // extern adub /*acosh*/ ( const badouble& );
 // extern adub atanh ( const badouble& );
+extern adouble atan2 ( const badouble&, const badouble&);
 extern adub fabs  ( const badouble& );
 extern adub ceil  ( const badouble& );
 extern adub floor ( const badouble& );
@@ -116,6 +117,7 @@ adub	(*tan_adub) 		( const badouble& ) = &tan;
 adub	(*asin_adub)		( const badouble& ) = &asin;
 adub	(*acos_adub)		( const badouble& ) = &acos;
 adub	(*atan_adub)		( const badouble& ) = &atan;
+adouble	(*atan2_adub_adub)      ( const badouble&, const badouble& ) = &atan2;
 adub	(*log10_adub)		( const badouble& ) = &log10;
 adub	(*sinh_adub)		( const badouble& ) = &sinh;
 adub	(*cosh_adub) 		( const badouble& ) = &cosh;
@@ -188,6 +190,7 @@ adub *adub_pow_badouble_double  (const badouble &lhs, const double &rhs)  {	retu
 adouble *adouble_pow_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adouble(pow(lhs,rhs));}
 adouble *adouble_pow_double_badouble(const badouble &rhs, double lhs){	return new adouble(pow(lhs,rhs));}
 
+adouble *adouble_atan2_badouble_badouble  (const badouble &rhs, const badouble &rhs2){	return new adouble(atan2(rhs, rhs2));}
 
 
 
@@ -259,6 +262,7 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("asin", adub_asin_badouble, return_value_policy<manage_new_object>()  );
 	def("acos", adub_acos_badouble, return_value_policy<manage_new_object>()  );
 	def("atan", adub_atan_badouble, return_value_policy<manage_new_object>()  );
+	def("atan2", adouble_atan2_badouble_badouble, return_value_policy<manage_new_object>()  );
 	def("sqrt", adub_sqrt_badouble, return_value_policy<manage_new_object>()  );
 	def("sinh", adub_sinh_badouble, return_value_policy<manage_new_object>()  );
 	def("cosh", adub_cosh_badouble, return_value_policy<manage_new_object>()  );
@@ -355,6 +359,7 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("arcsin", adub_asin_badouble, return_value_policy<manage_new_object>()  )
 			.def("arccos", adub_acos_badouble, return_value_policy<manage_new_object>()  )
 			.def("arctan", adub_atan_badouble, return_value_policy<manage_new_object>()  )
+			.def("arctan2", adouble_atan2_badouble_badouble, return_value_policy<manage_new_object>()  )
 			.def("sqrt", adub_sqrt_badouble, return_value_policy<manage_new_object>()  )
 			.def("sinh", adub_sinh_badouble, return_value_policy<manage_new_object>()  )
 			.def("cosh", adub_cosh_badouble, return_value_policy<manage_new_object>()  )

@@ -133,7 +133,23 @@ class OperationsTests ( TestCase ):
         assert_almost_equal(ach.val, numpy.cosh(x))
         assert_almost_equal(ath.val, numpy.tanh(x))
 
+    def test_arc_functions(self):
 
+        x = 0.65
+        y = 2.1
+
+        ax = adouble(x)
+        ay = adouble(y)
+
+        aas = numpy.arcsin(ax)
+        aac = numpy.arccos(ax)
+        aat = numpy.arctan(ax)
+        aat2 = numpy.arctan2(ax, ay)
+
+        assert_almost_equal(aas.val, numpy.arcsin(x))
+        assert_almost_equal(aac.val, numpy.arccos(x))
+        assert_almost_equal(aat.val, numpy.arctan(x))
+        assert_almost_equal(aat2.val, numpy.arctan2(x,y))
 
     def test_fabs(self):
         x = 3.
