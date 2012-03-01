@@ -316,7 +316,6 @@ def fov_forward(tape_tag, x, V):
     """
 
     assert type(tape_tag) == int
-    assert type(keep) == int
     ts = tapestats(tape_tag)
 
     N = ts['NUM_INDEPENDENTS']
