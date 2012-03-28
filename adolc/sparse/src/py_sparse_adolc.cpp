@@ -1,7 +1,7 @@
 #include "py_sparse_adolc.hpp"
 
 bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_options){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 	npy_intp M = tape_stats[NUM_DEPENDENTS];
@@ -17,7 +17,7 @@ bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_optio
 	for(int m = 0; m != M; ++m){
 		bp::list tmp;
 		ret_JP.append(tmp);
-		for(int c = 1; c <= JP[m][0]; ++c){
+		for(unsigned int c = 1; c <= JP[m][0]; ++c){
 			bp::list tmp =  boost::python::extract<boost::python::list>(ret_JP[m]);
 			tmp.append(JP[m][c]);
 		}
@@ -28,7 +28,7 @@ bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_optio
 
 
 // bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options){
-// 	int tape_stats[STAT_SIZE];
+// 	size_t tape_stats[STAT_SIZE];
 // 	tapestats(tape_tag, tape_stats);
 // 	int N = tape_stats[NUM_INDEPENDENTS];
 // 	int M = tape_stats[NUM_DEPENDENTS];
@@ -36,7 +36,7 @@ bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_optio
 // 	double* x = (double*) nu::data(bpn_x);
 // 	int* options  = (int*) nu::data(bpn_options);
 // // 	int options[4] = {1,1,0,0};
-	
+
 
 // 	int nnz=-1;
 // 	unsigned int *rind = NULL;
@@ -64,7 +64,7 @@ bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_optio
 // }
 
 // bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values){
-// 	int tape_stats[STAT_SIZE];
+// 	size_t tape_stats[STAT_SIZE];
 // 	tapestats(tape_tag, tape_stats);
 // 	int N = tape_stats[NUM_INDEPENDENTS];
 // 	int M = tape_stats[NUM_DEPENDENTS];
@@ -98,7 +98,7 @@ bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_optio
 
 
 bp::list	wrapped_hess_pat(short tape_tag, bpn::array &bpn_x,npy_intp option){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 	npy_intp M = tape_stats[NUM_DEPENDENTS];
@@ -124,7 +124,7 @@ bp::list	wrapped_hess_pat(short tape_tag, bpn::array &bpn_x,npy_intp option){
 }
 
 // bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options){
-// 	int tape_stats[STAT_SIZE];
+// 	size_t tape_stats[STAT_SIZE];
 // 	tapestats(tape_tag, tape_stats);
 // 	int N = tape_stats[NUM_INDEPENDENTS];
 
@@ -158,7 +158,7 @@ bp::list	wrapped_hess_pat(short tape_tag, bpn::array &bpn_x,npy_intp option){
 // }
 
 // bp::list	wrapped_sparse_hess_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values){
-// 	int tape_stats[STAT_SIZE];
+// 	size_t tape_stats[STAT_SIZE];
 // 	tapestats(tape_tag, tape_stats);
 // 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 

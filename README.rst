@@ -66,21 +66,23 @@ EXAMPLE USAGE::
 REQUIREMENTS:
     * Known to work for Ubuntu Linux, Python 2.6, NumPy 1.3.0, Boost:Python 1.40.0
     * Python and Numpy, both with header files
-    * ADOL-C version 2.1.0 http://www.coin-or.org/projects/ADOL-C.xml
+    * ADOL-C version 2.3.0 http://www.coin-or.org/projects/ADOL-C.xml
     * boost::python from http://www.boost.org/
 
 OPTIONAL REQUIREMENTS:
-    * For sparse Jacobians and Hessians: ColPack 1.0.0 http://www.cscapes.org/coloringpage/software.htm
+    * For sparse Jacobians and Hessians: ColPack 1.0.6 http://www.cscapes.org/coloringpage/software.htm
     * scons build tool (makes things easier if you need to recompile pyadolc)
 
 INSTALLATION:
 
-    * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.1 and above), ColPack (version 1.0.0 and above) the boost libraries and numpy installed. All with header files.
+    * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.3.0), ColPack (version 1.0.6) the boost libraries and numpy installed. All with header files.
     * BUILD COLPACK
-        * run ``make``
-        * this should generate ``~workspace/ColPack/build/lib/libColPack.so``.
+        * if you have 32bit system: run ``./configure --prefix=~/workspace/adol-c/ThirdParty/ColPack/``
+        * if you have 64bit system: run ``./configure --prefix=~/workspace/adol-c/ThirdParty/ColPack/ --libdir='${prefix}/lib64'``
+        * run ``make && make install``
+        * this should generate ``~/workspace/adol-c/ThirdParty/ColPack/libColPack.so``.
     * BUILD ADOL-C:
-        * run ``./configure --enable-sparse --with-colpack=/home/b45ch1/workspace/ColPack/build``
+        * run ``./configure --enable-sparse --with-colpack=~/workspace/adol-c/ThirdParty/ColPack/``
         * REMARK: the option ``--enable-sparse`` is used in ADOLC-2.2.1. In ADOLC-2.1.0 it is called ``--with-sparse``.
         * run ``make``
         * You don't have to run ``make install``.
