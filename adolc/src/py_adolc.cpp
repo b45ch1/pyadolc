@@ -25,7 +25,7 @@ void print_array(double *vec, int length, string msg=""){
 
 
 bp::dict wrapped_tapestats(short tape_tag){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	bp::dict retval;
 	retval["NUM_INDEPENDENTS"] = tape_stats[NUM_INDEPENDENTS];

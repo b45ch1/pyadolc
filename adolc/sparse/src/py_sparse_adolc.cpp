@@ -1,7 +1,7 @@
 #include "py_sparse_adolc.hpp"
 
 bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_options){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 	npy_intp M = tape_stats[NUM_DEPENDENTS];
@@ -98,7 +98,7 @@ bp::list	wrapped_jac_pat(short tape_tag, bpn::array &bpn_x,bpn::array &bpn_optio
 
 
 bp::list	wrapped_hess_pat(short tape_tag, bpn::array &bpn_x,npy_intp option){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 	npy_intp M = tape_stats[NUM_DEPENDENTS];

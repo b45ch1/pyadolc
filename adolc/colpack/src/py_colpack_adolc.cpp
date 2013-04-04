@@ -1,7 +1,7 @@
 #include "py_colpack_adolc.hpp"
 
 bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
 	int M = tape_stats[NUM_DEPENDENTS];
@@ -37,7 +37,7 @@ bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::ar
 }
 
 bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
 	int M = tape_stats[NUM_DEPENDENTS];
@@ -63,7 +63,7 @@ bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp n
 
 
 bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
 
@@ -97,7 +97,7 @@ bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::a
 }
 
 bp::list	wrapped_sparse_hess_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values){
-	int tape_stats[STAT_SIZE];
+	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 
