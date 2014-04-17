@@ -78,8 +78,8 @@ bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::a
 	sparse_hess(tape_tag,  N, 0, x, &nnz, &rind, &cind, &values, options);
 
 	npy_intp ret_nnz = static_cast<npy_intp>(nnz);
-	bp::object bp_rind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_INT, (char*) rind )));
-	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_INT, (char*) cind )));
+	bp::object bp_rind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_UINT, (char*) rind )));
+	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_UINT, (char*) cind )));
 	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_DOUBLE, (char*) values )));
 
 	bpn::array ret_rind   = boost::python::extract<boost::python::numeric::array>(bp_rind);
@@ -101,10 +101,10 @@ bp::list	wrapped_sparse_hess_repeat(short tape_tag, bpn::array &bpn_x, npy_intp 
 	tapestats(tape_tag, tape_stats);
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];
 
-	double* x                = (double*)   nu::data(bpn_x);
+	double* x                = (double*)         nu::data(bpn_x);
 	unsigned int* rind       = (unsigned int*)   nu::data(bpn_rind);
 	unsigned int* cind       = (unsigned int*)   nu::data(bpn_cind);
-	double   *values         = (double*)   nu::data(bpn_values);
+	double   *values         = (double*)         nu::data(bpn_values);
 	int options[2]={0,1};
 	int tmp_nnz = static_cast<int>(nnz);
 

@@ -5,14 +5,15 @@ import cgraph
 
 try:
     import sparse
-except:
+except Exception as e:
     print 'adolc Notice: sparse drivers not available'
-    
+    print e
 try:
     import colpack
 
-except:
+except Exception as e:
     print 'adolc Notice: colpack drivers not available'
+    print e
 
 # testing
 from numpy.testing import Tester
