@@ -11,7 +11,7 @@ int main(){
 	adouble ax,ay;
 	double *y = myalloc1(1);
 	double x;
-	x = 1.;
+	x = 0.99;
 	
 	trace_on(11);
 	ax<<=x;

@@ -9,6 +9,7 @@ import inspect
 #     which contain libColPack.so and the include files
 BASEDIR = os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
 
+
 ADOLC_DIR   = os.environ.get('ADOLC_DIR', BASEDIR)
 COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'ThirdParty/ColPack'))
 
@@ -56,6 +57,9 @@ Export('adolc_include_path')
 SConscript('adolc/SConscript')
 SConscript('adolc/sparse/SConscript')
 SConscript('adolc/colpack/SConscript')
+
+SConscript('tests/tape_equivalence_PyADOLC_ADOLC/SConscript')
+
 
 # SConscript('tests/misc_tests/adolc_tiny_unit_test/SConscript')
 

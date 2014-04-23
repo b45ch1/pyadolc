@@ -20,10 +20,6 @@ adouble clone_adouble(const adouble &rhs){
 	return adouble(rhs);
 }
 
-adub clone_adub(const adub &rhs){
-	return adub(rhs);
-}
-
 extern adub exp		( const badouble& );
 extern adub log		( const badouble& );
 extern adub sqrt	( const badouble& );
@@ -144,49 +140,49 @@ adub	(*ldexp_adub) 		( const badouble&, int ) = &ldexp;
 
 /* WRAPPED OPERATORS */
 /* unary */
-adub *adub_neg_badouble   (const badouble &rhs){	return new adub(operator*(-1.,rhs));}
-adub *adub_abs_badouble   (const badouble &rhs){	return new adub(fabs(rhs));}
-adub *adub_exp_badouble   (const badouble &rhs){	return new adub(exp(rhs));}
-adub *adub_log_badouble   (const badouble &rhs){	return new adub(log(rhs));}
-adub *adub_sin_badouble   (const badouble &rhs){	return new adub(sin(rhs));}
-adub *adub_cos_badouble   (const badouble &rhs){	return new adub(cos(rhs));}
-adub *adub_tan_badouble   (const badouble &rhs){	return new adub(tan(rhs));}
-adub *adub_asin_badouble  (const badouble &rhs){	return new adub(asin(rhs));}
-adub *adub_acos_badouble  (const badouble &rhs){	return new adub(acos(rhs));}
-adub *adub_atan_badouble  (const badouble &rhs){	return new adub(atan(rhs));}
-adub *adub_sqrt_badouble  (const badouble &rhs){	return new adub(sqrt(rhs));}
-adub *adub_sinh_badouble  (const badouble &rhs){	return new adub(sinh(rhs));}
-adub *adub_cosh_badouble  (const badouble &rhs){	return new adub(cosh(rhs));}
-adub *adub_tanh_badouble  (const badouble &rhs){	return new adub(tanh(rhs));}
-// adub *adub_asinh_badouble  (const badouble &rhs){	return new adub(asinh(rhs));}
-// adub *adub_acosh_badouble  (const badouble &rhs){	return new adub(acosh(rhs));}
-// adub *adub_atanh_badouble  (const badouble &rhs){	return new adub(atanh(rhs));}
+adub *adub_neg_badouble   (const badouble &rhs){	return adubp_from_adub(operator*(-1.,rhs));}
+adub *adub_abs_badouble   (const badouble &rhs){	return adubp_from_adub(fabs(rhs));}
+adub *adub_exp_badouble   (const badouble &rhs){	return adubp_from_adub(exp(rhs));}
+adub *adub_log_badouble   (const badouble &rhs){	return adubp_from_adub(log(rhs));}
+adub *adub_sin_badouble   (const badouble &rhs){	return adubp_from_adub(sin(rhs));}
+adub *adub_cos_badouble   (const badouble &rhs){	return adubp_from_adub(cos(rhs));}
+adub *adub_tan_badouble   (const badouble &rhs){	return adubp_from_adub(tan(rhs));}
+adub *adub_asin_badouble  (const badouble &rhs){	return adubp_from_adub(asin(rhs));}
+adub *adub_acos_badouble  (const badouble &rhs){	return adubp_from_adub(acos(rhs));}
+adub *adub_atan_badouble  (const badouble &rhs){	return adubp_from_adub(atan(rhs));}
+adub *adub_sqrt_badouble  (const badouble &rhs){	return adubp_from_adub(sqrt(rhs));}
+adub *adub_sinh_badouble  (const badouble &rhs){	return adubp_from_adub(sinh(rhs));}
+adub *adub_cosh_badouble  (const badouble &rhs){	return adubp_from_adub(cosh(rhs));}
+adub *adub_tanh_badouble  (const badouble &rhs){	return adubp_from_adub(tanh(rhs));}
+// adub *adub_asinh_badouble  (const badouble &rhs){	return adubp_from_adub(asinh(rhs));}
+// adub *adub_acosh_badouble  (const badouble &rhs){	return adubp_from_adub(acosh(rhs));}
+// adub *adub_atanh_badouble  (const badouble &rhs){	return adubp_from_adub(atanh(rhs));}
 
 
-adub *adub_fabs_badouble  (const badouble &rhs){	return new adub(fabs(rhs));}
-adub *adub_ceil_badouble  (const badouble &rhs){	return new adub(ceil(rhs));}
-adub *adub_floor_badouble (const badouble &rhs){	return new adub(floor(rhs));}
-adub *adub_log10_badouble (const badouble &rhs){	return new adub(log10(rhs));}
+adub *adub_fabs_badouble  (const badouble &rhs){	return adubp_from_adub(fabs(rhs));}
+adub *adub_ceil_badouble  (const badouble &rhs){	return adubp_from_adub(ceil(rhs));}
+adub *adub_floor_badouble (const badouble &rhs){	return adubp_from_adub(floor(rhs));}
+adub *adub_log10_badouble (const badouble &rhs){	return adubp_from_adub(log10(rhs));}
 
 
 /* binary */
-adub *adub_add_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator+(lhs,rhs));}
-adub *adub_sub_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator-(lhs,rhs));}
-adub *adub_mul_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator*(lhs,rhs));}
-adub *adub_div_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adub(operator/(lhs,rhs));}
+adub *adub_add_badouble_badouble(const badouble &lhs, const badouble &rhs){	return adubp_from_adub(operator+(lhs,rhs));}
+adub *adub_sub_badouble_badouble(const badouble &lhs, const badouble &rhs){	return adubp_from_adub(operator-(lhs,rhs));}
+adub *adub_mul_badouble_badouble(const badouble &lhs, const badouble &rhs){	return adubp_from_adub(operator*(lhs,rhs));}
+adub *adub_div_badouble_badouble(const badouble &lhs, const badouble &rhs){	return adubp_from_adub(operator/(lhs,rhs));}
 
-adub *adub_add_badouble_double(const badouble &lhs,double rhs){	return new adub(operator+(lhs,rhs));}
-adub *adub_sub_badouble_double(const badouble &lhs,double rhs){	return new adub(operator-(lhs,rhs));}
-adub *adub_mul_badouble_double(const badouble &lhs,double rhs){	return new adub(operator*(lhs,rhs));}
-adub *adub_div_badouble_double(const badouble &lhs,double rhs){	return new adub(operator/(lhs,rhs));}
+adub *adub_add_badouble_double(const badouble &lhs,double rhs){	return adubp_from_adub(operator+(lhs,rhs));}
+adub *adub_sub_badouble_double(const badouble &lhs,double rhs){	return adubp_from_adub(operator-(lhs,rhs));}
+adub *adub_mul_badouble_double(const badouble &lhs,double rhs){	return adubp_from_adub(operator*(lhs,rhs));}
+adub *adub_div_badouble_double(const badouble &lhs,double rhs){	return adubp_from_adub(operator/(lhs,rhs));}
 
-adub *adub_add_double_badouble(const badouble &rhs,double lhs){	return new adub(operator+(lhs,rhs));}
-adub *adub_sub_double_badouble(const badouble &rhs,double lhs){	return new adub(operator-(lhs,rhs));}
-adub *adub_mul_double_badouble(const badouble &rhs,double lhs){	return new adub(operator*(lhs,rhs));}
-adub *adub_div_double_badouble(const badouble &rhs,double lhs){	return new adub(operator/(lhs,rhs));}
+adub *adub_add_double_badouble(const badouble &rhs,double lhs){	return adubp_from_adub(operator+(lhs,rhs));}
+adub *adub_sub_double_badouble(const badouble &rhs,double lhs){	return adubp_from_adub(operator-(lhs,rhs));}
+adub *adub_mul_double_badouble(const badouble &rhs,double lhs){	return adubp_from_adub(operator*(lhs,rhs));}
+adub *adub_div_double_badouble(const badouble &rhs,double lhs){	return adubp_from_adub(operator/(lhs,rhs));}
 
 
-adub *adub_pow_badouble_double  (const badouble &lhs, const double &rhs)  {	return new adub(pow(lhs,rhs));}
+adub *adub_pow_badouble_double  (const badouble &lhs, const double &rhs)  {	return adubp_from_adub(pow(lhs,rhs));}
 adouble *adouble_pow_badouble_badouble(const badouble &lhs, const badouble &rhs){	return new adouble(pow(lhs,rhs));}
 adouble *adouble_pow_double_badouble(const badouble &rhs, double lhs){	return new adouble(pow(lhs,rhs));}
 
@@ -381,10 +377,10 @@ BOOST_PYTHON_MODULE(_adolc)
 			.def("fmin", fmin_adub_double_badouble)
 			.def("fmin", fmin_adub_badouble_double)
 			.def("clone", clone_adouble)
-			.def("clone", clone_adub)
+			// .def("clone", clone_adub)
 	;
 
-	class_<adub, bases<badouble> >("adub", no_init)
+	class_<adub, bases<badouble>, boost::noncopyable>("adub", no_init)
 	;
 
 	class_<adouble, bases<badouble> >("adouble", init<double>())
