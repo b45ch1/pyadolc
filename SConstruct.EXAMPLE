@@ -1,17 +1,18 @@
 import distutils.sysconfig
 import os
 import numpy
-
+import inspect
 
 # -1: CUSTOMIZE THIS TO FIT YOUR SYSTEM !!!
 
-adolc_include_path = '/home/swalter/projects/adol-c/ADOL-C/include'
-adolc_library_path = '/home/swalter/projects/adol-c/ADOL-C/src/.libs'
 
+BASEDIR = os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
 
+adolc_include_path   = os.path.join(BASEDIR, 'ADOL-C/include')
+adolc_library_path   = os.path.join(BASEDIR, 'ADOL-C/.libs')
 
-colpack_include_path = '/home/swalter/software/ColPack-1.0.9/build/include'
-colpack_lib_path = '/home/swalter/software/ColPack-1.0.9/build/lib64'
+colpack_include_path = os.path.join(BASEDIR, 'ThirdParty/ColPack/include')
+colpack_lib_path     = os.path.join(BASEDIR, 'ThirdParty/ColPack/lib64')
 
 LIBS        = ['adolc',
                 'boost_python',
