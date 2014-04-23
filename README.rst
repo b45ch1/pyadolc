@@ -64,38 +64,42 @@ EXAMPLE USAGE::
 
 
 REQUIREMENTS:
-    * Known to work for Ubuntu Linux, Python 2.6, NumPy 1.3.0, Boost:Python 1.40.0
     * Python and Numpy, both with header files
-    * ADOL-C version 2.3.0 http://www.coin-or.org/projects/ADOL-C.xml
+    * ADOL-C version >=2.3.0  http://www.coin-or.org/projects/ADOL-C.xml
     * boost::python from http://www.boost.org/
+    * scons build tool (makes things easier if you need to recompile pyadolc)
+
 
 OPTIONAL REQUIREMENTS:
-    * For sparse Jacobians and Hessians: ColPack 1.0.6 http://www.cscapes.org/coloringpage/software.htm
-    * scons build tool (makes things easier if you need to recompile pyadolc)
+    * For sparse Jacobians and Hessians: ColPack >=1.0.6 http://www.cscapes.org/coloringpage/software.htm
+
+
+KNOWN TO WORK WITH
+    * Known to work for Ubuntu Linux, Python 2.6, NumPy 1.3.0, Boost:Python 1.40.0, ADOL-C 2.3.0, ColPack 1.0.6
+    * Known to work for Ubuntu Linux, Python 2.7.3, NumPy 1.8.0, Boost:Python 1.48.0, ADOL-C 2.6.0, ColPack 1.0.9
+
 
 INSTALLATION:
 
-    * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.3.0), ColPack (version 1.0.6) the boost libraries and numpy installed. All with header files.
+    * CHECK REQUIREMENTS: Make sure you have ADOL-C (version 2.6.0), ColPack (version 1.0.9) the boost libraries and numpy installed. All with header files.
     * BUILD COLPACK
         * if you have 32bit system: run ``./configure --prefix=~/workspace/adol-c/ThirdParty/ColPack/``
         * if you have 64bit system: run ``./configure --prefix=~/workspace/adol-c/ThirdParty/ColPack/ --libdir='${prefix}/lib64'``
         * run ``make && make install``
-        * this should generate ``~/workspace/adol-c/ThirdParty/ColPack/libColPack.so``.
+        * this should generate ``~/workspace/adol-c/ThirdParty/ColPack/lib64/libColPack.so``.
     * BUILD ADOL-C:
         * run ``./configure --enable-sparse --with-colpack=~/workspace/adol-c/ThirdParty/ColPack/``
         * REMARK: the option ``--enable-sparse`` is used in ADOLC-2.2.1. In ADOLC-2.1.0 it is called ``--with-sparse``.
         * run ``make``
         * You don't have to run ``make install``.
         * You should then have a folder ``~/workspace/ADOL-C-2.1.0/ADOL-C`` with  ``adolc/adolc.h`` in it.
-    * DOWNLAD PYADOLC: ``cd ~`` and then ``git clone git://github.com/b45ch1/pyadolc.git``
+    * CLONE PYADOLC: ``cd ~/workspace/adol-c`` and then ``git clone git://github.com/b45ch1/pyadolc.git python``
+      You should then have a folder ~/workspace/adol-c/python containing the file SConstruct
+    * if you get no permission errors, then use the https url from github to clone the repository.
     * BUILD PYADOLC:
-        * change to the  folder ``~/pyadolc`` and rename the file ``setup.py.EXAMPLE`` to ``setup.py``.
-        * Adapt ``setup.py`` to fit your system. In particular, you have to set the paths to your ADOL-C installation and boost python.
-        * run ``python setup.py build``. A new folder with a name similar to ``~/pyadolc/build/lib.linux-x86_64-2.6`` should be generated.
-        * run ``python setup.py install`` to install pyadolc to your system.
+        Go to the folder ~/workspace/adol-c/python and run ``scons``
+        This should compile and link everything you need.
     * TEST YOUR INSTALLATION:
-        * Change directory to ``~/pyadolc/build/lib.linux-x86_64-2.6``
         * run ``python -c "import adolc; adolc.test()"``. All tests should pass.
-    * You can also use scons (if you have it) instead of using setup.py
     * If anything goes wrong, please file a bug report.
 
