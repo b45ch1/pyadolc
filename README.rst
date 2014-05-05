@@ -73,12 +73,12 @@ THIS VERSION OF PYADOLC IS KNOWN TO WORK WITH:
     * Boost:Python 1.48.0
 
 Other verions and combinations may or may not work.
-Check the git branches and tags
+Check the git branches and tags for older versions.
 
 REQUIREMENTS:
 
     * Python and Numpy, both with header files
-    * ADOL-C http://www.coin-or.org/projects/ADOL-C.xml or https://gitorious.org/adol-c
+    * ADOL-C, official versions from http://www.coin-or.org/projects/ADOL-C.xml or from https://gitorious.org/adol-c
     * boost::python from http://www.boost.org/
     * scons build tool (makes things easier if you need to recompile pyadolc)
 
