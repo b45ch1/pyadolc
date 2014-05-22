@@ -14,19 +14,40 @@ import os
 from distutils.core import setup, Extension
 from distutils.core import Command
 from numpy.distutils.misc_util import get_numpy_include_dirs
-from time import sleep
+import inspect
+
+
+BASEDIR = os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
+ADOLC_DIR   = os.environ.get('ADOLC_DIR', BASEDIR)
+COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'ThirdParty/ColPack'))
+
+adolc_include_path   = os.path.join(ADOLC_DIR, 'ADOL-C/include')
+adolc_library_path   = os.path.join(ADOLC_DIR, 'ADOL-C/.libs')
+
+colpack_include_path = os.path.join(COLPACK_DIR, 'include')
+colpack_lib_path     = os.path.join(COLPACK_DIR, 'lib64')
+
 
 # ADAPT THIS TO FIT YOUR SYSTEM
 extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
-include_dirs = [get_numpy_include_dirs()[0],'/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C','/home/b45ch1/workspace/ColPack/build/include']
-library_dirs = ['/home/b45ch1/workspace/ADOL-C/trunk/ADOL-C/src/.libs','/home/b45ch1/workspace/ColPack/build/lib']
+include_dirs = [get_numpy_include_dirs()[0], adolc_include_path, colpack_include_path]
+library_dirs = [adolc_library_path, colpack_lib_path]
 libraries = ['boost_python','adolc', 'ColPack']
 
 print ''
+print '\033[1;31musing scons is the preferred method to compile pyadolc. If this script does not work, try to use scons.\033[1;m'
 print '\033[1;31mplease check that the following settings are correct for your system\033[1;m'
 print 'include_dirs = %s\n'%str(include_dirs)
 print 'library_dirs = %s\n'%str(library_dirs)
-sleep(1)
+print '''
+If ADOL-C or Colpack cannot be found, you can manually set the paths via
+``export ADOLC_DIR=/path/to/adol-c`` and ``export COLPACK_DIR=/path/to/colpack``
+
+* where /path/to/adol-c contains the folders ``ADOL-C/include`` and ``ADOL-C/.libs``.
+* where /path/to/colpack contains the folders ``./include`` and ``./lib64``, containing ``libColPack.so`` and the include files
+
+'''
+raw_input("Press enter to continue.")
 
 
 # PACKAGE INFORMATION
@@ -69,9 +90,15 @@ if len(sys.argv) == 1:
 
     Options:
     1: build the extension with
+    python setup.py build
+
+    2: install the extension with
+    python setup.py install
+
+    3: alternatively build inplace
     python setup.py build_ext --inplace
 
-    2: remove generated files with
+    4: remove generated files with
     python setup.py clean --all
 
 

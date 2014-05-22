@@ -65,7 +65,7 @@ EXAMPLE USAGE::
 
 THIS VERSION OF PYADOLC IS KNOWN TO WORK WITH:
 
-    * ADOL-C 2.5.1
+    * ADOL-C 2.5.1 (or commit >= d7a0b87fe4cd1344930a0d3ccc048e0a7038c5c8 from https://gitorious.org/adol-c)
     * ColPack 1.0.9
     * Ubuntu Linux
     * Python 2.7.3
@@ -102,8 +102,11 @@ INSTALLATION:
     * CLONE PYADOLC: ``cd /path/to/adol-c/`` and then ``git clone https://github.com/b45ch1/pyadolc.git python``
       You should then have a folder /path/to/adol-c/python containing the file SConstruct
     * BUILD PYADOLC:
-        Go to the folder /path/to/adol-c/python and run ``scons``
+        Go to the folder /path/to/adol-c/python and run ``scons``.
         This should compile and link everything you need.
+        If you want to install ``pyadolc`` in a different path than ``/path/to/adol-c/python``, you have to set the following ENV variables
+        ``export ADOLC_DIR=/path/to/adolc`` and ``export COLPACK_DIR=/path/to/colpack`` before running scons.
+
     * TEST YOUR INSTALLATION:
         * run ``python -c "import adolc; adolc.test()"``. All tests should pass.
     * If anything goes wrong, please file a bug report.

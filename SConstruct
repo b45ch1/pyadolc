@@ -32,6 +32,24 @@ INCLUDEPATH = [
             adolc_include_path,
             ]
 
+
+
+print ''
+print '\033[1;31mplease check that the following settings are correct for your system\033[1;m'
+print 'INCLUDEPATH = %s\n'%str(INCLUDEPATH)
+print 'LIBPATH = %s\n'%str(LIBPATH)
+print '''
+If ADOL-C or Colpack cannot be found, you can manually set the paths via
+``export ADOLC_DIR=/path/to/adol-c`` and ``export COLPACK_DIR=/path/to/colpack``
+
+* where /path/to/adol-c contains the folders ``ADOL-C/include`` and ``ADOL-C/.libs``.
+* where /path/to/colpack contains the folders ``./include`` and ``./lib64``, containing ``libColPack.so`` and the include files
+
+'''
+raw_input("Press enter to continue.")
+
+
+
 # 0: setup the command line parsing
 AddOption('--prefix',
         dest='prefix',
@@ -45,7 +63,8 @@ env = Environment(
     PREFIX = GetOption('prefix'),
     TMPBUILD = '/tmp/builddir',
     CPPPATH=[distutils.sysconfig.get_python_inc(),numpy.get_include()] + INCLUDEPATH,
-    CXXFLAGS="-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB -O0 -g -Wall",
+    # CXXFLAGS="-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB -O0 -g -Wall",
+    CXXFLAGS="-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB -O1 -Wall",
     LIBPATH=  LIBPATH,
     LIBS= LIBS,
     RPATH = LIBPATH, #include information where shared libraries can be found to avoid errors like: "ImportError: libboost_python-gcc42-mt-1_34_1.so.1.34.1: cannot open shared object file: No such file or directory"
