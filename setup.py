@@ -17,21 +17,22 @@ from numpy.distutils.misc_util import get_numpy_include_dirs
 import inspect
 
 
-BASEDIR = os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
-ADOLC_DIR   = os.environ.get('ADOLC_DIR', BASEDIR)
-COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'ThirdParty/ColPack'))
+BASEDIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
+ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C'))
+COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/ThirdParty/ColPack'))
 
 adolc_include_path   = os.path.join(ADOLC_DIR, 'ADOL-C/include')
 adolc_library_path   = os.path.join(ADOLC_DIR, 'ADOL-C/.libs')
 
 colpack_include_path = os.path.join(COLPACK_DIR, 'include')
-colpack_lib_path     = os.path.join(COLPACK_DIR, 'lib64')
-
+colpack_lib_path1    = os.path.join(COLPACK_DIR, 'lib')
+colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
 
 # ADAPT THIS TO FIT YOUR SYSTEM
 extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
 include_dirs = [get_numpy_include_dirs()[0], adolc_include_path, colpack_include_path]
-library_dirs = [adolc_library_path, colpack_lib_path]
+library_dirs = [adolc_library_path, colpack_lib_path1, colpack_lib_path2]
 libraries = ['boost_python','adolc', 'ColPack']
 
 print ''

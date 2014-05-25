@@ -27,6 +27,8 @@ build
 adolc-2.0.0
 jac_pat.mtx
 
+PACKAGES
+
 # EXCEPTIONS
 !README
 !.gitignore

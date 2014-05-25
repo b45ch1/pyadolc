@@ -7,24 +7,26 @@ import inspect
 #     e.g. export COLPACK_DIR=/path/to/colpack
 #     where /path/to/colpack contains the folders ./include and ./lib64
 #     which contain libColPack.so and the include files
-BASEDIR = os.path.dirname(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))))
+BASEDIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-
-ADOLC_DIR   = os.environ.get('ADOLC_DIR', BASEDIR)
-COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'ThirdParty/ColPack'))
+ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C'))
+COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/ThirdParty/ColPack'))
 
 adolc_include_path   = os.path.join(ADOLC_DIR, 'ADOL-C/include')
 adolc_library_path   = os.path.join(ADOLC_DIR, 'ADOL-C/.libs')
 
 colpack_include_path = os.path.join(COLPACK_DIR, 'include')
-colpack_lib_path     = os.path.join(COLPACK_DIR, 'lib64')
+colpack_lib_path1    = os.path.join(COLPACK_DIR, 'lib')
+colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
+
 
 LIBS        = ['adolc',
                 'boost_python',
                 'ColPack',
             ]
 LIBPATH     = [
-                colpack_lib_path,
+                colpack_lib_path1,
+                colpack_lib_path2,
                 adolc_library_path,
             ]
 INCLUDEPATH = [
