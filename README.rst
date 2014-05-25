@@ -65,15 +65,10 @@ EXAMPLE USAGE::
 
 THIS VERSION OF PYADOLC IS KNOWN TO WORK WITH:
 
-    * ADOL-C 2.5.1 (or commit >= d7a0b87fe4cd1344930a0d3ccc048e0a7038c5c8 from https://gitorious.org/adol-c)
-    * ColPack 1.0.9
     * Ubuntu Linux
     * Python 2.7.3
     * NumPy 1.8.0
     * Boost:Python 1.48.0
-
-Other verions and combinations may or may not work.
-Check the git branches and tags for older versions.
 
 REQUIREMENTS:
 
@@ -82,11 +77,20 @@ REQUIREMENTS:
     * boost::python from http://www.boost.org/
     * scons build tool (makes things easier if you need to recompile pyadolc)
 
-OPTIONAL REQUIREMENTS:
-
-    * For sparse Jacobians and Hessians: ColPack http://www.cscapes.org/coloringpage/software.htm
-
 INSTALLATION:
+
+    * Use ``./bootstrap.sh`` to download ADOL-C and ColPack and compile them.
+    * Run ``scons`` or ``python setup.py``
+
+TEST YOUR INSTALLATION:
+
+    * run ``python -c "import adolc; adolc.test()"``.
+      All tests should pass.
+    * If anything goes wrong, please file a bug report.
+
+MANUAL INSTALLATION:
+
+    Use the description below if the INSTALLATION procedure using ``./bootstrap.sh`` does not work, or you want to use another ADOL-C version.
 
     * CHECK REQUIREMENTS: Make sure you have ADOL-C , ColPack the boost libraries and numpy installed. All with header files.
     * BUILD COLPACK
@@ -106,8 +110,4 @@ INSTALLATION:
         This should compile and link everything you need.
         If you want to install ``pyadolc`` in a different path than ``/path/to/adol-c/python``, you have to set the following ENV variables
         ``export ADOLC_DIR=/path/to/adolc`` and ``export COLPACK_DIR=/path/to/colpack`` before running scons.
-
-    * TEST YOUR INSTALLATION:
-        * run ``python -c "import adolc; adolc.test()"``. All tests should pass.
-    * If anything goes wrong, please file a bug report.
 
