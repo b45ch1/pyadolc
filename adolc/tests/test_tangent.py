@@ -63,7 +63,7 @@ class SemiImplicitOdeLhsTest(TestCase):
     
     def test_differentiation_of_gfcn(self):
         def gfcn(a):
-            print 'called gfcn'
+            print('called gfcn')
             ty = [Tangent(a.xd[0], a.xdd[0]),Tangent(a.xd[1], a.xdd[1]), Tangent(a.xd[2], a.xdd[2])]
             tlhs = [ty[0] * ty[2], ty[1] * ty[2], ty[2]]
             
@@ -127,5 +127,5 @@ if __name__ == '__main__':
     try:
         import nose
     except:
-        print 'Please install nose for unit testing'
+        print('Please install nose for unit testing')
     nose.runmodule()

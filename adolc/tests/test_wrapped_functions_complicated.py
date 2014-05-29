@@ -350,8 +350,8 @@ class TestNonlinearRegression(TestCase):
                 n = self.n
                 y = [numpy.fabs(i) for i in x[:-2]]
                 y.insert(0, numpy.fabs(n - sum(y[:n-1])))
-                a = dict(zip(self.names, y[:n]))
-                b = dict(zip(self.names, y[n:]))
+                a = dict(list(zip(self.names, y[:n])))
+                b = dict(list(zip(self.names, y[n:])))
                 g = numpy.fabs(x[-2])
                 r = x[-1]
                 pseudo_loglikelihood = 0

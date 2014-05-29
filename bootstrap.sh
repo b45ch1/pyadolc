@@ -26,5 +26,5 @@ make install
 # build ADOL-C
 cd ../ADOL-C
 ./update_versions.sh
-./configure --enable-sparse --with-colpack=`pwd`/ThirdParty/ColPack/
+./configure --enable-sparse --with-colpack=`pwd`/ThirdParty/ColPack/ --prefix=`pwd`/ADOL-C/.libs
 make

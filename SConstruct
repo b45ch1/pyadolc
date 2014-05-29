@@ -21,8 +21,8 @@ colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
 
 
 LIBS        = ['adolc',
-                'boost_python',
                 'ColPack',
+                'boost_python-mt',
             ]
 LIBPATH     = [
                 colpack_lib_path1,
@@ -33,8 +33,6 @@ INCLUDEPATH = [
             colpack_include_path,
             adolc_include_path,
             ]
-
-
 
 print ''
 print '\033[1;31mplease check that the following settings are correct for your system\033[1;m'
@@ -60,7 +58,6 @@ AddOption('--prefix',
         metavar='DIR',
         help='installation prefix')
 
-
 env = Environment(
     PREFIX = GetOption('prefix'),
     TMPBUILD = '/tmp/builddir',
@@ -71,7 +68,10 @@ env = Environment(
     LIBS= LIBS,
     RPATH = LIBPATH, #include information where shared libraries can be found to avoid errors like: "ImportError: libboost_python-gcc42-mt-1_34_1.so.1.34.1: cannot open shared object file: No such file or directory"
     SHLIBPREFIX="", #gets rid of lib prefix
+    SHLIBSUFFIX=".so",
 )
+env.Append(LINKFLAGS = "-undefined suppress -flat_namespace -pthread")
+
 
 Export('env')
 Export('adolc_include_path')

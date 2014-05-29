@@ -1,6 +1,6 @@
 import numpy
-import _adolc
-from _adolc import *
+from . import _adolc
+from ._adolc import *
 
 def adouble(x):
     """
@@ -60,7 +60,7 @@ def independent(ax):
         axr = numpy.ravel(ax)
         N   = numpy.size(axr)
         xr = numpy.array([axr[n].val for n in range(N)])
-        map(_adolc.adouble.is_independent,axr,xr)
+        list(map(_adolc.adouble.is_independent,axr,xr))
         return ax
 
 

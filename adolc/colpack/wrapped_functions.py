@@ -1,5 +1,5 @@
-import _colpack
-from _colpack import *
+from . import _colpack
+from ._colpack import *
 
 import numpy
 

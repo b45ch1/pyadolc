@@ -15,6 +15,7 @@ report/*
 *.dot
 *.o
 *.os
+*.dylib
 *.so
 *.eps
 *~

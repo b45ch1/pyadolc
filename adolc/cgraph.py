@@ -1,7 +1,7 @@
 import copy
 import numpy
 import numpy.testing
-import wrapped_functions
+from . import wrapped_functions
 
 class AdolcProgram(object):
     def __init__(self):
@@ -94,7 +94,7 @@ class AdolcProgram(object):
                 try:
                     numpy.testing.assert_array_almost_equal(self.independentVariableShapeList[nV], V_shp[:-2])
                 except:
-                    raise ValueError('taped independentVariableShapeList = %s\n but supplied Vs = %s'%(str(self.independentVariableShapeList), str(map(numpy.shape, Vs))))
+                    raise ValueError('taped independentVariableShapeList = %s\n but supplied Vs = %s'%(str(self.independentVariableShapeList), str(list(map(numpy.shape, Vs)))))
                 rV_list.append(numpy.reshape(V, (numpy.prod(V_shp[:-2]),) + V_shp[-2:]))
             self.V = numpy.ascontiguousarray(numpy.concatenate(rV_list,axis=0))
             

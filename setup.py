@@ -30,24 +30,25 @@ colpack_lib_path1    = os.path.join(COLPACK_DIR, 'lib')
 colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
 
 # ADAPT THIS TO FIT YOUR SYSTEM
-extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
+define_macros=[('MYDUMMY', None)]
+
 include_dirs = [get_numpy_include_dirs()[0], adolc_include_path, colpack_include_path]
 library_dirs = [adolc_library_path, colpack_lib_path1, colpack_lib_path2]
-libraries = ['boost_python','adolc', 'ColPack']
+libraries = ['boost_python-mt','adolc', 'ColPack']
 
-print ''
-print '\033[1;31musing scons is the preferred method to compile pyadolc. If this script does not work, try to use scons.\033[1;m'
-print '\033[1;31mplease check that the following settings are correct for your system\033[1;m'
-print 'include_dirs = %s\n'%str(include_dirs)
-print 'library_dirs = %s\n'%str(library_dirs)
-print '''
+print('')
+print('\033[1;31musing scons is the preferred method to compile pyadolc. If this script does not work, try to use scons.\033[1;m')
+print('\033[1;31mplease check that the following settings are correct for your system\033[1;m')
+print('include_dirs = %s\n'%str(include_dirs))
+print('library_dirs = %s\n'%str(library_dirs))
+print('''
 If ADOL-C or Colpack cannot be found, you can manually set the paths via
 ``export ADOLC_DIR=/path/to/adol-c`` and ``export COLPACK_DIR=/path/to/colpack``
 
 * where /path/to/adol-c contains the folders ``ADOL-C/include`` and ``ADOL-C/.libs``.
 * where /path/to/colpack contains the folders ``./include`` and ``./lib64``, containing ``libColPack.so`` and the include files
 
-'''
+''')
 raw_input("Press enter to continue.")
 
 
@@ -71,10 +72,10 @@ LONG_DESCRIPTION    = "\n".join(DOCLINES[2:])
 URL                 = "http://www.github.com/b45ch1/pyadolc"
 DOWNLOAD_URL        = "http://www.github.com/b45ch1/pyadolc"
 LICENSE             = 'BSD'
-CLASSIFIERS         = filter(None, CLASSIFIERS.split('\n'))
+CLASSIFIERS         = [_f for _f in CLASSIFIERS.split('\n') if _f]
 AUTHOR              = "Sebastian F. Walter"
 AUTHOR_EMAIL        = "sebastian.walter@gmail.com"
-PLATFORMS           = ["Linux"]
+PLATFORMS           = ["Linux", "Darwin"]
 MAJOR               = 0
 MINOR               = 1
 MICRO               = 0
@@ -85,7 +86,7 @@ VERSION             = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 # override default setup.py help output
 import sys
 if len(sys.argv) == 1:
-    print """
+    print("""
 
     You didn't enter what to do!
 
@@ -104,7 +105,7 @@ if len(sys.argv) == 1:
 
 
     Remark: This is an override of the default behaviour of the distutils setup.
-    """
+    """)
     exit()
 
 class clean(Command):
@@ -172,17 +173,20 @@ options_dict.update({
                                 include_dirs = ['adolc/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
-                                libraries = libraries),
+                                libraries = libraries,
+                                define_macros = define_macros),
                 Extension('sparse/_sparse', ['adolc/sparse/src/py_sparse_adolc.cpp', 'adolc/sparse/src/num_util.cpp'],
                                 include_dirs = ['adolc/sparse/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
-                                libraries = libraries),
+                                libraries = libraries,
+                                define_macros = define_macros),
                 Extension('colpack/_colpack', ['adolc/colpack/src/py_colpack_adolc.cpp', 'adolc/colpack/src/num_util.cpp'],
                                 include_dirs = ['adolc/colpack/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
-                                libraries = libraries)
+                                libraries = libraries,
+                                define_macros = define_macros)
 ],
 
 'cmdclass' : {'clean':clean}

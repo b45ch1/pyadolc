@@ -3,7 +3,7 @@ In this file, there should be tests that check  if future API changes of Python/
 will break pyadolc.
 """
 
-from __future__ import division
+
 from numpy.testing import *
 
 from adolc import *
@@ -29,5 +29,5 @@ if __name__ == '__main__':
     try:
         import nose
     except:
-        print 'Please install nose for unit testing'
+        print('Please install nose for unit testing')
     nose.runmodule()

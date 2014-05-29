@@ -3,7 +3,7 @@
 #include "py_adolc.hpp"
 
 
-using namespace std;
+using std::cout;
 template<class T>
 void print_vec(vector<T> vec, string msg=""){
 	printf("%s",msg.c_str());
@@ -76,7 +76,7 @@ adouble wrapped_condassign_adouble_if_else(adouble &res, const adouble &cond, co
 void c_wrapped_function			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_y ){
 	double* x = (double*) nu::data(bpn_x);
 	double* y = (double*) nu::data(bpn_y);
-	function(tape_tag, M, N, x, y);
+	::function(tape_tag, M, N, x, y);
 }
 void c_wrapped_gradient			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_g){
 	double* x = (double*) nu::data(bpn_x);
