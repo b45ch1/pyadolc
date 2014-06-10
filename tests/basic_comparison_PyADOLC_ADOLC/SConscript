@@ -1,0 +1,2 @@
+Import('env')
+my_executable = env.Program(target='main', source=['main.cpp'])

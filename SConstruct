@@ -80,6 +80,7 @@ SConscript('adolc/sparse/SConscript')
 SConscript('adolc/colpack/SConscript')
 
 SConscript('tests/tape_equivalence_PyADOLC_ADOLC/SConscript')
+SConscript('tests/basic_comparison_PyADOLC_ADOLC/SConscript')
 
 
 # SConscript('tests/misc_tests/adolc_tiny_unit_test/SConscript')
