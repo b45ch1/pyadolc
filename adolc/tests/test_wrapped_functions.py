@@ -269,7 +269,6 @@ class OperationsTests ( TestCase ):
         assert_array_almost_equal(g(1.), zos_forward(0, 1., keep=0)[0])
         assert_array_almost_equal(g(2.), zos_forward(0, 2., keep=0)[0])
 
-
     def test_adouble_condassign_if_else(self):
         x = adouble(3.)
         y = adouble(4.)
@@ -288,6 +287,33 @@ class OperationsTests ( TestCase ):
         x = condassign(x,cond,y,z)
         print x
         assert_almost_equal(x.val, 5.)
+
+
+class CorrectnessTests(TestCase):
+    def test_sin(self):
+        def eval_f(x):
+            return numpy.sin(x[0] + x[1]*x[0])
+
+        def eval_g(x):
+            return numpy.array([numpy.cos(x[0] + x[1]*(1 + x[1])),
+                                numpy.cos(x[0] + x[1]*x[0])
+                                ])
+
+        #tape f
+        ax = numpy.array([adouble(0.) for i in range(3)])
+        trace_on(0)
+        for i in range(2):
+            independent(ax[i])
+        ay = eval_f(ax)
+        dependent(ay)
+        trace_off()
+
+        x = numpy.array([3.,7.])
+
+        g = gradient(0,x)
+
+        print g
+        print eval_g(x)
 
 
 class LowLevelFunctionsTests ( TestCase ):

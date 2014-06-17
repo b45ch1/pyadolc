@@ -6,7 +6,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
 # download ADOL-C
-git clone https://git.gitorious.org/adol-c/adol-c.git@d7a0b87fe4cd1344930a0d3ccc048e0a7038c5c8 PACKAGES/ADOL-C
+git clone https://github.com/b45ch1/adol-c.git PACKAGES/ADOL-C
+cd PACKAGES/ADOL-C
+git checkout e686fc236baf2c109f9c7f43da9bbd88b558f74d
+cd $DIR
 
 # download ColPack
 wget -P PACKAGES wget http://cscapes.cs.purdue.edu/download/ColPack/ColPack-1.0.9.tar.gz
