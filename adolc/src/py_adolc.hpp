@@ -145,15 +145,15 @@ adub *adub_abs_badouble   (const badouble &rhs){	return adubp_from_adub(fabs(rhs
 adub *adub_exp_badouble   (const badouble &rhs){	return adubp_from_adub(exp(rhs));}
 adub *adub_log_badouble   (const badouble &rhs){	return adubp_from_adub(log(rhs));}
 adub *adub_sqrt_badouble  (const badouble &rhs){	return adubp_from_adub(sqrt(rhs));}
-adub *adub_sin_badouble   (const badouble &rhs){	return adubp_from_adub2(sin(rhs));}
-adub *adub_cos_badouble   (const badouble &rhs){	return adubp_from_adub2(cos(rhs));}
-adub *adub_tan_badouble   (const badouble &rhs){	return adubp_from_adub2(tan(rhs));}
-adub *adub_asin_badouble  (const badouble &rhs){	return adubp_from_adub2(asin(rhs));}
-adub *adub_acos_badouble  (const badouble &rhs){	return adubp_from_adub2(acos(rhs));}
-adub *adub_atan_badouble  (const badouble &rhs){	return adubp_from_adub2(atan(rhs));}
-adub *adub_sinh_badouble  (const badouble &rhs){	return adubp_from_adub2(sinh(rhs));}
-adub *adub_cosh_badouble  (const badouble &rhs){	return adubp_from_adub2(cosh(rhs));}
-adub *adub_tanh_badouble  (const badouble &rhs){	return adubp_from_adub2(tanh(rhs));}
+adub *adub_sin_badouble   (const badouble &rhs){	return adubp_from_adub(sin(rhs));}
+adub *adub_cos_badouble   (const badouble &rhs){	return adubp_from_adub(cos(rhs));}
+adub *adub_tan_badouble   (const badouble &rhs){	return adubp_from_adub(tan(rhs));}
+adub *adub_asin_badouble  (const badouble &rhs){	return adubp_from_adub(asin(rhs));}
+adub *adub_acos_badouble  (const badouble &rhs){	return adubp_from_adub(acos(rhs));}
+adub *adub_atan_badouble  (const badouble &rhs){	return adubp_from_adub(atan(rhs));}
+adub *adub_sinh_badouble  (const badouble &rhs){	return adubp_from_adub(sinh(rhs));}
+adub *adub_cosh_badouble  (const badouble &rhs){	return adubp_from_adub(cosh(rhs));}
+adub *adub_tanh_badouble  (const badouble &rhs){	return adubp_from_adub(tanh(rhs));}
 // adub *adub_asinh_badouble  (const badouble &rhs){	return adubp_from_adub(asinh(rhs));}
 // adub *adub_acosh_badouble  (const badouble &rhs){	return adubp_from_adub(acosh(rhs));}
 // adub *adub_atanh_badouble  (const badouble &rhs){	return adubp_from_adub(atanh(rhs));}

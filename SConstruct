@@ -9,11 +9,13 @@ import inspect
 #     which contain libColPack.so and the include files
 BASEDIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C'))
+ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/inst'))
 COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/ThirdParty/ColPack'))
 
-adolc_include_path   = os.path.join(ADOLC_DIR, 'ADOL-C/include')
-adolc_library_path   = os.path.join(ADOLC_DIR, 'ADOL-C/.libs')
+adolc_include_path   = os.path.join(ADOLC_DIR, 'include')
+adolc_library_path1  = os.path.join(ADOLC_DIR, 'lib')
+adolc_library_path2  = os.path.join(ADOLC_DIR, 'lib64')
+
 
 colpack_include_path = os.path.join(COLPACK_DIR, 'include')
 colpack_lib_path1    = os.path.join(COLPACK_DIR, 'lib')
@@ -27,7 +29,8 @@ LIBS        = ['adolc',
 LIBPATH     = [
                 colpack_lib_path1,
                 colpack_lib_path2,
-                adolc_library_path,
+                adolc_library_path1,
+                adolc_library_path2,
             ]
 INCLUDEPATH = [
             colpack_include_path,
@@ -44,7 +47,7 @@ print '''
 If ADOL-C or Colpack cannot be found, you can manually set the paths via
 ``export ADOLC_DIR=/path/to/adol-c`` and ``export COLPACK_DIR=/path/to/colpack``
 
-* where /path/to/adol-c contains the folders ``ADOL-C/include`` and ``ADOL-C/.libs``.
+* where /path/to/adol-c contains the folders ``./include`` and ``./lib`` or ``./lib64``.
 * where /path/to/colpack contains the folders ``./include`` and ``./lib64``, containing ``libColPack.so`` and the include files
 
 '''
