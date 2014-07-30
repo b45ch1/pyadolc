@@ -169,7 +169,7 @@ options_dict.update({
 'url':URL,
 'packages' :packages,
 'ext_package' : 'adolc',
-'ext_modules': [Extension('_adolc', ['adolc/src/py_adolc.cpp', 'adolc/src/num_util.cpp'],
+'ext_modules': [Extension('_adolc', ['adolc/src/py_adolc.cpp',  'adolc/src/py_interpolation.cpp', 'adolc/src/num_util.cpp'],
                                 include_dirs = ['adolc/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,

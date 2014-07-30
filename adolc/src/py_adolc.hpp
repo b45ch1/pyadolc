@@ -5,6 +5,8 @@
 #include "num_util.h"
 #include "adolc/adolc.h"
 
+#include "py_interpolation.h"
+
 using namespace std;
 namespace b = boost;
 namespace bp = boost::python;
@@ -212,6 +214,10 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("get_size_of_short", get_size_of_short);
 	def("get_size_of_int", get_size_of_int);
 	def("get_size_of_long", get_size_of_long);
+
+
+	def("_entangle_cross", &entangle_cross);
+	def("_detangle_cross", &detangle_cross);
 
 
 	def("trace_on",trace_on_default_argument);
