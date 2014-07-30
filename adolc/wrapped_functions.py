@@ -98,8 +98,6 @@ def trace_off():
     """turn off tracing"""
     return _adolc.trace_off()
 
-
-
 def function(tape_tag,x):
     """
     evaluate the function f(x) recorded on tape with index tape_tag

@@ -2,6 +2,7 @@ import _adolc
 from _adolc import *
 from wrapped_functions import * 
 import cgraph
+import interpolation
 
 try:
     import sparse

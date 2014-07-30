@@ -33,35 +33,33 @@ def entangle_cross(V, V1, V2, V12):
         raise ValueError("expected V12.shape = (%d, %d, %d) but got " \
                             "V12.shape = (%d, %d, %d) ",
                             (N, M, L,
-                            V12.shape[0], V12.shape[1], V12.shape[2] ))
+                            V12.shape[0], V12.shape[1], V12.shape[2]))
 
 
     # set V[:,0,:M] = V1
-
-    for m in range(M):
-        for n in range(N):
+    for n in range(N):
+        for m in range(M):
             V[n, m, 0] = V1[n,m]
 
     # set V[:,0,M:M+L] = V2
 
-    for l in range(L):
-        for n in range(N):
+    for n in range(N):
+        for l in range(L):
             V[n, l+M, 0] = V2[n,l]
 
 
     #  set V[:,0,M+L:] with mixed elements of V1 and V2
 
-    for m in range(M):
-        for l in range(L):
-            for n in range(N):
+    for n in range(N):
+        for m in range(M):
+            for l in range(L):
                 V[n, m+l*M + M + L, 0] = V1[n,m] + V2[n,l]
 
     #  V[:,1,M+L:] = V12
-
-    for m in range(M):
-        for l in range(L):
-            for n in range(N):
-                V[n, m + l*M + M + L, 1] = V12[n,l,m]
+    for n in range(N):
+        for m in range(M):
+            for l in range(L):
+                V[n, m + l*M + M + L, 1] = V12[n,m,l]
 
 
 def detangle_cross(V, V1, V2, V12):
@@ -73,24 +71,22 @@ def detangle_cross(V, V1, V2, V12):
     M = V1.shape[1]
     L = V2.shape[1]
 
-
     # V1 = V[:,0,:M]
 
-    for m in range(M):
-        for n in range(N):
+    for n in range(N):
+        for m in range(M):
             V1[n, m] = V[n, m, 0]
 
     # V1 = V[:,0,M:M+L]
-
-    for l in range(L):
-        for n in range(N):
+    for n in range(N):
+        for l in range(L):
             V2[n, l] = V[n, M+l, 0]
 
 
     # build V12 from mixed derivatives in
     # V[:,1,:M], V[:,1,M:M+L] and V[:,1,M+L:]
 
-    for m in range(M):
-        for l in range(L):
-            for n in range(N):
-                V12[n, l, m] = V[n,  M + L + m + l*M, 1] - V[n, m, 1] - V[n, M+l, 1]
+    for n in range(N):
+        for m in range(M):
+            for l in range(L):
+                V12[n, m, l] = V[n,  M + L + m + l*M, 1] - V[n, m, 1] - V[n, M+l, 1]
