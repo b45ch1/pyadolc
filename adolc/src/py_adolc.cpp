@@ -73,83 +73,83 @@ adouble wrapped_condassign_adouble_if_else(adouble &res, const adouble &cond, co
 
 /* C STYLE CALLS OF FUNCTIONS */
 /* easy to use drivers */
-void c_wrapped_function			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_y ){
+int c_wrapped_function			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_y ){
 	double* x = (double*) nu::data(bpn_x);
 	double* y = (double*) nu::data(bpn_y);
-	function(tape_tag, M, N, x, y);
+	return function(tape_tag, M, N, x, y);
 }
-void c_wrapped_gradient			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_g){
+int c_wrapped_gradient			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_g){
 	double* x = (double*) nu::data(bpn_x);
 	double* g = (double*) nu::data(bpn_g);
 	gradient(tape_tag, N, x, g);
 }
-void c_wrapped_hessian			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_H){
+int c_wrapped_hessian			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_H){
 	double* x = (double*) nu::data(bpn_x);
 	double* H_data = (double*) nu::data(bpn_H);
 	double* H[N];
 	for(int n = 0; n != N; ++n){
 		H[n] = &H_data[N * n];
 	}
-	hessian(tape_tag, N, x, H);
+	return hessian(tape_tag, N, x, H);
 }
-void c_wrapped_jacobian			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_J){
+int c_wrapped_jacobian			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_J){
 	double* x = (double*) nu::data(bpn_x);
 	double* J[M];
 	double* J_data = (double*) nu::data(bpn_J);
 	for(int m = 0; m != M; ++m){
 		J[m] = &J_data[N * m];
 	}
-	jacobian(tape_tag, M, N, x, J);
+	return jacobian(tape_tag, M, N, x, J);
 }
-void c_wrapped_vec_jac			(short tape_tag, int M, int N, bool repeat, bpn::array &bpn_x, bpn::array &bpn_u, bpn::array &bpn_z){
+int c_wrapped_vec_jac			(short tape_tag, int M, int N, bool repeat, bpn::array &bpn_x, bpn::array &bpn_u, bpn::array &bpn_z){
 	double* x = (double*) nu::data(bpn_x);
 	double* u = (double*) nu::data(bpn_u);
 	double* z = (double*) nu::data(bpn_z);
-	vec_jac(tape_tag, M, N, repeat, x, u, z);
+	return vec_jac(tape_tag, M, N, repeat, x, u, z);
 }
-void c_wrapped_jac_vec			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_z){
+int c_wrapped_jac_vec			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_z){
 	double* x = (double*) nu::data(bpn_x);
 	double* v = (double*) nu::data(bpn_v);
 	double* z = (double*) nu::data(bpn_z);
-	jac_vec(tape_tag, M, N, x, v, z);
+	return jac_vec(tape_tag, M, N, x, v, z);
 }
-void c_wrapped_hess_vec			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_z){
+int c_wrapped_hess_vec			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_z){
 	double* x = (double*) nu::data(bpn_x);
 	double* v = (double*) nu::data(bpn_v);
 	double* z = (double*) nu::data(bpn_z);
 	hess_vec(tape_tag, N, x, v, z);
 }
-void c_wrapped_lagra_hess_vec	(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_u,bpn::array &bpn_h){
+int c_wrapped_lagra_hess_vec	(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_u,bpn::array &bpn_h){
 
 	double* x = (double*) nu::data(bpn_x);
 	double* v = (double*) nu::data(bpn_v);
 	double* u = (double*) nu::data(bpn_u);
 	double* h = (double*) nu::data(bpn_h);
-	lagra_hess_vec(tape_tag, M, N, x, v, u, h);
+	return lagra_hess_vec(tape_tag, M, N, x, v, u, h);
 }
-// void c_wrapped_jac_solv			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode){
+// int c_wrapped_jac_solv			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_b, int sparse, int mode){
 // 	double* x = (double*) nu::data(bpn_x);
 // 	double* b = (double*) nu::data(bpn_b);
 // 	jac_solv(tape_tag, N, x, b, sparse, mode);
 // }
 
 /* low level functions */
-void c_wrapped_zos_forward		(short tape_tag, int M, int N, int keep, bpn::array &bpn_x, bpn::array &bpn_y){
+int c_wrapped_zos_forward		(short tape_tag, int M, int N, int keep, bpn::array &bpn_x, bpn::array &bpn_y){
 	double* x = (double*) nu::data(bpn_x);
 	double* y = (double*) nu::data(bpn_y);
-	zos_forward(tape_tag, M, N, keep, x, y);
+	return zos_forward(tape_tag, M, N, keep, x, y);
 }
-void c_wrapped_fos_forward		(short tape_tag, int M, int N, int keep, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_y, bpn::array &bpn_w){
+int c_wrapped_fos_forward		(short tape_tag, int M, int N, int keep, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_y, bpn::array &bpn_w){
 
 	double* x = (double*) nu::data(bpn_x);
 	double* v = (double*) nu::data(bpn_v);
 	double* y = (double*) nu::data(bpn_y);
 	double* w = (double*) nu::data(bpn_w);
 
-	fos_forward(tape_tag, M, N, keep, x, v, y, w);
+	return fos_forward(tape_tag, M, N, keep, x, v, y, w);
 }
 
-void c_wrapped_fov_forward		(short tape_tag, int M, int N, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
+int c_wrapped_fov_forward		(short tape_tag, int M, int N, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
 	double* x = (double*) nu::data(bpn_x);
 	double* y = (double*) nu::data(bpn_y);
 	double* V_data = (double*) nu::data(bpn_V);
@@ -163,10 +163,10 @@ void c_wrapped_fov_forward		(short tape_tag, int M, int N, int P, bpn::array &bp
 		W[m] = &W_data[P * m];
 	}
 
-	fov_forward(tape_tag, M, N, P, x, V, y, W);
+	return fov_forward(tape_tag, M, N, P, x, V, y, W);
 }
 
-void c_wrapped_hos_forward		(short tape_tag, int M, int N, int D, int keep, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
+int c_wrapped_hos_forward		(short tape_tag, int M, int N, int D, int keep, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
 	double* x = (double*) nu::data(bpn_x);
 	double* y = (double*) nu::data(bpn_y);
 	double* V_data = (double*) nu::data(bpn_V);
@@ -179,10 +179,10 @@ void c_wrapped_hos_forward		(short tape_tag, int M, int N, int D, int keep, bpn:
 	for(int m = 0; m != M; ++m){
 		W[m] = &W_data[D * m];
 	}
-	hos_forward(tape_tag, M, N, D, keep, x, V, y, W);
+	return hos_forward(tape_tag, M, N, D, keep, x, V, y, W);
 }
 
-void c_wrapped_hov_forward		(short tape_tag, int M, int N, int D, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
+int c_wrapped_hov_forward		(short tape_tag, int M, int N, int D, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
 	double* x = (double*) nu::data(bpn_x);
 	double* y = (double*) nu::data(bpn_y);
 	double* V_data = (double*) nu::data(bpn_V);
@@ -206,10 +206,10 @@ void c_wrapped_hov_forward		(short tape_tag, int M, int N, int D, int P, bpn::ar
 		W[m] = &W1[ m * P];
 	}
 
-	hov_forward(tape_tag, M, N, D, P, x, V, y, W);
+	return hov_forward(tape_tag, M, N, D, P, x, V, y, W);
 }
 
-void c_wrapped_hov_wk_forward	(short tape_tag, int M, int N, int D, int keep, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
+int c_wrapped_hov_wk_forward	(short tape_tag, int M, int N, int D, int keep, int P, bpn::array &bpn_x, bpn::array &bpn_V, bpn::array &bpn_y, bpn::array &bpn_W){
 	double* x = (double*) nu::data(bpn_x);
 	double* y = (double*) nu::data(bpn_y);
 	double* V_data = (double*) nu::data(bpn_V);
@@ -233,17 +233,17 @@ void c_wrapped_hov_wk_forward	(short tape_tag, int M, int N, int D, int keep, in
 		W[m] = &W1[ m * P];
 	}
 
-	hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W);
+	return hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W);
 }
 
 
-void c_wrapped_fos_reverse		(short tape_tag, int M, int N, bpn::array &bpn_u, bpn::array &bpn_z){
+int c_wrapped_fos_reverse		(short tape_tag, int M, int N, bpn::array &bpn_u, bpn::array &bpn_z){
 	double* u = (double*) nu::data(bpn_u);
 	double* z = (double*) nu::data(bpn_z);
 	fos_reverse(tape_tag, M, N, u, z);
 }
 
-void c_wrapped_fov_reverse		(short tape_tag, int M, int N, int Q, bpn::array &bpn_U, bpn::array &bpn_Z){
+int c_wrapped_fov_reverse		(short tape_tag, int M, int N, int Q, bpn::array &bpn_U, bpn::array &bpn_Z){
 	double* U_data = (double*) nu::data(bpn_U);
 	double* U[Q];
 	for(int q = 0; q != Q; ++q){
@@ -255,19 +255,19 @@ void c_wrapped_fov_reverse		(short tape_tag, int M, int N, int Q, bpn::array &bp
 	for(int q = 0; q != Q; ++q){
 		Z[q] = &Z_data[N * q];
 	}
-	fov_reverse(tape_tag, M, N, Q, U, Z);
+	return fov_reverse(tape_tag, M, N, Q, U, Z);
 }
-void c_wrapped_hos_reverse		(short tape_tag, int M, int N, int D, bpn::array &bpn_u, bpn::array &bpn_Z){
+int c_wrapped_hos_reverse		(short tape_tag, int M, int N, int D, bpn::array &bpn_u, bpn::array &bpn_Z){
 	double* u = (double*) nu::data(bpn_u);
 	double* Z_data = (double*) nu::data(bpn_Z);
 	double* Z[N];
 	for(int n = 0; n != N; ++n){
 		Z[n] = &Z_data[ n * (D+1)];
 	}
-	hos_reverse(tape_tag, M, N, D, u, Z);
+	return hos_reverse(tape_tag, M, N, D, u, Z);
 }
 
-void c_wrapped_hos_ti_reverse   (short tape_tag, int M, int N, int D, bpn::array &bpn_U, bpn::array &bpn_Z){
+int c_wrapped_hos_ti_reverse   (short tape_tag, int M, int N, int D, bpn::array &bpn_U, bpn::array &bpn_Z){
 	double* U_data = (double*) nu::data(bpn_U);
 	double* U[M];
 	for(int m = 0; m != M; ++m){
@@ -278,11 +278,11 @@ void c_wrapped_hos_ti_reverse   (short tape_tag, int M, int N, int D, bpn::array
 	for(int n = 0; n != N; ++n){
 		Z[n] = &Z_data[ n * (D+1)];
 	}
-	hos_ti_reverse(tape_tag, M, N, D, U, Z);
+	return hos_ti_reverse(tape_tag, M, N, D, U, Z);
 }
 
 
-void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz){
+int c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz){
 	double* U_data = (double*) nu::data(bpn_U);
 	double* U[Q];
 	for(int q = 0; q != Q; ++q){
@@ -304,11 +304,11 @@ void c_wrapped_hov_reverse		(short tape_tag, int M, int N, int D, int Q, bpn::ar
 	for(int q = 0; q != Q; ++q){
 		nz[q] = &nz_data[ q * N];
 	}
-	hov_reverse(tape_tag, M, N, D, Q, U, Z, nz);
+	return hov_reverse(tape_tag, M, N, D, Q, U, Z, nz);
 }
 
 
-void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz){
+int c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::array &bpn_U, bpn::array &bpn_Z, bpn::array &bpn_nz){
 
 	/* U is (Q, M, D+1) matrix */
 	double* U_data = (double*) nu::data(bpn_U);
@@ -343,12 +343,12 @@ void c_wrapped_hov_ti_reverse	(short tape_tag, int M, int N, int D, int Q, bpn::
 		nz[q] = &nz_data[ q * N];
 	}
 
-	hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz);
+	return hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz);
 
 }
 
 
-void c_wrapped_hos_ov_reverse	(short tape_tag, int M, int N, int D, int P, bpn::array &bpn_U, bpn::array &bpn_Z){
+int c_wrapped_hos_ov_reverse	(short tape_tag, int M, int N, int D, int P, bpn::array &bpn_U, bpn::array &bpn_Z){
 	/* this function is experimental and likely not to work ... */
 
 	/* U is (M,D+1) array */
@@ -371,7 +371,7 @@ void c_wrapped_hos_ov_reverse	(short tape_tag, int M, int N, int D, int P, bpn::
 		Z[n] = &Z1[ n * P];
 	}
 
-	hos_ov_reverse(tape_tag, M, N, D, P, U, Z);
+	return hos_ov_reverse(tape_tag, M, N, D, P, U, Z);
 }
 
 
