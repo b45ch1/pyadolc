@@ -79,8 +79,8 @@ REQUIREMENTS:
 
 INSTALLATION:
 
-    * Use ``./bootstrap.sh`` to download ADOL-C and ColPack and compile them.
-    * Run ``scons`` or ``python setup.py``
+    * Use ``./bootstrap.sh`` to download Boost, ADOL-C and ColPack and compile them.
+    * Run ``python setup.py``
 
 TEST YOUR INSTALLATION:
 
@@ -103,8 +103,8 @@ MANUAL INSTALLATION:
         * run ``make``
         * You don't have to run ``make install``.
         * You should then have a folder ``/path/to/adol-c/ADOL-C`` with  ``adolc/adolc.h`` in it.
-    * CLONE PYADOLC: ``cd /path/to/adol-c/`` and then ``git clone https://github.com/b45ch1/pyadolc.git python``
-      You should then have a folder /path/to/adol-c/python containing the file SConstruct
+    * CLONE PYADOLC: ``git clone https://github.com/b45ch1/pyadolc.git``
+      You should then have a folder /path/to/pyadolc containing the file ``setup.py``
     * BUILD PYADOLC:
         Go to the folder /path/to/adol-c/python and run ``scons``.
         This should compile and link everything you need.

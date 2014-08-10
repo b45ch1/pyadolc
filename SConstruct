@@ -9,17 +9,21 @@ import inspect
 #     which contain libColPack.so and the include files
 BASEDIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
+BOOST_DIR   = os.environ.get('BOOST_DIR', os.path.join(BASEDIR, 'PACKAGES/boost_1_56_0/build'))
 ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/inst'))
 COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/ThirdParty/ColPack'))
+
+boost_include_path   = os.path.join(BOOST_DIR, 'include')
+boost_library_path1  = os.path.join(BOOST_DIR, 'lib')
+boost_library_path2  = os.path.join(BOOST_DIR, 'lib64')
 
 adolc_include_path   = os.path.join(ADOLC_DIR, 'include')
 adolc_library_path1  = os.path.join(ADOLC_DIR, 'lib')
 adolc_library_path2  = os.path.join(ADOLC_DIR, 'lib64')
 
-
 colpack_include_path = os.path.join(COLPACK_DIR, 'include')
-colpack_lib_path1    = os.path.join(COLPACK_DIR, 'lib')
-colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
+colpack_library_path1    = os.path.join(COLPACK_DIR, 'lib')
+colpack_library_path2    = os.path.join(COLPACK_DIR, 'lib64')
 
 
 LIBS        = ['adolc',
@@ -27,12 +31,15 @@ LIBS        = ['adolc',
                 'ColPack',
             ]
 LIBPATH     = [
-                colpack_lib_path1,
-                colpack_lib_path2,
+                boost_library_path1,
+                boost_library_path2,
+                colpack_library_path1,
+                colpack_library_path2,
                 adolc_library_path1,
                 adolc_library_path2,
             ]
 INCLUDEPATH = [
+            boost_include_path,
             colpack_include_path,
             adolc_include_path,
             ]
@@ -65,6 +72,8 @@ AddOption('--prefix',
 
 
 env = Environment(
+    CC = 'gcc-4.2',
+    CXX = 'g++-4.2',
     PREFIX = GetOption('prefix'),
     TMPBUILD = '/tmp/builddir',
     CPPPATH=[distutils.sysconfig.get_python_inc(),numpy.get_include()] + INCLUDEPATH,

@@ -19,8 +19,14 @@ import inspect
 
 BASEDIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
+BOOST_DIR   = os.environ.get('BOOST_DIR', os.path.join(BASEDIR, 'PACKAGES/boost_1_56_0/build'))
 ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/inst'))
 COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/ThirdParty/ColPack'))
+
+
+boost_include_path   = os.path.join(BOOST_DIR, 'include')
+boost_library_path1  = os.path.join(BOOST_DIR, 'lib')
+boost_library_path2  = os.path.join(BOOST_DIR, 'lib64')
 
 adolc_include_path   = os.path.join(ADOLC_DIR, 'include')
 adolc_library_path1  = os.path.join(ADOLC_DIR, 'lib')
@@ -32,12 +38,12 @@ colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
 
 # ADAPT THIS TO FIT YOUR SYSTEM
 extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
-include_dirs = [get_numpy_include_dirs()[0], adolc_include_path, colpack_include_path]
-library_dirs = [adolc_library_path1, adolc_library_path2, colpack_lib_path1, colpack_lib_path2]
+include_dirs = [get_numpy_include_dirs()[0], boost_include_path, adolc_include_path, colpack_include_path]
+library_dirs = [boost_library_path1, boost_library_path2, adolc_library_path1, adolc_library_path2, colpack_lib_path1, colpack_lib_path2]
 libraries = ['boost_python','adolc', 'ColPack']
 
 print ''
-print '\033[1;31musing scons is the preferred method to compile pyadolc. If this script does not work, try to use scons.\033[1;m'
+print '\033[1;31m Note: If this script does not work you can try to use scons.\033[1;m'
 print '\033[1;31mplease check that the following settings are correct for your system\033[1;m'
 print 'include_dirs = %s\n'%str(include_dirs)
 print 'library_dirs = %s\n'%str(library_dirs)
