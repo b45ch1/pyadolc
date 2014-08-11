@@ -6,6 +6,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
 # download and build boost
+mkdir PACKAGES
 wget -O PACKAGES/boost_1_56_0.tar.gz http://downloads.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.tar.gz?use_mirror=switch
 cd $DIR/PACKAGES
 tar xfvz boost_1_56_0.tar.gz
