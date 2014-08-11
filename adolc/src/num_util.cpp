@@ -17,151 +17,151 @@ namespace num_util{
 
 
   template <>
-  PyArray_TYPES getEnum<unsigned char>(void)
+  NPY_TYPES getEnum<unsigned char>(void)
   {
-    return PyArray_UBYTE;
+    return NPY_UBYTE;
   }
 
 
   template <>
-  PyArray_TYPES getEnum<signed char>(void)
+  NPY_TYPES getEnum<signed char>(void)
   {
-    return PyArray_BYTE;
+    return NPY_BYTE;
   }
 
   template <>
-  PyArray_TYPES getEnum<short>(void)
+  NPY_TYPES getEnum<short>(void)
   {
-    return PyArray_SHORT;
+    return NPY_SHORT;
   }
 
   template <>
-  PyArray_TYPES getEnum<unsigned short>(void)
+  NPY_TYPES getEnum<unsigned short>(void)
   {
-    return PyArray_USHORT;
-  }
-
-
-  template <>
-  PyArray_TYPES getEnum<unsigned int>(void)
-  {
-    return PyArray_UINT;
-  }
-
-  template <>
-  PyArray_TYPES getEnum<int>(void)
-  {
-    return PyArray_INT;
-  }
-
-  template <>
-  PyArray_TYPES getEnum<long>(void)
-  {
-    return PyArray_LONG;
-  }
-
-  template <>
-  PyArray_TYPES getEnum<unsigned long>(void)
-  {
-    return PyArray_ULONG;
+    return NPY_USHORT;
   }
 
 
   template <>
-  PyArray_TYPES getEnum<long long>(void)
+  NPY_TYPES getEnum<unsigned int>(void)
   {
-    return PyArray_LONGLONG;
+    return NPY_UINT;
   }
 
   template <>
-  PyArray_TYPES getEnum<unsigned long long>(void)
+  NPY_TYPES getEnum<int>(void)
   {
-    return PyArray_ULONGLONG;
+    return NPY_INT;
   }
 
   template <>
-  PyArray_TYPES getEnum<float>(void)
+  NPY_TYPES getEnum<long>(void)
   {
-    return PyArray_FLOAT;
+    return NPY_LONG;
   }
 
   template <>
-  PyArray_TYPES getEnum<double>(void)
+  NPY_TYPES getEnum<unsigned long>(void)
   {
-    return PyArray_DOUBLE;
+    return NPY_ULONG;
+  }
+
+
+  template <>
+  NPY_TYPES getEnum<long long>(void)
+  {
+    return NPY_LONGLONG;
+  }
+
+  template <>
+  NPY_TYPES getEnum<unsigned long long>(void)
+  {
+    return NPY_ULONGLONG;
+  }
+
+  template <>
+  NPY_TYPES getEnum<float>(void)
+  {
+    return NPY_FLOAT;
+  }
+
+  template <>
+  NPY_TYPES getEnum<double>(void)
+  {
+    return NPY_DOUBLE;
   }
     
   template <>
-  PyArray_TYPES getEnum<long double>(void)
+  NPY_TYPES getEnum<long double>(void)
   {
-    return PyArray_LONGDOUBLE;
+    return NPY_LONGDOUBLE;
   }
 
   template <>
-  PyArray_TYPES getEnum<std::complex<float> >(void)
+  NPY_TYPES getEnum<std::complex<float> >(void)
   {
-    return PyArray_CFLOAT;
+    return NPY_CFLOAT;
   }
 
 
   template <>
-  PyArray_TYPES getEnum<std::complex<double> >(void)
+  NPY_TYPES getEnum<std::complex<double> >(void)
   {
-    return PyArray_CDOUBLE;
+    return NPY_CDOUBLE;
   }
 
   template <>
-  PyArray_TYPES getEnum<std::complex<long double> >(void)
+  NPY_TYPES getEnum<std::complex<long double> >(void)
   {
-    return PyArray_CLONGDOUBLE;
+    return NPY_CLONGDOUBLE;
   }
 
 
 typedef KindStringMap::value_type  KindStringMapEntry;
 KindStringMapEntry kindStringMapEntries[] =
   {
-    KindStringMapEntry(PyArray_UBYTE,  "PyArray_UBYTE"),
-    KindStringMapEntry(PyArray_BYTE,   "PyArray_BYTE"),
-    KindStringMapEntry(PyArray_SHORT,  "PyArray_SHORT"),
-    KindStringMapEntry(PyArray_INT,    "PyArray_INT"),
-    KindStringMapEntry(PyArray_LONG,   "PyArray_LONG"),
-    KindStringMapEntry(PyArray_FLOAT,  "PyArray_FLOAT"),
-    KindStringMapEntry(PyArray_DOUBLE, "PyArray_DOUBLE"),
-    KindStringMapEntry(PyArray_CFLOAT, "PyArray_CFLOAT"),
-    KindStringMapEntry(PyArray_CDOUBLE,"PyArray_CDOUBLE"),
-    KindStringMapEntry(PyArray_OBJECT, "PyArray_OBJECT"),
-    KindStringMapEntry(PyArray_NTYPES, "PyArray_NTYPES"),
-    KindStringMapEntry(PyArray_NOTYPE ,"PyArray_NOTYPE")
+    KindStringMapEntry(NPY_UBYTE,  "NPY_UBYTE"),
+    KindStringMapEntry(NPY_BYTE,   "NPY_BYTE"),
+    KindStringMapEntry(NPY_SHORT,  "NPY_SHORT"),
+    KindStringMapEntry(NPY_INT,    "NPY_INT"),
+    KindStringMapEntry(NPY_LONG,   "NPY_LONG"),
+    KindStringMapEntry(NPY_FLOAT,  "NPY_FLOAT"),
+    KindStringMapEntry(NPY_DOUBLE, "NPY_DOUBLE"),
+    KindStringMapEntry(NPY_CFLOAT, "NPY_CFLOAT"),
+    KindStringMapEntry(NPY_CDOUBLE,"NPY_CDOUBLE"),
+    KindStringMapEntry(NPY_OBJECT, "NPY_OBJECT"),
+    KindStringMapEntry(NPY_NTYPES, "NPY_NTYPES"),
+    KindStringMapEntry(NPY_NOTYPE ,"NPY_NOTYPE")
   };
 
 typedef KindCharMap::value_type  KindCharMapEntry;
 KindCharMapEntry kindCharMapEntries[] =
   {
-    KindCharMapEntry(PyArray_UBYTE,  'B'),
-    KindCharMapEntry(PyArray_BYTE,   'b'),
-    KindCharMapEntry(PyArray_SHORT,  'h'),
-    KindCharMapEntry(PyArray_INT,    'i'),
-    KindCharMapEntry(PyArray_LONG,   'l'),
-    KindCharMapEntry(PyArray_FLOAT,  'f'),
-    KindCharMapEntry(PyArray_DOUBLE, 'd'),
-    KindCharMapEntry(PyArray_CFLOAT, 'F'),
-    KindCharMapEntry(PyArray_CDOUBLE,'D'),
-    KindCharMapEntry(PyArray_OBJECT, 'O')
+    KindCharMapEntry(NPY_UBYTE,  'B'),
+    KindCharMapEntry(NPY_BYTE,   'b'),
+    KindCharMapEntry(NPY_SHORT,  'h'),
+    KindCharMapEntry(NPY_INT,    'i'),
+    KindCharMapEntry(NPY_LONG,   'l'),
+    KindCharMapEntry(NPY_FLOAT,  'f'),
+    KindCharMapEntry(NPY_DOUBLE, 'd'),
+    KindCharMapEntry(NPY_CFLOAT, 'F'),
+    KindCharMapEntry(NPY_CDOUBLE,'D'),
+    KindCharMapEntry(NPY_OBJECT, 'O')
   };
   
 typedef KindTypeMap::value_type  KindTypeMapEntry;
 KindTypeMapEntry kindTypeMapEntries[] =
   {
-    KindTypeMapEntry('B',PyArray_UBYTE),
-    KindTypeMapEntry('b',PyArray_BYTE),
-    KindTypeMapEntry('h',PyArray_SHORT),
-    KindTypeMapEntry('i',PyArray_INT),
-    KindTypeMapEntry('l',PyArray_LONG),
-    KindTypeMapEntry('f',PyArray_FLOAT),
-    KindTypeMapEntry('d',PyArray_DOUBLE),
-    KindTypeMapEntry('F',PyArray_CFLOAT),
-    KindTypeMapEntry('D',PyArray_CDOUBLE),
-    KindTypeMapEntry('O',PyArray_OBJECT)
+    KindTypeMapEntry('B',NPY_UBYTE),
+    KindTypeMapEntry('b',NPY_BYTE),
+    KindTypeMapEntry('h',NPY_SHORT),
+    KindTypeMapEntry('i',NPY_INT),
+    KindTypeMapEntry('l',NPY_LONG),
+    KindTypeMapEntry('f',NPY_FLOAT),
+    KindTypeMapEntry('d',NPY_DOUBLE),
+    KindTypeMapEntry('F',NPY_CFLOAT),
+    KindTypeMapEntry('D',NPY_CDOUBLE),
+    KindTypeMapEntry('O',NPY_OBJECT)
   };
 
   
@@ -188,20 +188,20 @@ numeric::array makeNum(object x){
     throw_error_already_set();
   }
   object obj(handle<>
-	     (PyArray_ContiguousFromObject(x.ptr(),PyArray_NOTYPE,0,0)));
+	     (PyArray_ContiguousFromObject(x.ptr(),NPY_NOTYPE,0,0)));
   check_PyArrayElementType(obj);
   return extract<numeric::array>(obj); 
 }
 
 //Create a one-dimensional Numeric array of length n and Numeric type t
-numeric::array makeNum(npy_intp n, PyArray_TYPES t=PyArray_DOUBLE){
+numeric::array makeNum(npy_intp n, NPY_TYPES t=NPY_DOUBLE){
   object obj(handle<>(PyArray_SimpleNew(1, &n, t)));
   return extract<numeric::array>(obj);
 }
   
 //Create a Numeric array with dimensions dimens and Numeric type t
 numeric::array makeNum(std::vector<npy_intp> dimens, 
-		       PyArray_TYPES t=PyArray_DOUBLE){
+		       NPY_TYPES t=NPY_DOUBLE){
   object obj(handle<>(PyArray_SimpleNew(dimens.size(), &dimens[0], t)));
   return extract<numeric::array>(obj);
 }
@@ -212,13 +212,13 @@ numeric::array makeNum(const numeric::array& arr){
   return numeric::array(arr);
 } 
 
-PyArray_TYPES type(numeric::array arr){
-  return PyArray_TYPES(PyArray_TYPE(arr.ptr()));
+NPY_TYPES type(numeric::array arr){
+  return NPY_TYPES(PyArray_TYPE(reinterpret_cast<PyArrayObject*>(arr.ptr())));
 }
 
 void check_type(boost::python::numeric::array arr, 
-		PyArray_TYPES expected_type){
-  PyArray_TYPES actual_type = type(arr);
+		NPY_TYPES expected_type){
+  NPY_TYPES actual_type = type(arr);
   if (actual_type != expected_type) {
     std::ostringstream stream;
     stream << "expected Numeric type " << kindstrings[expected_type]
@@ -236,7 +236,7 @@ int rank(numeric::array arr){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
     throw_error_already_set();
   }
-  return PyArray_NDIM(arr.ptr());
+  return PyArray_NDIM(reinterpret_cast<PyArrayObject*>(arr.ptr()));
 }
 
 void check_rank(boost::python::numeric::array arr, int expected_rank){
@@ -251,17 +251,17 @@ void check_rank(boost::python::numeric::array arr, int expected_rank){
   return;
 }
 
-intp size(numeric::array arr)
+npy_intp size(numeric::array arr)
 {
-  if(!PyArray_Check(arr.ptr())){
+  if(!PyArray_Check(reinterpret_cast<PyArrayObject*>(arr.ptr()))){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
     throw_error_already_set();
   }
   return PyArray_Size(arr.ptr());
 }
 
-void check_size(boost::python::numeric::array arr, intp expected_size){
-  intp actual_size = size(arr);
+void check_size(boost::python::numeric::array arr, npy_intp expected_size){
+  npy_intp actual_size = size(arr);
   if (actual_size != expected_size) {
     std::ostringstream stream;
     stream << "expected size " << expected_size 
@@ -272,13 +272,13 @@ void check_size(boost::python::numeric::array arr, intp expected_size){
   return;
 }
 
-std::vector<intp> shape(numeric::array arr){
-  std::vector<intp> out_dims;
+std::vector<npy_intp> shape(numeric::array arr){
+  std::vector<npy_intp> out_dims;
   if(!PyArray_Check(arr.ptr())){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
     throw_error_already_set();
   }
-  npy_intp* dims_ptr = PyArray_DIMS(arr.ptr());
+  npy_intp* dims_ptr = PyArray_DIMS(reinterpret_cast<PyArrayObject*>(arr.ptr()));
   int the_rank = rank(arr);
   for (int i = 0; i < the_rank; i++){
     out_dims.push_back(*(dims_ptr + i));
@@ -286,7 +286,7 @@ std::vector<intp> shape(numeric::array arr){
   return out_dims;
 }
 
-intp get_dim(boost::python::numeric::array arr, int dimnum){
+npy_intp get_dim(boost::python::numeric::array arr, int dimnum){
   assert(dimnum >= 0);
   int the_rank=rank(arr);
   if(the_rank < dimnum){
@@ -296,12 +296,12 @@ intp get_dim(boost::python::numeric::array arr, int dimnum){
     PyErr_SetString(PyExc_RuntimeError, stream.str().c_str());       
     throw_error_already_set();
   }
-  std::vector<intp> actual_dims = shape(arr);
+  std::vector<npy_intp> actual_dims = shape(arr);
   return actual_dims[dimnum];
 }
 
-void check_shape(boost::python::numeric::array arr, std::vector<intp> expected_dims){
-  std::vector<intp> actual_dims = shape(arr);
+void check_shape(boost::python::numeric::array arr, std::vector<npy_intp> expected_dims){
+  std::vector<npy_intp> actual_dims = shape(arr);
   if (actual_dims != expected_dims) {
     std::ostringstream stream;
     stream << "expected dimensions " << vector_str(expected_dims)
@@ -312,8 +312,8 @@ void check_shape(boost::python::numeric::array arr, std::vector<intp> expected_d
   return;
 }
 
-void check_dim(boost::python::numeric::array arr, int dimnum, intp dimsize){
-  std::vector<intp> actual_dims = shape(arr);
+void check_dim(boost::python::numeric::array arr, int dimnum, npy_intp dimsize){
+  std::vector<npy_intp> actual_dims = shape(arr);
   if(actual_dims[dimnum] != dimsize){
     std::ostringstream stream;
     stream << "Error: expected dimension number ";
@@ -328,7 +328,7 @@ void check_dim(boost::python::numeric::array arr, int dimnum, intp dimsize){
 bool iscontiguous(numeric::array arr)
 {
   //  return arr.iscontiguous();
-  return PyArray_ISCONTIGUOUS(arr.ptr());
+  return PyArray_ISCONTIGUOUS(reinterpret_cast<PyArrayObject*>(arr.ptr()));
 }
 
 void check_contiguous(numeric::array arr)
@@ -341,18 +341,18 @@ void check_contiguous(numeric::array arr)
 }
 
 void* data(numeric::array arr){
-  if(!PyArray_Check(arr.ptr())){
+  if(!PyArray_Check(reinterpret_cast<PyArrayObject*>(arr.ptr()))){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
     throw_error_already_set();
   }
-  return PyArray_DATA(arr.ptr());
+  return PyArray_DATA(reinterpret_cast<PyArrayObject*>(arr.ptr()));
 }
 
 //Copy data into the array
 void copy_data(boost::python::numeric::array arr, char* new_data){
   char* arr_data = (char*) data(arr);
-  intp nbytes = PyArray_NBYTES(arr.ptr());
-  for (intp i = 0; i < nbytes; i++) {
+  npy_intp nbytes = PyArray_NBYTES(reinterpret_cast<PyArrayObject*>(arr.ptr()));
+  for (npy_intp i = 0; i < nbytes; i++) {
     arr_data[i] = new_data[i];
   }
   return;
@@ -360,39 +360,39 @@ void copy_data(boost::python::numeric::array arr, char* new_data){
 
 //Return a clone of this array
 numeric::array clone(numeric::array arr){
-  object obj(handle<>(PyArray_NewCopy((PyArrayObject*)arr.ptr(),PyArray_CORDER)));
+  object obj(handle<>(PyArray_NewCopy(reinterpret_cast<PyArrayObject*>(arr.ptr()),NPY_CORDER)));
   return makeNum(obj);
 }
 
   
 //Return a clone of this array with a new type
-numeric::array astype(boost::python::numeric::array arr, PyArray_TYPES t){
+numeric::array astype(boost::python::numeric::array arr, NPY_TYPES t){
   return (numeric::array) arr.astype(type2char(t));
 }
 
-std::vector<intp> strides(numeric::array arr){
-  std::vector<intp> out_strides;
-  if(!PyArray_Check(arr.ptr())){
+std::vector<npy_intp> strides(numeric::array arr){
+  std::vector<npy_intp> out_strides;
+  if(!PyArray_Check(reinterpret_cast<PyArrayObject*>(arr.ptr()))){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
     throw_error_already_set();
   }
-  intp* strides_ptr = PyArray_STRIDES(arr.ptr());
-  intp the_rank = rank(arr);
-  for (intp i = 0; i < the_rank; i++){
+  npy_intp* strides_ptr = PyArray_STRIDES(reinterpret_cast<PyArrayObject*>(arr.ptr()));
+  npy_intp the_rank = rank(arr);
+  for (npy_intp i = 0; i < the_rank; i++){
     out_strides.push_back(*(strides_ptr + i));
   }
   return out_strides;
 }
 
 int refcount(numeric::array arr){
-  return REFCOUNT(arr.ptr());
+  return REFCOUNT(reinterpret_cast<PyArrayObject*>(arr.ptr()));
 }
 
 void check_PyArrayElementType(object newo){
-  PyArray_TYPES theType=PyArray_TYPES(PyArray_TYPE(newo.ptr()));
-  if(theType == PyArray_OBJECT){
+  NPY_TYPES theType=NPY_TYPES(PyArray_TYPE(reinterpret_cast<PyArrayObject*>(newo.ptr())));
+  if(theType == NPY_OBJECT){
       std::ostringstream stream;
-      stream << "array elments have been cast to PyArray_OBJECT, "
+      stream << "array elments have been cast to NPY_OBJECT, "
              << "numhandle can only accept arrays with numerical elements" 
 	     << std::ends;
       PyErr_SetString(PyExc_TypeError, stream.str().c_str());
@@ -401,15 +401,15 @@ void check_PyArrayElementType(object newo){
   return;
 }
 
-std::string type2string(PyArray_TYPES t_type){
+std::string type2string(NPY_TYPES t_type){
   return kindstrings[t_type];
 }
 
-char type2char(PyArray_TYPES t_type){
+char type2char(NPY_TYPES t_type){
   return kindchars[t_type];
 }
 
-PyArray_TYPES char2type(char e_type){
+NPY_TYPES char2type(char e_type){
   return kindtypes[e_type];
 }
 
@@ -426,9 +426,9 @@ inline std::string vector_str(const std::vector<T>& vec)
   return stream.str();
 }
 
-inline void check_size_match(std::vector<intp> dims, intp n)
+inline void check_size_match(std::vector<npy_intp> dims, npy_intp n)
 {
-  intp total = std::accumulate(dims.begin(),dims.end(),1,std::multiplies<intp>());
+  npy_intp total = std::accumulate(dims.begin(),dims.end(),1,std::multiplies<npy_intp>());
   if (total != n) {
     std::ostringstream stream;
     stream << "expected array size " << n

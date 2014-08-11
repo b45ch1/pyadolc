@@ -81,7 +81,7 @@ int c_wrapped_function			(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::
 int c_wrapped_gradient			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_g){
 	double* x = (double*) nu::data(bpn_x);
 	double* g = (double*) nu::data(bpn_g);
-	gradient(tape_tag, N, x, g);
+	return gradient(tape_tag, N, x, g);
 }
 int c_wrapped_hessian			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &bpn_H){
 	double* x = (double*) nu::data(bpn_x);
@@ -117,7 +117,7 @@ int c_wrapped_hess_vec			(short tape_tag, int N, bpn::array &bpn_x, bpn::array &
 	double* x = (double*) nu::data(bpn_x);
 	double* v = (double*) nu::data(bpn_v);
 	double* z = (double*) nu::data(bpn_z);
-	hess_vec(tape_tag, N, x, v, z);
+	return hess_vec(tape_tag, N, x, v, z);
 }
 int c_wrapped_lagra_hess_vec	(short tape_tag, int M, int N, bpn::array &bpn_x, bpn::array &bpn_v, bpn::array &bpn_u,bpn::array &bpn_h){
 
@@ -240,7 +240,7 @@ int c_wrapped_hov_wk_forward	(short tape_tag, int M, int N, int D, int keep, int
 int c_wrapped_fos_reverse		(short tape_tag, int M, int N, bpn::array &bpn_u, bpn::array &bpn_z){
 	double* u = (double*) nu::data(bpn_u);
 	double* z = (double*) nu::data(bpn_z);
-	fos_reverse(tape_tag, M, N, u, z);
+	return fos_reverse(tape_tag, M, N, u, z);
 }
 
 int c_wrapped_fov_reverse		(short tape_tag, int M, int N, int Q, bpn::array &bpn_U, bpn::array &bpn_Z){

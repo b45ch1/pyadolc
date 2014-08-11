@@ -18,9 +18,9 @@ bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::ar
 	sparse_jac(tape_tag, M, N, 0, x, &nnz, &rind, &cind, &values, options);
 
 	npy_intp ret_nnz = static_cast<npy_intp>(nnz);
-	bp::object bp_rind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_INT, (char*) rind )));
-	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_INT, (char*) cind )));
-	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_DOUBLE, (char*) values )));
+	bp::object bp_rind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_INT, (char*) rind )));
+	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_INT, (char*) cind )));
+	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_DOUBLE, (char*) values )));
 
 	bpn::array ret_rind   = boost::python::extract<boost::python::numeric::array>(bp_rind);
 	bpn::array ret_cind   = boost::python::extract<boost::python::numeric::array>(bp_cind);
@@ -78,9 +78,9 @@ bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::a
 	sparse_hess(tape_tag,  N, 0, x, &nnz, &rind, &cind, &values, options);
 
 	npy_intp ret_nnz = static_cast<npy_intp>(nnz);
-	bp::object bp_rind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_UINT, (char*) rind )));
-	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_UINT, (char*) cind )));
-	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, PyArray_DOUBLE, (char*) values )));
+	bp::object bp_rind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_UINT, (char*) rind )));
+	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_UINT, (char*) cind )));
+	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_DOUBLE, (char*) values )));
 
 	bpn::array ret_rind   = boost::python::extract<boost::python::numeric::array>(bp_rind);
 	bpn::array ret_cind   = boost::python::extract<boost::python::numeric::array>(bp_cind);

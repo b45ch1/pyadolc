@@ -10,6 +10,7 @@
 // $Id: num_util.h 39 2007-02-01 02:54:54Z phil $
 //
 
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include <boost/python.hpp>
 #include <numpy/noprefix.h>
 #include <iostream>
@@ -37,7 +38,7 @@ namespace num_util{
    *@param t elements' numpy type. Default is double.
    *@return a numeric array of size n with elements initialized to zero.
    */
-  boost::python::numeric::array makeNum(intp n, PyArray_TYPES t);
+  boost::python::numeric::array makeNum(npy_intp n, NPY_TYPES t);
 
   /** 
    *Creates a n-dimensional numpy array with dimensions dimens and numpy 
@@ -47,7 +48,7 @@ namespace num_util{
    *@return a numeric array of shape dimens with elements initialized to zero.
    */
   boost::python::numeric::array makeNum(std::vector<npy_intp> dimens, 
-					PyArray_TYPES t);
+					NPY_TYPES t);
 				      
   /** 
    *Function template returns PyArray_Type for C++ type
@@ -56,11 +57,11 @@ namespace num_util{
    *@return numpy type enum
    */
 
-  template<typename T> PyArray_TYPES getEnum(void)
+  template<typename T> NPY_TYPES getEnum(void)
   {
     PyErr_SetString(PyExc_ValueError, "no mapping available for this type");
     boost::python::throw_error_already_set();
-    return PyArray_VOID;
+    return NPY_VOID;
   }
 
   /** 
@@ -111,7 +112,7 @@ namespace num_util{
    *@param arr a Boost/Python numeric array.
    *@return the numpy type of the array's elements 
    */
-  PyArray_TYPES type(boost::python::numeric::array arr);
+  NPY_TYPES type(boost::python::numeric::array arr);
 
   /** 
    *Throws an exception if the actual array type is not equal to the expected 
@@ -121,7 +122,7 @@ namespace num_util{
    *@return -----
    */
   void check_type(boost::python::numeric::array arr, 
-		  PyArray_TYPES expected_type);
+		  NPY_TYPES expected_type);
 
   /** 
    *A free function that retrieves the number of dimensions of a numpy array.
@@ -143,7 +144,7 @@ namespace num_util{
    *@param arr a Boost/Python numeric array.
    *@return an integer that indicates the total size of the array.
    */
-  intp size(boost::python::numeric::array arr);
+  npy_intp size(boost::python::numeric::array arr);
   
   /** 
    *Throw an exception if the actual total size of the array is not equal to 
@@ -152,14 +153,14 @@ namespace num_util{
    *@param expected_size the expected size of an array.
    *@return -----
    */
-  void check_size(boost::python::numeric::array arr, intp expected_size);
+  void check_size(boost::python::numeric::array arr, npy_intp expected_size);
 
   /** 
    *Returns the dimensions in a vector.
    *@param arr a Boost/Python numeric array.
    *@return a vector with integer values that indicates the shape of the array.
   */
-  std::vector<intp> shape(boost::python::numeric::array arr);
+  std::vector<npy_intp> shape(boost::python::numeric::array arr);
 
   /**
    *Returns the size of a specific dimension.
@@ -167,7 +168,7 @@ namespace num_util{
    *@param dimnum an integer that identifies the dimension to retrieve.
    *@return the size of the requested dimension.
    */
-  intp get_dim(boost::python::numeric::array arr, int dimnum);
+  npy_intp get_dim(boost::python::numeric::array arr, int dimnum);
 
   /** 
    *Throws an exception if the actual dimensions of the array are not equal to
@@ -177,7 +178,7 @@ namespace num_util{
    *@return -----
    */
   void check_shape(boost::python::numeric::array arr, 
-		   std::vector<intp> expected_dims);
+		   std::vector<npy_intp> expected_dims);
 
   /**
    *Throws an exception if a specific dimension from a numpy array does not
@@ -187,7 +188,7 @@ namespace num_util{
    *@param dimsize an expected size of the specified dimension.
    *@return -----
   */
-  void check_dim(boost::python::numeric::array arr, int dimnum, intp dimsize);
+  void check_dim(boost::python::numeric::array arr, int dimnum, npy_intp dimsize);
 
   /** 
    *Returns true if the array is contiguous.
@@ -228,11 +229,11 @@ namespace num_util{
   /** 
    *Returns a clone of this array with a new type.
    *@param arr a Boost/Python numeric array.
-   *@param t PyArray_TYPES of the output array.
+   *@param t NPY_TYPES of the output array.
    *@return a replicate of 'arr' with type set to 't'.
    */
   boost::python::numeric::array astype(boost::python::numeric::array arr, 
-				       PyArray_TYPES t);
+				       NPY_TYPES t);
 
 
 /*    *Returns the reference count of the array. */
@@ -246,11 +247,11 @@ namespace num_util{
    *@param arr a Boost/Python numeric array.
    *@return the strides of an array.
    */
-  std::vector<intp> strides(boost::python::numeric::array arr);
+  std::vector<npy_intp> strides(boost::python::numeric::array arr);
 
   /** 
    *Throws an exception if the element of a numpy array is type cast to
-   *PyArray_OBJECT.
+   *NPY_OBJECT.
    *@param newo a Boost/Python object.
    *@return -----
    */
@@ -259,38 +260,38 @@ namespace num_util{
   /** 
    *Mapping from a PyArray_TYPE to its corresponding name in string.
    */
-  typedef std::map<PyArray_TYPES, std::string> KindStringMap;
+  typedef std::map<NPY_TYPES, std::string> KindStringMap;
 
   /** 
    *Mapping from a PyArray_TYPE to its corresponding typeID in char.
    */
-  typedef std::map<PyArray_TYPES, char> KindCharMap;
+  typedef std::map<NPY_TYPES, char> KindCharMap;
 
   /** 
    *Mapping from a typeID to its corresponding PyArray_TYPE.
    */
-  typedef std::map<char, PyArray_TYPES> KindTypeMap;
+  typedef std::map<char, NPY_TYPES> KindTypeMap;
 
   /** 
    *Converts a PyArray_TYPE to its name in string.
-   *@param t_type a PyArray_TYPES.
+   *@param t_type a NPY_TYPES.
    *@return the corresponding name in string.
    */
-  std::string type2string(PyArray_TYPES t_type);
+  std::string type2string(NPY_TYPES t_type);
 
   /** 
    *Converts a PyArray_TYPE to its single character typecode.
-   *@param t_type a PyArray_TYPES.
+   *@param t_type a NPY_TYPES.
    *@return the corresponding typecode in char.
    */
-  char type2char(PyArray_TYPES t_type);
+  char type2char(NPY_TYPES t_type);
   
   /** 
-   *Coverts a single character typecode to its PyArray_TYPES.
-   *@param e_type a PyArray_TYPES typecode in char.
-   *@return its corresponding PyArray_TYPES.
+   *Coverts a single character typecode to its NPY_TYPES.
+   *@param e_type a NPY_TYPES typecode in char.
+   *@return its corresponding NPY_TYPES.
    */
-  PyArray_TYPES char2type(char e_type);
+  NPY_TYPES char2type(char e_type);
 
   /**
    *Constructs a string which contains a list of elements extracted from the 
@@ -308,7 +309,7 @@ namespace num_util{
    *@param n an expected size.
    *@return -----
    */
-  inline void check_size_match(std::vector<intp> dims, intp n);
+  inline void check_size_match(std::vector<npy_intp> dims, npy_intp n);
 
 } //  namespace num_util
 
