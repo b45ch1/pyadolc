@@ -70,11 +70,20 @@ THIS VERSION OF PYADOLC IS KNOWN TO WORK WITH:
 
 
 REQUIREMENTS:
-
+    * gcc
     * Python and Numpy, both with header files
     * ADOL-C, official versions from http://www.coin-or.org/projects/ADOL-C.xml or from https://gitorious.org/adol-c
     * boost::python from http://www.boost.org/
     * scons build tool (makes things easier if you need to recompile pyadolc)
+    * OSX::
+
+        brew install wget
+        brew install automake
+        brew install shtool
+        brew install libtool
+
+       You may have to run``brew link automake`` to generate symbolic links.
+
 
 INSTALLATION:
 
