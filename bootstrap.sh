@@ -1,7 +1,10 @@
 #!/bin/bash
 
+set -e # stop this script on command not returning 0
+
 SYSTEM=`uname -m`
 OLDDIR=`pwd`
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
@@ -16,16 +19,19 @@ sed -i -e 's/libraries =  ;/libraries = --with-python ;/g' ${DIR}/PACKAGES/boost
 ./b2 install
 
 # download ADOL-C
-cd $DIR
-git clone https://git.gitorious.org/adol-c/adol-c.git PACKAGES/ADOL-C
+cd $DIR/PACKAGES
+wget http://www.coin-or.org/download/source/ADOL-C/ADOL-C-2.5.2.tgz
+tar xfvz ADOL-C-2.5.2.tgz
+mv ADOL-C-2.5.2 ADOL-C
+# git clone https://git.gitorious.org/adol-c/adol-c.git PACKAGES/ADOL-C
 # git clone https://github.com/b45ch1/adol-c.git PACKAGES/ADOL-C
-cd PACKAGES/ADOL-C
+cd $DIR/PACKAGES/ADOL-C
 # git checkout e686fc236baf2c109f9c7f43da9bbd88b558f74d
-git checkout 4f72634
+# git checkout 4f72634
 cd $DIR
 
 # download ColPack
-wget -P PACKAGES wget http://cscapes.cs.purdue.edu/download/ColPack/ColPack-1.0.9.tar.gz
+wget -P PACKAGES http://cscapes.cs.purdue.edu/download/ColPack/ColPack-1.0.9.tar.gz
 
 # build ColPack
 cd $DIR/PACKAGES
@@ -36,12 +42,14 @@ if [ SYSTEM = "x86_64" ]; then
 else
 ./configure --prefix=`pwd`/../ADOL-C/ThirdParty/ColPack/ --libdir='${prefix}/lib'
 fi
+cd $DIR/PACKAGES/ColPack-1.0.9
 make
 make install
 
 # build ADOL-C
-cd ../ADOL-C
+cd $DIR/PACKAGES/ADOL-C
 ./update_versions.sh
 ./configure --enable-sparse --with-colpack=`pwd`/ThirdParty/ColPack/ --prefix=`pwd`/inst
 make
 make install
+
