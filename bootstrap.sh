@@ -8,21 +8,23 @@ OLDDIR=`pwd`
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
-# download and build boost
 mkdir PACKAGES
-wget -O PACKAGES/boost_1_56_0.tar.gz http://downloads.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.tar.gz?use_mirror=switch
-cd $DIR/PACKAGES
-tar xfvz boost_1_56_0.tar.gz
-cd boost_1_56_0
-./bootstrap.sh --prefix=${DIR}/PACKAGES/boost_1_56_0/build
-sed -i -e 's/libraries =  ;/libraries = --with-python ;/g' ${DIR}/PACKAGES/boost_1_56_0/project-config.jam
-./b2 install
+
+
+# # download and build boost
+# wget -O PACKAGES/boost_1_56_0.tar.gz http://downloads.sourceforge.net/project/boost/boost/1.56.0/boost_1_56_0.tar.gz?use_mirror=switch
+# cd $DIR/PACKAGES
+# tar xfvz boost_1_56_0.tar.gz
+# cd boost_1_56_0
+# ./bootstrap.sh --prefix=${DIR}/PACKAGES/boost_1_56_0/build
+# sed -i -e 's/libraries =  ;/libraries = --with-python ;/g' ${DIR}/PACKAGES/boost_1_56_0/project-config.jam
+# ./b2 install
 
 # download ADOL-C
 cd $DIR/PACKAGES
-wget http://www.coin-or.org/download/source/ADOL-C/ADOL-C-2.5.2.tgz
-tar xfvz ADOL-C-2.5.2.tgz
-mv ADOL-C-2.5.2 ADOL-C
+wget http://www.coin-or.org/download/source/ADOL-C/ADOL-C-2.6.0.tgz
+tar xfvz ADOL-C-2.6.0.tgz
+mv ADOL-C-2.6.0 ADOL-C
 # git clone https://git.gitorious.org/adol-c/adol-c.git PACKAGES/ADOL-C
 # git clone https://github.com/b45ch1/adol-c.git PACKAGES/ADOL-C
 cd $DIR/PACKAGES/ADOL-C

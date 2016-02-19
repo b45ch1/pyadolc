@@ -19,7 +19,7 @@ import inspect
 
 BASEDIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-BOOST_DIR   = os.environ.get('BOOST_DIR', os.path.join(BASEDIR, 'PACKAGES/boost_1_56_0/build'))
+BOOST_DIR   = os.environ.get('BOOST_DIR', os.path.join(BASEDIR, '/usr/local'))
 ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/inst'))
 COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/ThirdParty/ColPack'))
 
@@ -179,17 +179,20 @@ options_dict.update({
                                 include_dirs = ['adolc/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
-                                libraries = libraries),
+                                libraries = libraries,
+                                extra_compile_args = ["-std=c++11"]),
                 Extension('sparse/_sparse', ['adolc/sparse/src/py_sparse_adolc.cpp', 'adolc/sparse/src/num_util.cpp'],
                                 include_dirs = ['adolc/sparse/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
-                                libraries = libraries),
+                                libraries = libraries,
+                                extra_compile_args = ["-std=c++11"]),
                 Extension('colpack/_colpack', ['adolc/colpack/src/py_colpack_adolc.cpp', 'adolc/colpack/src/num_util.cpp'],
                                 include_dirs = ['adolc/colpack/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
-                                libraries = libraries)
+                                libraries = libraries,
+                                extra_compile_args = ["-std=c++11"]),
 ],
 
 'cmdclass' : {'clean':clean}
