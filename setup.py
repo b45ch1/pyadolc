@@ -23,7 +23,6 @@ BOOST_DIR   = os.environ.get('BOOST_DIR', os.path.join(BASEDIR, '/usr/local'))
 ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/inst'))
 COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/ThirdParty/ColPack'))
 
-
 boost_include_path   = os.path.join(BOOST_DIR, 'include')
 boost_library_path1  = os.path.join(BOOST_DIR, 'lib')
 boost_library_path2  = os.path.join(BOOST_DIR, 'lib64')
@@ -37,7 +36,7 @@ colpack_lib_path1    = os.path.join(COLPACK_DIR, 'lib')
 colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
 
 # ADAPT THIS TO FIT YOUR SYSTEM
-extra_compile_args = ['-ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
+extra_compile_args = ['-std=c++11 -ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
 include_dirs = [get_numpy_include_dirs()[0], boost_include_path, adolc_include_path, colpack_include_path]
 library_dirs = [boost_library_path1, boost_library_path2, adolc_library_path1, adolc_library_path2, colpack_lib_path1, colpack_lib_path2]
 libraries = ['boost_python','adolc', 'ColPack']
@@ -180,19 +179,19 @@ options_dict.update({
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
                                 libraries = libraries,
-                                extra_compile_args = ["-std=c++11"]),
+                                extra_compile_args = extra_compile_args),
                 Extension('sparse/_sparse', ['adolc/sparse/src/py_sparse_adolc.cpp', 'adolc/sparse/src/num_util.cpp'],
                                 include_dirs = ['adolc/sparse/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
                                 libraries = libraries,
-                                extra_compile_args = ["-std=c++11"]),
+                                extra_compile_args = extra_compile_args),
                 Extension('colpack/_colpack', ['adolc/colpack/src/py_colpack_adolc.cpp', 'adolc/colpack/src/num_util.cpp'],
                                 include_dirs = ['adolc/colpack/src'] + include_dirs,
                                 library_dirs = library_dirs,
                                 runtime_library_dirs = library_dirs,
                                 libraries = libraries,
-                                extra_compile_args = ["-std=c++11"]),
+                                extra_compile_args = extra_compile_args),
 ],
 
 'cmdclass' : {'clean':clean}

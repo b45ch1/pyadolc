@@ -67,6 +67,7 @@ THIS VERSION OF PYADOLC IS KNOWN TO WORK WITH:
 
     * Ubuntu Linux, Python 2.7.3, NumPy 1.8.0
     * OSX 10.9 (Mavericks), Python 2.7.6, NumPy 1.8.0
+    * OSX 10.11 (El Capitan), Python 2.7.11, NumPy 1.10.11
 
 
 REQUIREMENTS:
@@ -83,11 +84,17 @@ INSTALLATION UBUNTU:
 
 INSTALLATION OSX:
 
+    * Run::
 
-    brew install wget
-    brew install automake
-    brew install shtool
-    brew install libtool
+        brew install wget
+        brew install automake
+        brew install shtool
+        brew install libtool
+        brew install boost --with-python
+        brew install boost-python
+        brew install homebrew/science/adol-c
+
+    * Run ``CC=clang CXX=clang++ python setup.py``
 
    You may have to run``brew link automake`` to generate symbolic links.
 
