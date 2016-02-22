@@ -71,10 +71,11 @@ THIS VERSION OF PYADOLC IS KNOWN TO WORK WITH:
 
 
 REQUIREMENTS:
-    * gcc
+    * C and C++ compiler
     * Python and Numpy, both with header files
-    * ADOL-C, official versions from http://www.coin-or.org/projects/ADOL-C.xml 
-    * boost::python from http://www.boost.org/
+    * ADOL-C, official versions from http://www.coin-or.org/projects/ADOL-C.xml
+    * ColPack from http://cscapes.cs.purdue.edu/download/ColPack
+    * boost::python from http://www.boost.org/ or from the apt-get repository.
 
 INSTALLATION UBUNTU:
 
@@ -94,7 +95,7 @@ INSTALLATION OSX:
         brew install boost-python
         brew install homebrew/science/adol-c
 
-    * Run ``CC=clang CXX=clang++ python setup.py``
+    * Run ``CC=clang CXX=clang++  -stdlib=libc++ -mmacosx-version-min=10.9  python setup.py``
 
    You may have to run``brew link automake`` to generate symbolic links.
 
@@ -102,9 +103,15 @@ INSTALLATION OSX:
 TEST YOUR INSTALLATION:
 
     * install nose, e.g., via pip install nose
+    * add pyadolc to your python path
     * run ``python -c "import adolc; adolc.test()"``.
       All tests should pass.
     * If anything goes wrong, please file a bug report.
+
+    .. warning::
+
+        If you run the test from the root folder of pyadolc you will get ``ImportError: No module named _adolc`` since it first looks in the local folder ``./adolc`` before trying the other directories in your PYTHONPATH.
+
 
 MANUAL INSTALLATION:
 

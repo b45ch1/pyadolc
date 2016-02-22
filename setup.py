@@ -11,6 +11,7 @@ DOCLINES = __doc__.split("\n")
 # http://docs.cython.org/docs/tutorial.html
 
 import os
+import sys
 from distutils.core import setup, Extension
 from distutils.core import Command
 from numpy.distutils.misc_util import get_numpy_include_dirs
@@ -37,13 +38,16 @@ colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
 
 # ADAPT THIS TO FIT YOUR SYSTEM
 extra_compile_args = ['-std=c++11 -ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
+
+if sys.platform == 'darwin' and os.environ.get('CC', 'clang').find('clang') > 0:
+    extra_compile_args += ['-stdlib=libc++ -mmacosx-version-min=10.9']
+
 include_dirs = [get_numpy_include_dirs()[0], boost_include_path, adolc_include_path, colpack_include_path]
 library_dirs = [boost_library_path1, boost_library_path2, adolc_library_path1, adolc_library_path2, colpack_lib_path1, colpack_lib_path2]
 libraries = ['boost_python','adolc', 'ColPack']
 
 print ''
-print '\033[1;31m Note: If this script does not work you can try to use scons.\033[1;m'
-print '\033[1;31mplease check that the following settings are correct for your system\033[1;m'
+print '\033[1;31mPlease check that the following settings are correct for your system:\n\033[1;m'
 print 'include_dirs = %s\n'%str(include_dirs)
 print 'library_dirs = %s\n'%str(library_dirs)
 print '''
@@ -53,8 +57,15 @@ If ADOL-C or Colpack cannot be found, you can manually set the paths via
 * where /path/to/adol-c contains the folders ``./include`` and ``./lib64``.
 * where /path/to/colpack contains the folders ``./include`` and ``./lib64``, containing ``libColPack.so`` and the include files
 
+You can also specify the compiler, e.g. by
+``export CC=clang`` and ``export CXX=clang++`` or run
+
+Example:
+
+    CC=clang CXX=clang++ python setup.py
+
 '''
-raw_input("Press enter to continue.")
+raw_input("Press enter to build pyadolc.")
 
 
 # PACKAGE INFORMATION
