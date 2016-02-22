@@ -95,7 +95,7 @@ INSTALLATION OSX:
         brew install boost-python
         brew install homebrew/science/adol-c
 
-    * Run ``CC=clang CXX=clang++  -stdlib=libc++ -mmacosx-version-min=10.9  python setup.py``
+    * Run ``CC=clang CXX=clang++ python setup.py``
 
    You may have to run``brew link automake`` to generate symbolic links.
 
