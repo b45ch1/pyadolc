@@ -2,6 +2,14 @@ import numpy
 import _adolc
 from _adolc import *
 
+class ErrorReturnCode(Exception):
+    """
+    to be raised when adolc interfaces use negative return codes 
+    to indicate an error condition
+    """
+    def __init__(self, message, rc):
+        Exception.__init__(self,(message,rc))
+
 def adouble(x):
     """
     Return adouble from scalar or array of arbitrary shape
@@ -110,7 +118,9 @@ def function(tape_tag,x):
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     y = numpy.zeros(M, dtype=float)
-    _adolc.function(tape_tag, M, N, x, y)
+    rc = _adolc.function(tape_tag, M, N, x, y)
+    if (rc < 0):
+        raise ErrorReturnCode("function",rc)
     return y
 
 def gradient(tape_tag,x):
@@ -125,7 +135,9 @@ def gradient(tape_tag,x):
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     g = numpy.zeros(N, dtype=float)
-    _adolc.gradient(tape_tag, N, x, g)
+    rc = _adolc.gradient(tape_tag, N, x, g)
+    if (rc < 0):
+        raise ErrorReturnCode("gradient", rc)
     return g
 
 def hessian(tape_tag, x, format='full' ):
@@ -143,7 +155,9 @@ def hessian(tape_tag, x, format='full' ):
     if format == 'full':
         H = numpy.zeros((N,N), dtype=float)
         ints = [i for i in range(N)]
-        _adolc.hessian(tape_tag, N, x, H)
+        rc = _adolc.hessian(tape_tag, N, x, H)
+        if (rc < 0):
+            raise ErrorReturnCode("hessian", rc)
         H[:] = H[:] + H.T
         H[ints, ints] /= 2.
         return H
@@ -162,7 +176,9 @@ def jacobian(tape_tag,x):
     assert numpy.size(x) == N
     assert numpy.ndim(x) == 1
     J = numpy.zeros((M,N), dtype=float)
-    _adolc.jacobian(tape_tag, M, N, x, J)
+    rc = _adolc.jacobian(tape_tag, M, N, x, J)
+    if (rc < 0):
+        raise ErrorReturnCode("jacobian", rc)
     return J
 
 
@@ -182,7 +198,9 @@ def vec_jac(tape_tag, x, u, repeat = False):
     assert numpy.size(u) == M
     assert numpy.ndim(u) == 1
     z = numpy.zeros(N, dtype=float)
-    _adolc.vec_jac(tape_tag, M, N, repeat, x, u, z)
+    rc = _adolc.vec_jac(tape_tag, M, N, repeat, x, u, z)
+    if (rc < 0):
+        raise ErrorReturnCode("vec_jac", rc)
     return z
 
 def jac_vec(tape_tag, x, v):
@@ -199,7 +217,9 @@ def jac_vec(tape_tag, x, v):
     assert numpy.size(v) == N
     assert numpy.ndim(v) == 1
     z = numpy.zeros(M, dtype=float)
-    _adolc.jac_vec(tape_tag, M, N, x, v, z)
+    rc = _adolc.jac_vec(tape_tag, M, N, x, v, z)
+    if (rc < 0):
+        raise ErrorReturnCode("jac_vec", rc)
     return z
 
 def hess_vec(tape_tag, x, v):
@@ -216,7 +236,9 @@ def hess_vec(tape_tag, x, v):
     assert numpy.size(v) == N
     assert numpy.ndim(v) == 1
     z = numpy.zeros(N, dtype=float)
-    _adolc.hess_vec(tape_tag, N, x, v, z)
+    rc = _adolc.hess_vec(tape_tag, N, x, v, z)
+    if (rc < 0):
+        raise ErrorReturnCode("hess_vec", rc)
     return z
 
 
@@ -246,7 +268,9 @@ def lagra_hess_vec(tape_tag, x, u, v):
 
     z = numpy.zeros(N, dtype=float)
 
-    _adolc.lagra_hess_vec(tape_tag, M, N, x, v, u, z)
+    rc = _adolc.lagra_hess_vec(tape_tag, M, N, x, v, u, z)
+    if (rc < 0):
+        raise ErrorReturnCode("lagra_hess_vec", rc)
     return z
 
 def zos_forward(tape_tag,x,keep):
@@ -267,8 +291,9 @@ def zos_forward(tape_tag,x,keep):
     assert numpy.ndim(x) == 1
 
     y = numpy.zeros(M, dtype=float)
-    _adolc.zos_forward(tape_tag, M, N, keep, x, y)
-
+    rc = _adolc.zos_forward(tape_tag, M, N, keep, x, y)
+    if (rc < 0):
+        raise ErrorReturnCode("zos_forward", rc)
     return y
 
 def fos_forward(tape_tag, x, v, keep):
@@ -299,8 +324,9 @@ def fos_forward(tape_tag, x, v, keep):
 
     y = numpy.zeros(M, dtype=float)
     w = numpy.zeros(M, dtype=float)
-    _adolc.fos_forward(tape_tag, M, N, keep, x, v, y, w)
-
+    rc = _adolc.fos_forward(tape_tag, M, N, keep, x, v, y, w)
+    if (rc < 0):
+        raise ErrorReturnCode("fos_forward", rc)
     return (y,w)
 
 def fov_forward(tape_tag, x, V):
@@ -331,8 +357,9 @@ def fov_forward(tape_tag, x, V):
     y = numpy.zeros(M, dtype=float)
     W = numpy.zeros((M,P), dtype=float)
 
-    _adolc.fov_forward(tape_tag, M, N, P, x, V, y, W)
-
+    rc = _adolc.fov_forward(tape_tag, M, N, P, x, V, y, W)
+    if (rc < 0):
+        raise ErrorReturnCode("fov_forward", rc)
     return (y,W)
 
 def hos_forward(tape_tag, x, V, keep):
@@ -367,8 +394,9 @@ def hos_forward(tape_tag, x, V, keep):
     y = numpy.zeros(M, dtype=float)
     W = numpy.zeros((M,D), dtype=float)
 
-    _adolc.hos_forward(tape_tag, M, N, D, keep, x, V, y, W)
-
+    rc = _adolc.hos_forward(tape_tag, M, N, D, keep, x, V, y, W)
+    if (rc < 0):
+        raise ErrorReturnCode("hos_forward", rc)
     return (y,W)
 
 def hov_forward(tape_tag, x, V):
@@ -402,7 +430,9 @@ def hov_forward(tape_tag, x, V):
     y = numpy.zeros(M, dtype=float)
     W = numpy.zeros((M,P,D), dtype=float)
 
-    _adolc.hov_forward(tape_tag, M, N, D, P, x, V, y, W)
+    rc = _adolc.hov_forward(tape_tag, M, N, D, P, x, V, y, W)
+    if (rc < 0):
+        raise ErrorReturnCode("hov_forward", rc)
     return (y,W)
 
 def hov_wk_forward(tape_tag, x, V, keep):
@@ -436,7 +466,9 @@ def hov_wk_forward(tape_tag, x, V, keep):
     y = numpy.zeros(M, dtype=float)
     W = numpy.zeros((M,P,D), dtype=float)
 
-    _adolc.hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W)
+    rc = _adolc.hov_wk_forward(tape_tag, M, N, D, keep, P, x, V, y, W)
+    if (rc < 0):
+        raise ErrorReturnCode("hov_wk_forward", rc)
     return (y,W)
     # raise NotImplementedError
 
@@ -461,7 +493,9 @@ def fos_reverse(tape_tag, u):
     assert numpy.ndim(u) == 1
 
     z = numpy.zeros(N, dtype=float)
-    _adolc.fos_reverse(tape_tag, M, N, u, z)
+    rc = _adolc.fos_reverse(tape_tag, M, N, u, z)
+    if (rc < 0):
+        raise ErrorReturnCode("fos_reverse", rc)
     return z
 
 
@@ -488,7 +522,9 @@ def fov_reverse(tape_tag, U):
     Q = numpy.shape(U)[0]
 
     Z = numpy.zeros((Q,N), dtype=float)
-    _adolc.fov_reverse(tape_tag, M, N, Q, U, Z)
+    rc = _adolc.fov_reverse(tape_tag, M, N, Q, U, Z)
+    if (rc < 0):
+        raise ErrorReturnCode("fov_reverse", rc)
     return Z
 
 def hos_reverse(tape_tag, D, u):
@@ -514,7 +550,9 @@ def hos_reverse(tape_tag, D, u):
     assert numpy.size(u) == M
     assert numpy.ndim(u) == 1
     Z = numpy.zeros((N, D+1), dtype=float)
-    _adolc.hos_reverse(tape_tag, M, N, D, u, Z)
+    rc = _adolc.hos_reverse(tape_tag, M, N, D, u, Z)
+    if (rc < 0):
+        raise ErrorReturnCode("hos_reverse", rc)
     return Z
 
 def hos_ti_reverse(tape_tag, U):
@@ -540,7 +578,9 @@ def hos_ti_reverse(tape_tag, U):
     Dp1 = numpy.shape(U)[1]
     D = Dp1 - 1
     Z = numpy.zeros((N, D+1), dtype=float)
-    _adolc.hos_ti_reverse(tape_tag, M, N, D, U, Z)
+    rc = _adolc.hos_ti_reverse(tape_tag, M, N, D, U, Z)
+    if (rc < 0):
+        raise ErrorReturnCode("hos_ti_reverse", rc)
     return Z
 
 
@@ -573,7 +613,9 @@ def hov_reverse(tape_tag, D, U):
     Z = numpy.zeros((Q, N, D+1), dtype=float)
     nz = numpy.zeros((Q,N), dtype=numpy.int16)
 
-    _adolc.hov_reverse(tape_tag, M, N, D, Q, U, Z, nz)
+    rc = _adolc.hov_reverse(tape_tag, M, N, D, Q, U, Z, nz)
+    if (rc < 0):
+        raise ErrorReturnCode("hov_reverse", rc)
 
     return (Z, nz)
 
@@ -605,7 +647,9 @@ def hov_ti_reverse(tape_tag, U):
 
     Z = numpy.zeros((Q, N, Dp1), dtype=float)
     nz = numpy.zeros((Q,N), dtype=numpy.int16)
-    _adolc.hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz)
+    rc = _adolc.hov_ti_reverse(tape_tag, M, N, D, Q, U, Z, nz)
+    if (rc < 0):
+        raise ErrorReturnCode("hov_ti_reverse", rc)
     return (Z,nz)
 
 def hos_ov_reverse(tape_tag, P, U):
@@ -634,7 +678,9 @@ def hos_ov_reverse(tape_tag, P, U):
     D = Dp1 - 1
 
     Z = numpy.zeros((N, P, D+1), dtype=float)
-    _adolc.hos_ov_reverse(tape_tag, M, N, D, P, U, Z)
+    rc = _adolc.hos_ov_reverse(tape_tag, M, N, D, P, U, Z)
+    if (rc < 0):
+        raise ErrorReturnCode("hos_ov_reverse", rc)
     return Z
 
 def condassign(x, cond, y, z = None):
