@@ -87,7 +87,7 @@ class AdolcProgram(object):
             rx_list.append(rx)
         self.x = numpy.concatenate(rx_list)
         
-        if Vs != None:
+        if Vs is not None:
             rV_list = []        
             for nV,V in enumerate(Vs):
                 V_shp = numpy.shape(V)
@@ -100,7 +100,7 @@ class AdolcProgram(object):
             
         # run the ADOL-C functions
         # ------------------------
-        if Vs == None:
+        if Vs is None:
             self.y = wrapped_functions.zos_forward(self.tape_tag, self.x, keep=keep)
         
         else:
@@ -127,7 +127,7 @@ class AdolcProgram(object):
             self.ys.append(self.y[count:count+M_ns].reshape(s))
             count += M_ns
         
-        if Vs != None:
+        if Vs is not None:
             self.Ws = []
             count = 0
             for ns, s in enumerate(self.dependentVariableShapeList):
@@ -137,7 +137,7 @@ class AdolcProgram(object):
                 
         # return outputs
         # --------------
-        if Vs == None:
+        if Vs is None:
             return self.ys
         else:
             return (self.ys, self.Ws)                
@@ -178,8 +178,8 @@ class AdolcProgram(object):
         
         Wbar = numpy.ascontiguousarray(numpy.concatenate(rWbar_list,axis=1))
         
-        if self.Vs != None:
-            """ this branch is executed after a forward(xs, Vs!=None)"""
+        if self.Vs is not None:
+            """ this branch is executed after a forward(xs, Vs)"""
             N,PV,DV = self.V.shape
             Q,M,P,Dp1 = Wbar.shape
             D = Dp1 - 1
@@ -203,7 +203,7 @@ class AdolcProgram(object):
                 
             
         else:
-            """ this branch is executed after a forward(xs, Vs==None)"""
+            """ this branch is executed after a forward(xs, Vs=None)"""
             Q,M,P,Dp1 = Wbar.shape
             D = Dp1 - 1
             N = self.x.size

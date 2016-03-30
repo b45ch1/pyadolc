@@ -37,7 +37,7 @@ colpack_lib_path1    = os.path.join(COLPACK_DIR, 'lib')
 colpack_lib_path2    = os.path.join(COLPACK_DIR, 'lib64')
 
 # ADAPT THIS TO FIT YOUR SYSTEM
-extra_compile_args = ['-std=c++11 -ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB']
+extra_compile_args = ['-std=c++11 -ftemplate-depth-100 -DBOOST_PYTHON_DYNAMIC_LIB -Wno-unused-local-typedefs']
 
 if sys.platform == 'darwin' and os.environ.get('CC', 'clang').find('clang') > 0:
     extra_compile_args += ['-stdlib=libc++ -mmacosx-version-min=10.9']

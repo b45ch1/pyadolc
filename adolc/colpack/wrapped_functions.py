@@ -41,7 +41,7 @@ def sparse_jac_no_repeat(tape_tag, x, options):
     """
     assert type(tape_tag) == int
     
-    if options == None:
+    if options is None:
         options = numpy.array([1,1,0,0], dtype=numpy.int32)
 
     options = numpy.asarray(options,dtype=numpy.int32)
@@ -116,7 +116,7 @@ def sparse_hess_no_repeat(tape_tag, x, options = None):
     """
     assert type(tape_tag) == int
     
-    if options == None:
+    if options is None:
         options = numpy.array([0,0], dtype=numpy.int32)
 
     options = numpy.asarray(options,dtype=numpy.int32)

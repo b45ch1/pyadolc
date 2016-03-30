@@ -693,7 +693,7 @@ def condassign(x, cond, y, z = None):
        x = y
 
     else:
-        if z != None:
+        if z is not None:
             x = z
 
     """
@@ -707,7 +707,7 @@ def condassign(x, cond, y, z = None):
     cond = c(cond)
     y = c(y)
 
-    if z == None:
+    if z is None:
         return _adolc.condassign(x, cond, y)
     else:
         z = c(z)
