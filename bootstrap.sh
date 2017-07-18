@@ -33,13 +33,10 @@ cd $DIR/PACKAGES/ADOL-C
 cd $DIR
 
 # download ColPack
-#wget -P PACKAGES http://cscapes.cs.purdue.edu/download/ColPack/ColPack-1.0.9.tar.gz
-wget -P PACKAGES https://github.com/CSCsw/ColPack/archive/v1.0.10.zip
+wget -O PACKAGES/ColPack-1.0.10.tar.gz https://github.com/CSCsw/ColPack/archive/v1.0.10.tar.gz
 
 # build ColPack
 cd $DIR/PACKAGES
-#tar xfvz ColPack-1.0.9.tar.gz
-#cd ColPack-1.0.9
 tar xfvz ColPack-1.0.10.tar.gz
 cd ColPack-1.0.10
 if [ SYSTEM = "x86_64" ]; then
@@ -49,7 +46,6 @@ else
 autoreconf -vif
 ./configure --prefix=`pwd`/../ADOL-C/ThirdParty/ColPack/ --libdir='${prefix}/lib'
 fi
-#cd $DIR/PACKAGES/ColPack-1.0.9
 cd $DIR/PACKAGES/ColPack-1.0.10
 make
 make install
