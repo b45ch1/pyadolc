@@ -66,6 +66,7 @@ EXAMPLE USAGE::
 THIS VERSION OF PYADOLC IS KNOWN TO WORK WITH:
 
     * Ubuntu Linux, Python 2.7.3, NumPy 1.8.0
+    * Debian Stretch Linux, Python 2.7.13, NumPy 1.13.1
     * OSX 10.9 (Mavericks), Python 2.7.6, NumPy 1.8.0
     * OSX 10.11 (El Capitan), Python 2.7.11, NumPy 1.10.11
 
@@ -77,11 +78,12 @@ REQUIREMENTS:
     * ColPack from http://cscapes.cs.purdue.edu/download/ColPack
     * boost::python from http://www.boost.org/ or from the apt-get repository.
 
-INSTALLATION UBUNTU:
+INSTALLATION UBUNTU / DEBIAN (Stretch):
 
     * install boost-python via apt-get
+    * install autotools-dev libtool libboost-all-dev
     * Use ``./bootstrap.sh`` to download ADOL-C and ColPack and compile them.
-    * Run ``python setup.py``
+    * Run ``python setup.py`` and follow the instructions
 
 INSTALLATION OSX:
 
@@ -102,7 +104,7 @@ INSTALLATION OSX:
 
 TEST YOUR INSTALLATION:
 
-    * install nose, e.g., via pip install nose
+    * install nose, matplotlib, e.g., via pip install nose matplotlib
     * add pyadolc to your python path
     * run ``python -c "import adolc; adolc.test()"``.
       All tests should pass.

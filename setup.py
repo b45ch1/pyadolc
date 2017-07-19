@@ -104,7 +104,7 @@ import sys
 if len(sys.argv) == 1:
     print """
 
-    You didn't enter what to do!
+    \033[1;31mYou didn't enter what to do!\n\033[1;m
 
     Options:
     1: build the extension with
