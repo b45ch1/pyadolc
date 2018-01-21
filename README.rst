@@ -93,13 +93,23 @@ INSTALLATION OSX:
         brew install automake
         brew install shtool
         brew install libtool
-        brew install boost --with-python
-        brew install boost-python
-        brew install homebrew/science/adol-c
+        brew install boost@1.59
+        brew install boost-python@1.59
+        brew link boost@1.59 --force
+        brew link boost-python@1.59 --force
+    
+    * If you installed homebrew in the default location ``/usr/local``, you can skip this step.  Otherwise, if you installed homebrew somewhere else on your system, you will need to edit ``bootstrap.sh`` and ``setup.py``.  First, in the ColPack build section of ``bootstrap.sh``, add the flags::
+        
+        --with-boost-libdir='<homebrew_libdir>' --with-boost-includedir='<homebrew_includedir>'
+      to the end of the ``./configure`` commands, where ``<homebrew_libdir>`` and ``<homebrew_includedir>`` are the locations of homebrew's ``lib`` and ``include`` directories, respectively.  Similarly, edit setup.py so that ``BOOST_DIR = '<homewbrew_root>'`` where ``<homebrew_root>`` is the base directory of your homebrew install (where ``lib``, ``include``, ... are located).
+    
+    * Run::
 
-    * Run ``CC=clang CXX=clang++ python setup.py``
+        ./bootstrap.sh
+        CC=clang CXX=clang++ python setup.py build
+        python setup.py install
 
-   You may have to run``brew link automake`` to generate symbolic links.
+   You may have to run ``brew link automake`` to generate symbolic links.
 
 
 TEST YOUR INSTALLATION:
