@@ -10,7 +10,7 @@ static inline int _(const int I, const int J, const int K,
     return J*K*i + K*j +k;
 }
 
-void entangle_cross(bpn::array &bpn_V, bpn::array &bpn_V1, bpn::array &bpn_V2, bpn::array &bpn_V12){
+void entangle_cross(bpn::ndarray &bpn_V, bpn::ndarray &bpn_V1, bpn::ndarray &bpn_V2, bpn::ndarray &bpn_V12){
 
     double* V   = (double*) nu::data(bpn_V);
     double* V1  = (double*) nu::data(bpn_V1);
@@ -73,7 +73,7 @@ void entangle_cross(bpn::array &bpn_V, bpn::array &bpn_V1, bpn::array &bpn_V2, b
 }
 
 
-void detangle_cross(bpn::array &bpn_V, bpn::array &bpn_V1, bpn::array &bpn_V2, bpn::array &bpn_V12){
+void detangle_cross(bpn::ndarray &bpn_V, bpn::ndarray &bpn_V1, bpn::ndarray &bpn_V2, bpn::ndarray &bpn_V12){
 
     double* V   = (double*) nu::data(bpn_V);
     double* V1  = (double*) nu::data(bpn_V1);

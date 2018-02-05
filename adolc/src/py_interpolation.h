@@ -6,7 +6,7 @@
 using namespace std;
 namespace b = boost;
 namespace bp = boost::python;
-namespace bpn = boost::python::numeric;
+namespace bpn = boost::python::numpy;
 namespace nu = num_util;
 
 /**
@@ -42,7 +42,7 @@ N = number of input arguments
 D = 2 = order of the Taylor polynomial
 P = M*L + M + L number of entangled directions
 */
-void entangle_cross(bpn::array &V, bpn::array &V1, bpn::array &V2, bpn::array &V12);
+void entangle_cross(bpn::ndarray &V, bpn::ndarray &V1, bpn::ndarray &V2, bpn::ndarray &V12);
 
 /**
 
@@ -69,7 +69,7 @@ V12     (OUTPUT) DArray
 
 
 */
-void detangle_cross(bpn::array &V, bpn::array &V1, bpn::array &V2, bpn::array &V12);
+void detangle_cross(bpn::ndarray &V, bpn::ndarray &V1, bpn::ndarray &V2, bpn::ndarray &V12);
 
 
 #endif

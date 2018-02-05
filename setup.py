@@ -20,7 +20,7 @@ import inspect
 
 BASEDIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
-BOOST_DIR   = os.environ.get('BOOST_DIR', os.path.join(BASEDIR, '/usr/local'))
+BOOST_DIR   = os.environ.get('BOOST_DIR', os.path.join(BASEDIR, '/usr/include'))
 ADOLC_DIR   = os.environ.get('ADOLC_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/inst'))
 COLPACK_DIR = os.environ.get('COLPACK_DIR', os.path.join(BASEDIR, 'PACKAGES/ADOL-C/ThirdParty/ColPack'))
 
@@ -44,7 +44,7 @@ if sys.platform == 'darwin' and os.environ.get('CC', 'clang').find('clang') > 0:
 
 include_dirs = [get_numpy_include_dirs()[0], boost_include_path, adolc_include_path, colpack_include_path]
 library_dirs = [boost_library_path1, boost_library_path2, adolc_library_path1, adolc_library_path2, colpack_lib_path1, colpack_lib_path2]
-libraries = ['boost_python','adolc', 'ColPack']
+libraries = ['boost_python','boost_numpy', 'adolc', 'ColPack']
 
 print ''
 print '\033[1;31mPlease check that the following settings are correct for your system:\n\033[1;m'

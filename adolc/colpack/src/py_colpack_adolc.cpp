@@ -1,6 +1,6 @@
 #include "py_colpack_adolc.hpp"
 
-bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options){
+bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::ndarray &bpn_x, bpn::ndarray &bpn_options){
 	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
@@ -22,9 +22,9 @@ bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::ar
 	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_INT, (char*) cind )));
 	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_DOUBLE, (char*) values )));
 
-	bpn::array ret_rind   = boost::python::extract<boost::python::numeric::array>(bp_rind);
-	bpn::array ret_cind   = boost::python::extract<boost::python::numeric::array>(bp_cind);
-	bpn::array ret_values = boost::python::extract<boost::python::numeric::array>(bp_values);
+	bpn::ndarray ret_rind   = boost::python::extract<boost::python::numpy::ndarray>(bp_rind);
+	bpn::ndarray ret_cind   = boost::python::extract<boost::python::numpy::ndarray>(bp_cind);
+	bpn::ndarray ret_values = boost::python::extract<boost::python::numpy::ndarray>(bp_values);
 
 	bp::list retvals;
 	retvals.append(ret_nnz);
@@ -36,7 +36,7 @@ bp::list	wrapped_sparse_jac_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::ar
 
 }
 
-bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values){
+bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::ndarray &bpn_x, npy_intp nnz, bpn::ndarray &bpn_rind, bpn::ndarray &bpn_cind, bpn::ndarray &bpn_values){
 	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
@@ -62,7 +62,7 @@ bp::list	wrapped_sparse_jac_repeat(short tape_tag, bpn::array &bpn_x, npy_intp n
 }
 
 
-bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::array &bpn_options){
+bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::ndarray &bpn_x, bpn::ndarray &bpn_options){
 	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	int N = tape_stats[NUM_INDEPENDENTS];
@@ -82,9 +82,9 @@ bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::a
 	bp::object bp_cind   ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_UINT, (char*) cind )));
 	bp::object bp_values ( bp::handle<>(PyArray_SimpleNewFromData(1, &ret_nnz, NPY_DOUBLE, (char*) values )));
 
-	bpn::array ret_rind   = boost::python::extract<boost::python::numeric::array>(bp_rind);
-	bpn::array ret_cind   = boost::python::extract<boost::python::numeric::array>(bp_cind);
-	bpn::array ret_values = boost::python::extract<boost::python::numeric::array>(bp_values);
+	bpn::ndarray ret_rind   = boost::python::extract<boost::python::numpy::ndarray>(bp_rind);
+	bpn::ndarray ret_cind   = boost::python::extract<boost::python::numpy::ndarray>(bp_cind);
+	bpn::ndarray ret_values = boost::python::extract<boost::python::numpy::ndarray>(bp_values);
 
 	bp::list retvals;
 	retvals.append(ret_nnz);
@@ -96,7 +96,7 @@ bp::list	wrapped_sparse_hess_no_repeat(short tape_tag, bpn::array &bpn_x, bpn::a
 
 }
 
-bp::list	wrapped_sparse_hess_repeat(short tape_tag, bpn::array &bpn_x, npy_intp nnz, bpn::array &bpn_rind, bpn::array &bpn_cind, bpn::array &bpn_values){
+bp::list	wrapped_sparse_hess_repeat(short tape_tag, bpn::ndarray &bpn_x, npy_intp nnz, bpn::ndarray &bpn_rind, bpn::ndarray &bpn_cind, bpn::ndarray &bpn_values){
 	size_t tape_stats[STAT_SIZE];
 	tapestats(tape_tag, tape_stats);
 	npy_intp N = tape_stats[NUM_INDEPENDENTS];

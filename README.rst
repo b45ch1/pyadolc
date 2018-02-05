@@ -93,10 +93,10 @@ INSTALLATION OSX:
         brew install automake
         brew install shtool
         brew install libtool
-        brew install boost@1.59
-        brew install boost-python@1.59
-        brew link boost@1.59 --force
-        brew link boost-python@1.59 --force
+        brew install boost
+        brew install boost-python
+        brew link boost --force
+        brew link boost-python --force
     
     * If you installed homebrew in the default location ``/usr/local``, you can skip this step.  Otherwise, if you installed homebrew somewhere else on your system, you will need to edit ``bootstrap.sh`` and ``setup.py``.  First, in the ColPack build section of ``bootstrap.sh``, add the flags::
         

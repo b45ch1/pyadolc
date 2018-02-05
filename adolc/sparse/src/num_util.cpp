@@ -182,47 +182,47 @@ static KindTypeMap kindtypes(kindTypeMapEntries,
                                    kindTypeMapEntries + numTypeEntries);
 
 //Create a numarray referencing Python sequence object
-numeric::array makeNum(object x){
+numpy::ndarray makeNum(object x){
   if (!PySequence_Check(x.ptr())){
     PyErr_SetString(PyExc_ValueError, "expected a sequence");
     throw_error_already_set();
   }
   object obj(handle<>
-       (PyArray_ContiguousFromObject(x.ptr(),NPY_NOTYPE,0,0)));
+	     (PyArray_ContiguousFromObject(x.ptr(),NPY_NOTYPE,0,0)));
   check_PyArrayElementType(obj);
-  return extract<numeric::array>(obj); 
+  return extract<numpy::ndarray>(obj); 
 }
 
 //Create a one-dimensional Numeric array of length n and Numeric type t
-numeric::array makeNum(npy_intp n, NPY_TYPES t=NPY_DOUBLE){
+numpy::ndarray makeNum(npy_intp n, NPY_TYPES t=NPY_DOUBLE){
   object obj(handle<>(PyArray_SimpleNew(1, &n, t)));
-  return extract<numeric::array>(obj);
+  return extract<numpy::ndarray>(obj);
 }
   
 //Create a Numeric array with dimensions dimens and Numeric type t
-numeric::array makeNum(std::vector<npy_intp> dimens, 
-           NPY_TYPES t=NPY_DOUBLE){
+numpy::ndarray makeNum(std::vector<npy_intp> dimens, 
+		       NPY_TYPES t=NPY_DOUBLE){
   object obj(handle<>(PyArray_SimpleNew(dimens.size(), &dimens[0], t)));
-  return extract<numeric::array>(obj);
+  return extract<numpy::ndarray>(obj);
 }
 
-numeric::array makeNum(const numeric::array& arr){
-  //Returns a reference of arr by calling numeric::array copy constructor.
+numpy::ndarray makeNum(const numpy::ndarray& arr){
+  //Returns a reference of arr by calling numpy::ndarray copy constructor.
   //The copy constructor increases arr's reference count.
-  return numeric::array(arr);
+  return numpy::ndarray(arr);
 } 
 
-NPY_TYPES type(numeric::array arr){
+NPY_TYPES type(numpy::ndarray arr){
   return NPY_TYPES(PyArray_TYPE(reinterpret_cast<PyArrayObject*>(arr.ptr())));
 }
 
-void check_type(boost::python::numeric::array arr, 
-    NPY_TYPES expected_type){
+void check_type(boost::python::numpy::ndarray arr, 
+		NPY_TYPES expected_type){
   NPY_TYPES actual_type = type(arr);
   if (actual_type != expected_type) {
     std::ostringstream stream;
     stream << "expected Numeric type " << kindstrings[expected_type]
-     << ", found Numeric type " << kindstrings[actual_type] << std::ends;
+	   << ", found Numeric type " << kindstrings[actual_type] << std::ends;
     PyErr_SetString(PyExc_TypeError, stream.str().c_str());
     throw_error_already_set();
   }
@@ -230,7 +230,7 @@ void check_type(boost::python::numeric::array arr,
 }
 
 //Return the number of dimensions
-int rank(numeric::array arr){
+int rank(numpy::ndarray arr){
   //std::cout << "inside rank" << std::endl;
   if(!PyArray_Check(arr.ptr())){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
@@ -239,19 +239,19 @@ int rank(numeric::array arr){
   return PyArray_NDIM(reinterpret_cast<PyArrayObject*>(arr.ptr()));
 }
 
-void check_rank(boost::python::numeric::array arr, int expected_rank){
+void check_rank(boost::python::numpy::ndarray arr, int expected_rank){
   int actual_rank = rank(arr);
   if (actual_rank != expected_rank) {
     std::ostringstream stream;
     stream << "expected rank " << expected_rank 
-     << ", found rank " << actual_rank << std::ends;
+	   << ", found rank " << actual_rank << std::ends;
     PyErr_SetString(PyExc_RuntimeError, stream.str().c_str());
     throw_error_already_set();
   }
   return;
 }
 
-npy_intp size(numeric::array arr)
+npy_intp size(numpy::ndarray arr)
 {
   if(!PyArray_Check(reinterpret_cast<PyArrayObject*>(arr.ptr()))){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
@@ -260,19 +260,19 @@ npy_intp size(numeric::array arr)
   return PyArray_Size(arr.ptr());
 }
 
-void check_size(boost::python::numeric::array arr, npy_intp expected_size){
+void check_size(boost::python::numpy::ndarray arr, npy_intp expected_size){
   npy_intp actual_size = size(arr);
   if (actual_size != expected_size) {
     std::ostringstream stream;
     stream << "expected size " << expected_size 
-     << ", found size " << actual_size << std::ends;
+	   << ", found size " << actual_size << std::ends;
     PyErr_SetString(PyExc_RuntimeError, stream.str().c_str());
     throw_error_already_set();
   }
   return;
 }
 
-std::vector<npy_intp> shape(numeric::array arr){
+std::vector<npy_intp> shape(numpy::ndarray arr){
   std::vector<npy_intp> out_dims;
   if(!PyArray_Check(arr.ptr())){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
@@ -286,7 +286,7 @@ std::vector<npy_intp> shape(numeric::array arr){
   return out_dims;
 }
 
-npy_intp get_dim(boost::python::numeric::array arr, int dimnum){
+npy_intp get_dim(boost::python::numpy::ndarray arr, int dimnum){
   assert(dimnum >= 0);
   int the_rank=rank(arr);
   if(the_rank < dimnum){
@@ -300,19 +300,19 @@ npy_intp get_dim(boost::python::numeric::array arr, int dimnum){
   return actual_dims[dimnum];
 }
 
-void check_shape(boost::python::numeric::array arr, std::vector<npy_intp> expected_dims){
+void check_shape(boost::python::numpy::ndarray arr, std::vector<npy_intp> expected_dims){
   std::vector<npy_intp> actual_dims = shape(arr);
   if (actual_dims != expected_dims) {
     std::ostringstream stream;
     stream << "expected dimensions " << vector_str(expected_dims)
-     << ", found dimensions " << vector_str(actual_dims) << std::ends;
+	   << ", found dimensions " << vector_str(actual_dims) << std::ends;
     PyErr_SetString(PyExc_RuntimeError, stream.str().c_str());
     throw_error_already_set();
   }
   return;
 }
 
-void check_dim(boost::python::numeric::array arr, int dimnum, npy_intp dimsize){
+void check_dim(boost::python::numpy::ndarray arr, int dimnum, npy_intp dimsize){
   std::vector<npy_intp> actual_dims = shape(arr);
   if(actual_dims[dimnum] != dimsize){
     std::ostringstream stream;
@@ -325,13 +325,13 @@ void check_dim(boost::python::numeric::array arr, int dimnum, npy_intp dimsize){
   return;
 }
 
-bool iscontiguous(numeric::array arr)
+bool iscontiguous(numpy::ndarray arr)
 {
   //  return arr.iscontiguous();
   return PyArray_ISCONTIGUOUS(reinterpret_cast<PyArrayObject*>(arr.ptr()));
 }
 
-void check_contiguous(numeric::array arr)
+void check_contiguous(numpy::ndarray arr)
 {
   if (!iscontiguous(arr)) {
     PyErr_SetString(PyExc_RuntimeError, "expected a contiguous array");
@@ -340,7 +340,7 @@ void check_contiguous(numeric::array arr)
   return;
 }
 
-void* data(numeric::array arr){
+void* data(numpy::ndarray arr){
   if(!PyArray_Check(reinterpret_cast<PyArrayObject*>(arr.ptr()))){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
     throw_error_already_set();
@@ -349,7 +349,7 @@ void* data(numeric::array arr){
 }
 
 //Copy data into the array
-void copy_data(boost::python::numeric::array arr, char* new_data){
+void copy_data(boost::python::numpy::ndarray arr, char* new_data){
   char* arr_data = (char*) data(arr);
   npy_intp nbytes = PyArray_NBYTES(reinterpret_cast<PyArrayObject*>(arr.ptr()));
   for (npy_intp i = 0; i < nbytes; i++) {
@@ -359,18 +359,18 @@ void copy_data(boost::python::numeric::array arr, char* new_data){
 } 
 
 //Return a clone of this array
-numeric::array clone(numeric::array arr){
+numpy::ndarray clone(numpy::ndarray arr){
   object obj(handle<>(PyArray_NewCopy(reinterpret_cast<PyArrayObject*>(arr.ptr()),NPY_CORDER)));
   return makeNum(obj);
 }
 
   
 //Return a clone of this array with a new type
-numeric::array astype(boost::python::numeric::array arr, NPY_TYPES t){
-  return (numeric::array) arr.astype(type2char(t));
+numpy::ndarray astype(boost::python::numpy::ndarray arr, NPY_TYPES t){
+  return (numpy::ndarray) arr.astype(boost::python::numpy::dtype(boost::python::str(type2char(t))));
 }
 
-std::vector<npy_intp> strides(numeric::array arr){
+std::vector<npy_intp> strides(numpy::ndarray arr){
   std::vector<npy_intp> out_strides;
   if(!PyArray_Check(reinterpret_cast<PyArrayObject*>(arr.ptr()))){
     PyErr_SetString(PyExc_ValueError, "expected a PyArrayObject");
@@ -384,7 +384,7 @@ std::vector<npy_intp> strides(numeric::array arr){
   return out_strides;
 }
 
-int refcount(numeric::array arr){
+int refcount(numpy::ndarray arr){
   return REFCOUNT(reinterpret_cast<PyArrayObject*>(arr.ptr()));
 }
 
@@ -394,7 +394,7 @@ void check_PyArrayElementType(object newo){
       std::ostringstream stream;
       stream << "array elments have been cast to NPY_OBJECT, "
              << "numhandle can only accept arrays with numerical elements" 
-       << std::ends;
+	     << std::ends;
       PyErr_SetString(PyExc_TypeError, stream.str().c_str());
       throw_error_already_set();
   }
