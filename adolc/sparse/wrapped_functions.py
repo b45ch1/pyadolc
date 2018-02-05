@@ -1,5 +1,5 @@
-import _sparse
-from _sparse import *
+from . import _sparse
+from ._sparse import *
 
 import numpy
 

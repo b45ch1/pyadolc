@@ -1,1 +1,1 @@
-from wrapped_functions import * 
+from .wrapped_functions import * 

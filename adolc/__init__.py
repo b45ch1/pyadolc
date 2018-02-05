@@ -1,20 +1,20 @@
-import _adolc
-from _adolc import *
-from wrapped_functions import * 
-import cgraph
-import interpolation
+from . import _adolc
+from ._adolc import *
+from .wrapped_functions import * 
+from . import cgraph
+from . import interpolation
 
 try:
-    import sparse
+    from . import sparse
 except Exception as e:
-    print 'adolc Notice: sparse drivers not available'
-    print e
+    print('adolc Notice: sparse drivers not available')
+    print(e)
 try:
-    import colpack
+    from . import colpack
 
 except Exception as e:
-    print 'adolc Notice: colpack drivers not available'
-    print e
+    print('adolc Notice: colpack drivers not available')
+    print(e)
 
 # testing
 from numpy.testing import Tester

@@ -30,8 +30,8 @@ def test_big_tape():
     dependent(ay)
     trace_off()
 
-    print tapestats(0)
-    print function(0,[1.])
+    print(tapestats(0))
+    print(function(0,[1.]))
     #tape_to_latex(0,numpy.array([1.]),numpy.array([0.]))
 
 
@@ -315,8 +315,8 @@ def test_ipopt_optimization():
     nlp_adolc.close()
     
     adolc_optimization_time = end_time - start_time
-    print 'optimization time with derivatives computed by adolc = ', adolc_optimization_time
-    print 'optimization time with derivatives computed by hand = ',pure_python_optimization_time
+    print('optimization time with derivatives computed by adolc = ', adolc_optimization_time)
+    print('optimization time with derivatives computed by hand = ',pure_python_optimization_time)
     assert adolc_optimization_time / pure_python_optimization_time < 10
     
     # this works with the pyipopt version from code.google.com
@@ -337,5 +337,5 @@ if __name__ == '__main__':
     try:
         import nose
     except:
-        print 'Please install nose for unit testing'
+        print('Please install nose for unit testing')
     nose.runmodule()

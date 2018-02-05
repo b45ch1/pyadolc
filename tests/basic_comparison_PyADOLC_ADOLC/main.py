@@ -19,8 +19,8 @@ y = adolc.function(13, x)
 g = adolc.gradient(13, x)
 J = adolc.jacobian(13, x)
 
-print 'function y=', y
-print 'gradient g=', g
-print 'Jacobian J=', J
+print('function y=', y)
+print('gradient g=', g)
+print('Jacobian J=', J)
 
 

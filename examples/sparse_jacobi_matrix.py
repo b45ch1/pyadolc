@@ -33,9 +33,9 @@ options = numpy.array([0,0,0,0],dtype=int)
 pat = adolc.sparse.jac_pat(0,x,options)
 result = adolc.colpack.sparse_jac_no_repeat(0,x,options)
 
-print adolc.jacobian(0,x)
-print pat
+print(adolc.jacobian(0,x))
+print(pat)
 
-print result
+print(result)
 
 

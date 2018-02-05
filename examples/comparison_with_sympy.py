@@ -114,23 +114,23 @@ adolc.trace_off()
 # point at which the derivatives should be evaluated
 x = random((N,D))
 
-print '\n\n'
-print 'Sympy function = function  check (should be almost zero)'
-print f(x) - sym_f(x)
+print('\n\n')
+print('Sympy function = function  check (should be almost zero)')
+print(f(x) - sym_f(x))
 
-print '\n\n'
-print 'Sympy vs Hand Derived Gradient check (should be almost zero)'
-print df(x) - sym_df(x)
+print('\n\n')
+print('Sympy vs Hand Derived Gradient check (should be almost zero)')
+print(df(x) - sym_df(x))
 
-print 'Sympy vs Ad Derived Gradient check (should be almost zero)'
-print adolc.gradient(0, numpy.ravel(x)).reshape(x.shape) - sym_df(x)
+print('Sympy vs Ad Derived Gradient check (should be almost zero)')
+print(adolc.gradient(0, numpy.ravel(x)).reshape(x.shape) - sym_df(x))
 
-print '\n\n'
-print 'Sympy vs Hand Derived Hessian check (should be almost zero)'
-print ddf(x) - sym_ddf(x)
+print('\n\n')
+print('Sympy vs Hand Derived Hessian check (should be almost zero)')
+print(ddf(x) - sym_ddf(x))
 
-print 'Sympy vs Ad Derive Hessian check (should be almost zero)'
-print adolc.hessian(0, numpy.ravel(x)).reshape(x.shape + x.shape) - sym_ddf(x)
+print('Sympy vs Ad Derive Hessian check (should be almost zero)')
+print(adolc.hessian(0, numpy.ravel(x)).reshape(x.shape + x.shape) - sym_ddf(x))
 
 
 

@@ -194,12 +194,12 @@ eval_h_adolc = Eval_h_adolc(x0)
 pat = eval_h(x0,  numpy.array([1.,2.]), 1., True)
 val = eval_h(x0,  numpy.array([1.,2.]), 1., False)
 H1 = scipy.sparse.coo_matrix( (val, (pat[0], pat[1])), shape=(4, 4))
-print 'symbolic Hessian=\n',H1
+print('symbolic Hessian=\n',H1)
 
 pat = eval_h_adolc(x0,  numpy.array([1.,2.]), 1., True)
 val = eval_h_adolc(x0,  numpy.array([1.,2.]), 1., False)
 H2 = scipy.sparse.coo_matrix( (val, (pat[0], pat[1])), shape=(4, 4))
-print 'pyadolc Hessian=\n',H2
+print('pyadolc Hessian=\n',H2)
 
 # function of f
 assert_almost_equal(eval_f(x0), eval_f_adolc(x0))
@@ -241,8 +241,8 @@ end_time = time.time()
 nlp_adolc.close()
 
 adolc_optimization_time = end_time - start_time
-print 'optimization time with derivatives computed by adolc = ', adolc_optimization_time
-print 'optimization time with derivatives computed by hand = ',pure_python_optimization_time
+print('optimization time with derivatives computed by adolc = ', adolc_optimization_time)
+print('optimization time with derivatives computed by hand = ',pure_python_optimization_time)
 
 # # this works with the pyipopt version from code.google.com
 # assert_array_almost_equal(result[0], result_adolc[0])

@@ -28,16 +28,16 @@ Adot = V.reshape((N,N))
 Qdot = Z[:N**2,0,0].reshape((N,N))
 Rdot  = Z[N**2:,0,0].reshape((N,N))
 
-print dot(Qdot, R) + dot(Q, Rdot)
+print(dot(Qdot, R) + dot(Q, Rdot))
 
-print 'd=0: QR - A :\n', dot(Q, R) - A
-print 'd=1: QR - A :\n', dot(Qdot, R) + dot(Q, Rdot) - Adot
+print('d=0: QR - A :\n', dot(Q, R) - A)
+print('d=1: QR - A :\n', dot(Qdot, R) + dot(Q, Rdot) - Adot)
 
-print 'd=0: Q.T Q - I :\n', dot(Q.T, Q) - numpy.eye(N)
-print 'd=1: Q.T Q - I :\n', dot(Qdot.T, Q) + dot(Q.T,Qdot)
+print('d=0: Q.T Q - I :\n', dot(Q.T, Q) - numpy.eye(N))
+print('d=1: Q.T Q - I :\n', dot(Qdot.T, Q) + dot(Q.T,Qdot))
 
-print 'd=0: R - triu(R) :\n', R - numpy.triu(R)
-print 'd=1: R - triu(R) :\n', Rdot - numpy.triu(Rdot)
+print('d=0: R - triu(R) :\n', R - numpy.triu(R))
+print('d=1: R - triu(R) :\n', Rdot - numpy.triu(Rdot))
 
 
 

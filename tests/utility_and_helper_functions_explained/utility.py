@@ -8,10 +8,10 @@ def test_tape_to_latex():
 		a = avec[0]*avec[-1]
 		c =avec[0]*avec[0]
 		if isinstance(a,badouble):
-			print avec[0].loc
-			print avec[1].loc
-			print a.loc
-			print c.loc
+			print(avec[0].loc)
+			print(avec[1].loc)
+			print(a.loc)
+			print(c.loc)
 		return a
 
 
@@ -42,7 +42,7 @@ def test_tape_stats():
 	depends_on(ay)
 	trace_off()
 
-	print tapestats(1)
+	print(tapestats(1))
 
 if __name__ == "__main__":
 	test_tape_stats()

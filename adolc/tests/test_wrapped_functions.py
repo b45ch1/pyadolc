@@ -23,8 +23,8 @@ class OperationsTests ( TestCase ):
         assert b.val == -1.
         assert a.val == 1.
 
-        print type(b)
-        print type(a)
+        print(type(b))
+        print(type(a))
 
     def test_conditional_operators(self):
         ax = adouble(2.)
@@ -193,14 +193,14 @@ class OperationsTests ( TestCase ):
         cond = 1.
 
         x = condassign(x,cond,y)
-        print x
+        print(x)
         assert_almost_equal(x,4.)
 
         x = 3.
         y = 4.
         cond = -1.
         x = condassign(x,cond,y)
-        print x
+        print(x)
         assert_almost_equal(x,3.)
 
     def test_double_condassign_if_else(self):
@@ -227,14 +227,14 @@ class OperationsTests ( TestCase ):
         cond = adouble(1.)
 
         x = condassign(x,cond,y)
-        print x
+        print(x)
         assert_almost_equal(x.val, 4.)
 
         x = adouble(3.)
         y = adouble(4.)
         cond = adouble(-3.)
         x = condassign(x,cond,y)
-        print x
+        print(x)
         assert_almost_equal(x.val, 3.)
 
 
@@ -276,7 +276,7 @@ class OperationsTests ( TestCase ):
         cond = adouble(1.)
 
         x = condassign(x,cond,y,z)
-        print x
+        print(x)
         assert_almost_equal(x.val, 4.)
 
         x = adouble(3.)
@@ -285,7 +285,7 @@ class OperationsTests ( TestCase ):
         cond = adouble(-3.)
 
         x = condassign(x,cond,y,z)
-        print x
+        print(x)
         assert_almost_equal(x.val, 5.)
 
 
@@ -312,8 +312,8 @@ class CorrectnessTests(TestCase):
 
         g = gradient(0,x)
 
-        print g
-        print eval_g(x)
+        print(g)
+        print(eval_g(x))
 
 
 class LowLevelFunctionsTests ( TestCase ):
@@ -411,7 +411,7 @@ class LowLevelFunctionsTests ( TestCase ):
         U[0,0,0] = 1.
 
         Z = hov_ti_reverse(0,U)[0]
-        print Z[0,:,0]
+        print(Z[0,:,0])
         assert numpy.prod( Z[0,:,0] == numpy.array([35., 21., 15.]))
         assert numpy.prod( Z[0,:,1] == numpy.array([0., 7., 5.]))
 
@@ -703,6 +703,6 @@ if __name__ == '__main__':
     try:
         import nose
     except:
-        print 'Please install nose for unit testing'
+        print('Please install nose for unit testing')
     nose.runmodule()
 

@@ -11,7 +11,7 @@ if __name__ == "__main__":
 	N_max = 120
 	reps = 100
 
-	Ns = range(2,N_max,5)
+	Ns = list(range(2,N_max,5))
 	adolc_gradient_runtimes = []
 	cppad_gradient_runtimes = []
 	adolc_hessian_runtimes = []

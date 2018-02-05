@@ -66,4 +66,4 @@ xp1_plot = plot(ts, J[:,1], 'r')
 xp1_analytical_plot = plot(ts, phip1(ts,p,q), 'r.')
 
 show()
-print J
+print(J)
