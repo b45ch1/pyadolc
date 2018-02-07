@@ -713,6 +713,35 @@ def condassign(x, cond, y, z = None):
         z = c(z)
         return _adolc.condassign(x, cond, y, z)
 
+def condeqassign(x, cond, y, z = None):
+    """
+
+    x = condeqassign(cond, y, z = None)
+
+    equivalent to:
+    if cond:
+       x = y
+
+    else:
+        if z != None:
+            x = z
+
+    """
+
+    def c(v):
+        if isinstance(v, _adolc.adub):
+            return _adolc.adouble(v)
+        return v
+
+    x = c(x)
+    cond = c(cond)
+    y = c(y)
+
+    if z == None:
+        return _adolc.condeqassign(x, cond, y)
+    else:
+        z = c(z)
+        return _adolc.condeqassign(x, cond, y, z)
 
 def tape_to_latex(tape_tag,x,y):
     """

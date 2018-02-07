@@ -66,8 +66,11 @@ double wrapped_condassign_double_if_else(double res, const double cond, const do
 adouble wrapped_condassign_adouble_if(adouble &res, const adouble &cond, const adouble &arg1);
 adouble wrapped_condassign_adouble_if_else(adouble &res, const adouble &cond, const adouble &arg1,  const adouble &arg2);
 
+double wrapped_condeqassign_double_if(double res, const double cond, const double arg1);
+double wrapped_condeqassign_double_if_else(double res, const double cond, const double arg1, const double arg2);
 
-
+adouble wrapped_condeqassign_adouble_if(adouble &res, const adouble &cond, const adouble &arg1);
+adouble wrapped_condeqassign_adouble_if_else(adouble &res, const adouble &cond, const adouble &arg1,  const adouble &arg2);
 
 /* THIN WRAPPER FOR OVERLOADED FUNCTIONS */
 int trace_on_default_argument(short tape_tag){ return trace_on(tape_tag,0);}
@@ -277,6 +280,11 @@ BOOST_PYTHON_MODULE(_adolc)
 	def("condassign", &wrapped_condassign_double_if_else);
 	def("condassign", &wrapped_condassign_adouble_if);
 	def("condassign", &wrapped_condassign_adouble_if_else);
+
+	def("condeqassign", &wrapped_condeqassign_double_if);
+	def("condeqassign", &wrapped_condeqassign_double_if_else);
+	def("condeqassign", &wrapped_condeqassign_adouble_if);
+	def("condeqassign", &wrapped_condeqassign_adouble_if_else);
 
 	class_<badouble>("badouble", init<const badouble &>())
 			.def(boost::python::self_ns::str(self))
