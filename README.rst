@@ -70,13 +70,19 @@ THIS VERSION OF PYADOLC IS KNOWN TO WORK WITH:
     * OSX 10.9 (Mavericks), Python 2.7.6, NumPy 1.8.0
     * OSX 10.11 (El Capitan), Python 2.7.11, NumPy 1.10.11
 
+BRANCHES:
+
+    There are several branches available for different versions of ADOL-C/Colpack and Boost.
+    In case you have issues installing the master branch, you can have a look there.
+
 
 REQUIREMENTS:
+
     * C and C++ compiler
     * Python and Numpy, both with header files
     * ADOL-C, official versions from http://www.coin-or.org/projects/ADOL-C.xml
     * ColPack from http://cscapes.cs.purdue.edu/download/ColPack
-    * boost::python from http://www.boost.org/ or from the apt-get repository.
+    * boost::python Version 1.66 from http://www.boost.org/ or from the apt-get repository.
 
 INSTALLATION UBUNTU / DEBIAN (Stretch):
 
@@ -97,12 +103,12 @@ INSTALLATION OSX:
         brew install boost-python
         brew link boost --force
         brew link boost-python --force
-    
+
     * If you installed homebrew in the default location ``/usr/local``, you can skip this step.  Otherwise, if you installed homebrew somewhere else on your system, you will need to edit ``bootstrap.sh`` and ``setup.py``.  First, in the ColPack build section of ``bootstrap.sh``, add the flags::
-        
+
         --with-boost-libdir='<homebrew_libdir>' --with-boost-includedir='<homebrew_includedir>'
       to the end of the ``./configure`` commands, where ``<homebrew_libdir>`` and ``<homebrew_includedir>`` are the locations of homebrew's ``lib`` and ``include`` directories, respectively.  Similarly, edit setup.py so that ``BOOST_DIR = '<homewbrew_root>'`` where ``<homebrew_root>`` is the base directory of your homebrew install (where ``lib``, ``include``, ... are located).
-    
+
     * Run::
 
         ./bootstrap.sh
