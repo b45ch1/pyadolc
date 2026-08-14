@@ -20,6 +20,15 @@ except Exception as e:
 from numpy.testing import Tester
 test = Tester().test
 
+# Workaround for numpy ticket #1136: ay * x[0] fails when ay is array of adouble and x[0] is numpy.float64
+import numpy
+_orig_adouble_mul = adouble.__mul__
+def _adouble_mul_workaround(self, other):
+    if isinstance(other, (numpy.floating, numpy.integer)):
+        other = float(other) if isinstance(other, numpy.floating) else int(other)
+    return _orig_adouble_mul(self, other)
+adouble.__mul__ = _adouble_mul_workaround
+
 __doc__ = """
 Adolc: Algorithmic Differentiation Software 
     see http://www.math.tu-dresden.de/~adol-c/ for documentation of Adolc 
